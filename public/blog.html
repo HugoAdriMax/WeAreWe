@@ -104,43 +104,46 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
     <script>
+        // Initialiser AOS
         AOS.init({
             duration: 800,
             easing: 'ease-in-out',
             once: true,
             mirror: false
         });
-
+    
         const articlesPerPage = 6;
         let currentPage = 1;
         let articles = [];
-
+    
         // Charger et afficher les articles
-        const response = await fetch('https://we-are-we1.vercel.app/api/articles')
+        fetch('https://we-are-we1.vercel.app/api/articles')
             .then(response => response.json())
             .then(data => {
-                articles = data;
-                displayArticles(currentPage);
+                articles = data; // Sauvegarder les articles pour la pagination
+                displayArticles(currentPage); // Afficher la première page des articles
+                updatePagination(); // Mettre à jour la pagination
             })
             .catch(error => {
                 console.error('Erreur lors du chargement des articles :', error);
             });
-
-        // Fonction pour afficher les articles d'une page
+    
+        // Fonction pour afficher les articles pour la page courante
         function displayArticles(page) {
             const container = document.getElementById('articles-container');
             container.innerHTML = '';
-            
-            const start = (page - 1) * articlesPerPage;
-            const end = start + articlesPerPage;
-            const pageArticles = articles.slice(start, end);
-
-            pageArticles.forEach(article => {
+    
+            // Calculer les index des articles à afficher
+            const startIndex = (page - 1) * articlesPerPage;
+            const endIndex = startIndex + articlesPerPage;
+    
+            // Afficher les articles pour la page courante
+            const articlesToDisplay = articles.slice(startIndex, endIndex);
+            articlesToDisplay.forEach(article => {
                 const slug = article.title.toLowerCase().replace(/\s+/g, '-');
                 const articleElement = document.createElement('article');
                 articleElement.classList.add('bg-white', 'rounded-lg', 'shadow-lg', 'overflow-hidden');
-                articleElement.setAttribute('data-aos', 'fade-up');
-
+    
                 articleElement.innerHTML = `
                     <img src="${article.coverImage || 'https://via.placeholder.com/600x400'}" alt="${article.title}" class="w-full h-48 object-cover">
                     <div class="p-6">
@@ -153,41 +156,42 @@
                 `;
                 container.appendChild(articleElement);
             });
-
-            updatePagination();
         }
-
+    
         // Fonction pour mettre à jour la pagination
         function updatePagination() {
             const totalPages = Math.ceil(articles.length / articlesPerPage);
             const pageInfo = document.getElementById('page-info');
             pageInfo.textContent = `Page ${currentPage} sur ${totalPages}`;
-
+    
             const prevButton = document.getElementById('prev-page');
             const nextButton = document.getElementById('next-page');
-
+    
             prevButton.disabled = currentPage === 1;
             nextButton.disabled = currentPage === totalPages;
-
+    
             prevButton.classList.toggle('opacity-50', currentPage === 1);
             nextButton.classList.toggle('opacity-50', currentPage === totalPages);
         }
-
+    
         // Navigation entre les pages
         document.getElementById('prev-page').addEventListener('click', () => {
             if (currentPage > 1) {
                 currentPage--;
                 displayArticles(currentPage);
+                updatePagination(); // Mettre à jour la pagination après changement de page
             }
         });
-
+    
         document.getElementById('next-page').addEventListener('click', () => {
             const totalPages = Math.ceil(articles.length / articlesPerPage);
             if (currentPage < totalPages) {
                 currentPage++;
                 displayArticles(currentPage);
+                updatePagination(); // Mettre à jour la pagination après changement de page
             }
         });
     </script>
+    
 </body>
 </html>
