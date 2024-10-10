@@ -1,25 +1,18 @@
-// api/articles.js
+const fs = require('fs');
+const path = require('path');
 
-let articles = []; // Définissez un tableau d'articles
+const articlesFilePath = path.join(__dirname, '../articles.json'); // Assurez-vous que le chemin est correct
 
-export default function handler(req, res) {
-    if (req.method === 'GET') {
-        // Renvoie la liste des articles
-        res.status(200).json(articles);
-    } else if (req.method === 'POST') {
-        // Ajoute un nouvel article
-        const newArticle = req.body;
-
-        // Vérifie que l'article contient les champs requis
-        if (!newArticle.title || !newArticle.author || !newArticle.content) {
-            return res.status(400).json({ message: 'Titre, auteur et contenu requis.' });
-        }
-
-        // Ajoute le nouvel article au tableau
-        articles.push(newArticle);
-        res.status(201).json(newArticle);
-    } else {
-        res.setHeader('Allow', ['GET', 'POST']);
-        res.status(405).end(`Method ${req.method} Not Allowed`);
+// Fonction pour lire les articles
+function readArticles() {
+    if (fs.existsSync(articlesFilePath)) {
+        return JSON.parse(fs.readFileSync(articlesFilePath));
     }
+    return [];
 }
+
+// Route pour récupérer tous les articles
+module.exports = (req, res) => {
+    const articles = readArticles();
+    res.json(articles);
+};
