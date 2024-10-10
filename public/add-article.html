@@ -69,24 +69,27 @@
             const articleData = Object.fromEntries(formData.entries());
 
             try {
-                const response = await fetch('https://we-are-we1.vercel.app/api/articles', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(articleData),
-                });
+    const response = await fetch('https://we-are-we1.vercel.app/api/articles', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(articleData), // articleData contient les données de l'article à ajouter
+    });
 
-                if (response.ok) {
-                    alert('Article ajouté avec succès !');
-                    window.location.href = '/blog.html';
-                } else {
-                    alert('Erreur lors de l\'ajout de l\'article.');
-                }
-            } catch (error) {
-                console.error('Erreur:', error);
-                alert('Une erreur s\'est produite. Veuillez réessayer.');
-            }
+    if (response.ok) {
+        // Traitement en cas de succès
+        const data = await response.json(); // Récupérer les données de la réponse
+        alert('Article ajouté avec succès !');
+        // ... (autres actions à réaliser après l'ajout, comme réinitialiser le formulaire)
+    } else {
+        // Traitement en cas d'erreur
+        alert('Erreur lors de l\'ajout de l\'article.');
+    }
+} catch (error) {
+    console.error('Erreur:', error);
+    alert('Une erreur s\'est produite. Veuillez réessayer.');
+}
         });
     </script>
 </body>
