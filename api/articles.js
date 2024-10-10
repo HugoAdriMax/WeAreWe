@@ -1,13 +1,22 @@
 // api/articles.js
 
+let articles = []; // Définissez un tableau d'articles
+
 export default function handler(req, res) {
     if (req.method === 'GET') {
-        // Logique pour récupérer les articles
-        res.status(200).json(articles); // Remplacez 'articles' par vos données
+        // Renvoie la liste des articles
+        res.status(200).json(articles);
     } else if (req.method === 'POST') {
-        // Logique pour ajouter un article
+        // Ajoute un nouvel article
         const newArticle = req.body;
-        // Ajoutez votre logique ici
+
+        // Vérifie que l'article contient les champs requis
+        if (!newArticle.title || !newArticle.author || !newArticle.content) {
+            return res.status(400).json({ message: 'Titre, auteur et contenu requis.' });
+        }
+
+        // Ajoute le nouvel article au tableau
+        articles.push(newArticle);
         res.status(201).json(newArticle);
     } else {
         res.setHeader('Allow', ['GET', 'POST']);
