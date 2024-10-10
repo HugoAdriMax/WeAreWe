@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="seo-title">Article - WeAreWe Blog</title>
+
+    <!-- Meta description pour le SEO -->
+    <meta name="description" content="Découvrez nos derniers articles sur le marketing digital et les conseils pour propulser votre entreprise.">
+    
+    <!-- Meta keywords pour le SEO -->
+    <meta name="keywords" content="marketing digital, SEO, SEM, stratégie digitale, WeAreWe blog, conseils marketing">
+    
+    <!-- Open Graph pour les réseaux sociaux -->
+    <meta property="og:title" content="WeAreWe Blog - Actualités et conseils en marketing digital">
+    <meta property="og:description" content="Découvrez les dernières tendances et stratégies en marketing digital sur WeAreWe Blog.">
+    <meta property="og:image" id="og-image" content="https://example.com/default-image.jpg">
+    <meta property="og:type" content="article">
+    <meta property="og:url" id="og-url" content="https://example.com/article.html">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="WeAreWe Blog - Actualités et conseils en marketing digital">
+    <meta name="twitter:description" content="Découvrez nos derniers articles sur le marketing digital et les conseils pour propulser votre entreprise.">
+    <meta name="twitter:image" id="twitter-image" content="https://example.com/default-image.jpg">
+
+    <!-- Structured Data (Schema.org) pour l'article -->
+    <script type="application/ld+json" id="schema-json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": "Article WeAreWe Blog",
+        "description": "Découvrez nos derniers articles sur le marketing digital et les conseils pour propulser votre entreprise.",
+        "author": {
+            "@type": "Person",
+            "name": "Auteur"
+        },
+        "datePublished": "2024-10-10",
+        "image": "https://example.com/default-image.jpg",
+        "publisher": {
+            "@type": "Organization",
+            "name": "WeAreWe",
+            "logo": {
+                "@type": "ImageObject",
+                "url": "https://example.com/logo.png"
+            }
+        }
+    }
+    </script>
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="antialiased text-gray-800 leading-normal tracking-wider bg-gray-100">
+    <header style="background-color: #6366F1;" class="fixed w-full z-30 top-0 text-white">
+        <div class="container mx-auto py-5 flex items-center justify-between px-4">
+            <a class="flex items-center hover:opacity-75 transition duration-150 ease-in-out" href="index.html">
+                <svg class="w-10 h-10 text-white p-2 bg-indigo-500 rounded-full" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                </svg>
+                <span class="ml-3 text-xl font-bold">WeAreWe</span>
+            </a>
+        </div>
+    </header>
+
+    <main class="pt-20">
+        <section class="py-16 bg-gray-100">
+            <div class="container mx-auto px-4">
+                <article id="article-content" class="bg-white rounded-lg shadow-lg p-8">
+                    <!-- Le contenu de l'article sera inséré ici dynamiquement -->
+                </article>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // Fonction pour récupérer un paramètre d'URL (slug dans ce cas)
+        function getQueryParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+
+        // Récupérer le slug depuis l'URL
+        const slug = getQueryParam('slug');
+
+        // Récupérer l'article correspondant au slug
+        fetch('/api/articles')
+            .then(response => response.json())
+            .then(articles => {
+                const article = articles.find(a => a.title.toLowerCase().replace(/\s+/g, '-') === slug);
+                if (article) {
+                    document.title = `${article.title} - WeAreWe Blog`;
+                    document.querySelector('meta[name="description"]').setAttribute('content', article.content.substring(0, 150));
+                    document.getElementById('og-url').setAttribute('content', window.location.href);
+                    document.getElementById('og-image').setAttribute('content', article.coverImage);
+                    document.getElementById('twitter-image').setAttribute('content', article.coverImage);
+
+                    // Mettre à jour les données JSON-LD pour SEO
+                    const schemaData = {
+                        "@context": "https://schema.org",
+                        "@type": "Article",
+                        "headline": article.title,
+                        "description": article.content.substring(0, 150),
+                        "author": {
+                            "@type": "Person",
+                            "name": article.author
+                        },
+                        "datePublished": article.date,
+                        "image": article.coverImage,
+                        "publisher": {
+                            "@type": "Organization",
+                            "name": "WeAreWe",
+                            "logo": {
+                                "@type": "ImageObject",
+                                "url": "https://example.com/logo.png"
+                            }
+                        }
+                    };
+                    document.getElementById('schema-json').textContent = JSON.stringify(schemaData);
+
+                    const articleContent = document.getElementById('article-content');
+                    articleContent.innerHTML = `
+                        <h1 class="text-4xl font-bold mb-4">${article.title}</h1>
+                        <div class="mb-6 text-gray-600">
+                            <span class="mr-4">${article.date}</span>
+                            <span>Par ${article.author}</span>
+                        </div>
+                        <img src="${article.coverImage}" alt="${article.title}" class="w-48 h-48 rounded-lg shadow-lg mb-8 object-cover">
+                        <div class="prose lg:prose-xl">
+                            ${article.content}
+                        </div>
+                    `;
+                } else {
+                    document.getElementById('article-content').innerHTML = `
+                        <h1 class="text-4xl font-bold mb-4">Article non trouvé</h1>
+                        <p>Désolé, l'article que vous recherchez n'existe pas ou a été supprimé.</p>
+                    `;
+                }
+            })
+            .catch(error => {
+                console.error('Erreur lors du chargement de l\'article:', error);
+            });
+    </script>
+</body>
+</html>

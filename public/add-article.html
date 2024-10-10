@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ajouter un article - WeAreWe Blog</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+    </style>
+</head>
+<body class="antialiased text-gray-800 leading-normal tracking-wider bg-gray-100">
+
+    <header style="background-color: #6366F1;" class="fixed w-full z-30 top-0 text-white">
+        <div class="container mx-auto py-5 flex items-center justify-between px-4">
+            <a class="flex items-center hover:opacity-75 transition duration-150 ease-in-out" href="index.html">
+                <svg class="w-10 h-10 text-white p-2 bg-indigo-500 rounded-full" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                </svg>
+                <span class="ml-3 text-xl font-bold">WeAreWe</span>
+            </a>
+            <nav class="hidden md:flex space-x-10 items-center">
+                <a class="hover:text-indigo-200" href="index.html#home">Accueil</a>
+                <a class="hover:text-indigo-200" href="index.html#services">Services</a>
+                <a class="hover:text-indigo-200" href="index.html#about">À propos</a>
+                <a class="hover:text-indigo-200" href="index.html#portfolio">Portfolio</a>
+                <a class="hover:text-indigo-200" href="index.html#testimonials">Témoignages</a>
+                <a class="hover:text-indigo-200" href="blog.html">Blog</a>
+                <a class="bg-white text-indigo-600 px-4 py-2 rounded-md font-semibold hover:bg-indigo-50 transition duration-150 ease-in-out" href="index.html#contact">Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="pt-20">
+        <section class="py-20 bg-gray-100">
+            <div class="container mx-auto px-4">
+                <h1 class="text-4xl font-bold text-center mb-8">Ajouter un article</h1>
+                <form id="add-article-form" class="max-w-2xl mx-auto bg-white p-8 rounded-lg shadow-md">
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="title">Titre</label>
+                        <input type="text" name="title" id="title" placeholder="Titre de l'article" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500" required>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="author">Auteur</label>
+                        <input type="text" name="author" id="author" placeholder="Nom de l'auteur" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500" required>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="content">Contenu</label>
+                        <textarea name="content" id="content" rows="5" placeholder="Contenu de l'article" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500" required></textarea>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="coverImage">URL de l'image de couverture</label>
+                        <input type="url" name="coverImage" id="coverImage" placeholder="URL de l'image de couverture (facultatif)" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500">
+                    </div>
+                    <button type="submit" class="w-full bg-indigo-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50">Ajouter l'article</button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        document.getElementById('add-article-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const articleData = Object.fromEntries(formData.entries());
+
+            try {
+                const response = await fetch('/api/articles', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(articleData),
+                });
+
+                if (response.ok) {
+                    alert('Article ajouté avec succès !');
+                    window.location.href = '/blog.html';
+                } else {
+                    alert('Erreur lors de l\'ajout de l\'article.');
+                }
+            } catch (error) {
+                console.error('Erreur:', error);
+                alert('Une erreur s\'est produite. Veuillez réessayer.');
+            }
+        });
+    </script>
+</body>
+</html>
