@@ -116,7 +116,7 @@
         let articles = [];
 
         // Charger et afficher les articles
-        fetch('/api/articles')
+        const response = await fetch('https://we-are-we1.vercel.app/api/articles')
             .then(response => response.json())
             .then(data => {
                 articles = data;
