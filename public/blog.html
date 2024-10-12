@@ -140,7 +140,10 @@
 
         // Charger et afficher les articles
         fetch('https://www.wearewework.com/api/articles')
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) throw new Error('Erreur lors du chargement des articles');
+                return response.json();
+            })
             .then(data => {
                 articles = data; // Sauvegarder les articles pour la pagination
                 displayArticles(currentPage); // Afficher la première page des articles
