@@ -1,57 +1,28 @@
 const express = require('express');
-const mongoose = require('mongoose');
-
 const app = express();
 app.use(express.json());
 
-// Remplacez 'your_mongo_db_uri' par l'URI de connexion à votre base de données
-const mongoURI = process.env.MONGO_URI; // Utilisez la variable d'environnement
-mongoose.connect(mongoURI)
-    .then(() => console.log('Connecté à MongoDB...'))
-    .catch(err => console.error('Erreur de connexion à MongoDB', err));
-
-// Schéma pour les articles
-const articleSchema = new mongoose.Schema({
-    title: { type: String, required: true },
-    slug: { type: String, required: true, unique: true },
-    metaDescription: { type: String, required: true },
-    imageUrl: { type: String, required: true },
-    content: { type: String, required: true },
-    date: { type: Date, default: Date.now },
-    author: { type: String, default: 'WeAreWe Team' }
-});
-
-// Modèle pour les articles
-const Article = mongoose.model('Article', articleSchema);
+// Stockage en mémoire des articles
+let articles = [];
 
 // Route pour récupérer tous les articles
-app.get('/api/articles', async (req, res) => {
-    try {
-        const articles = await Article.find();
-        res.json(articles);
-    } catch (error) {
-        console.error('Erreur lors de la récupération des articles:', error);
-        res.status(500).json({ error: 'Erreur lors de la récupération des articles' });
-    }
+app.get('/api/articles', (req, res) => {
+    res.json(articles);
 });
 
 // Route pour récupérer un article par ID
-app.get('/api/articles/:id', async (req, res) => {
-    try {
-        const article = await Article.findById(req.params.id);
-        if (article) {
-            res.json(article);
-        } else {
-            res.status(404).send('Article non trouvé');
-        }
-    } catch (error) {
-        console.error('Erreur lors de la récupération de l\'article:', error);
-        res.status(500).send('Erreur lors de la récupération de l\'article');
+app.get('/api/articles/:id', (req, res) => {
+    const article = articles.find(a => a.id === req.params.id);
+    if (article) {
+        res.json(article);
+    } else {
+        console.log('Article non trouvé pour l\'ID :', req.params.id);
+        res.status(404).send('Article non trouvé');
     }
 });
 
 // Route pour créer un nouvel article
-app.post('/api/articles', async (req, res) => {
+app.post('/api/articles', (req, res) => {
     const { title, url, metaDescription, imageUrl, content } = req.body;
 
     if (!title || !metaDescription || !content || !imageUrl) {
@@ -60,61 +31,50 @@ app.post('/api/articles', async (req, res) => {
 
     const slug = url || title.trim().toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]+/g, '');
 
-    const newArticle = new Article({
+    const newArticle = {
+        id: Date.now().toString(),
         title,
         slug,
         metaDescription,
         imageUrl,
         content,
+        date: new Date().toISOString(),
         author: 'WeAreWe Team'
-    });
+    };
 
-    try {
-        const savedArticle = await newArticle.save();
-        res.status(201).json(savedArticle);
-    } catch (error) {
-        console.error('Erreur lors de la création de l\'article:', error);
-        res.status(500).json({ error: 'Erreur lors de la création de l\'article' });
-    }
+    articles.push(newArticle);
+    res.status(201).json(newArticle);
 });
 
 // Route pour mettre à jour un article existant
-app.put('/api/articles/:id', async (req, res) => {
+app.put('/api/articles/:id', (req, res) => {
     const { title, url, metaDescription, imageUrl, content } = req.body;
-    const slug = url || title.trim().toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]+/g, '');
+    const index = articles.findIndex(a => a.id === req.params.id);
 
-    try {
-        const article = await Article.findByIdAndUpdate(req.params.id, {
+    if (index !== -1) {
+        articles[index] = {
+            ...articles[index],
             title,
-            slug,
+            slug: url || title.trim().toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]+/g, ''),
             metaDescription,
             imageUrl,
             content
-        }, { new: true });
-
-        if (article) {
-            res.json(article);
-        } else {
-            res.status(404).send('Article non trouvé');
-        }
-    } catch (error) {
-        console.error('Erreur lors de la mise à jour de l\'article:', error);
-        res.status(500).send('Erreur lors de la mise à jour de l\'article');
+        };
+        res.json(articles[index]);
+    } else {
+        res.status(404).send('Article non trouvé');
     }
 });
 
 // Route pour supprimer un article
-app.delete('/api/articles/:id', async (req, res) => {
-    try {
-        const result = await Article.findByIdAndDelete(req.params.id);
-        if (result) {
-            res.status(204).send(); // Suppression réussie
-        } else {
-            res.status(404).json({ error: 'Article non trouvé' });
-        }
-    } catch (error) {
-        console.error('Erreur lors de la suppression de l\'article:', error);
-        res.status(500).json({ error: 'Erreur lors de la suppression de l\'article' });
+app.delete('/api/articles/:id', (req, res) => {
+    const initialLength = articles.length;
+    articles = articles.filter(a => a.id !== req.params.id);
+
+    if (articles.length !== initialLength) {
+        res.status(204).send(); // Suppression réussie
+    } else {
+        res.status(404).json({ error: 'Article non trouvé' });
     }
 });
 
