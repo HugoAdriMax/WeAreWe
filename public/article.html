@@ -5,17 +5,42 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Article - WeAreWe</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link rel="icon" href="https://i.imgur.com/PL6qLai.png" type="image/png">
 </head>
-<body class="bg-gray-100 antialiased">
-    <header style="background-color: #6366F1;" class="fixed w-full z-30 top-0 text-white">
-        <div class="container mx-auto py-5 flex items-center justify-between px-4">
-            <a class="flex items-center hover:opacity-75 transition duration-150 ease-in-out" href="index.html">
+<body class="antialiased text-gray-800 leading-normal tracking-wider bg-gray-100">
+    <header style="background-color: #6366F1;" class="fixed w-full z-30 top-0 text-white" x-data="{ isOpen: false }" @keydown.escape="isOpen = false">
+        <div class="container mx-auto py-5 flex items-center justify-between">
+            <a class="flex items-center hover:opacity-75 transition duration-150 ease-in-out" href="#">
                 <svg class="w-10 h-10 text-white p-2 bg-indigo-500 rounded-full" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
                 </svg>
                 <span class="ml-3 text-xl font-bold">WeAreWe</span>
             </a>
+            <nav class="hidden md:flex space-x-10 items-center">
+                <a class="hover:text-indigo-200" href="#home">Accueil</a>
+                <a class="hover:text-indigo-200" href="#services">Services</a>
+                <a class="hover:text-indigo-200" href="#about">À propos</a>
+                <a class="hover:text-indigo-200" href="#portfolio">Portfolio</a>
+                <a class="hover:text-indigo-200" href="#testimonials">Témoignages</a>
+                <a class="hover:text-indigo-200" href="blog.html">Blog</a>
+                <a class="bg-white text-indigo-600 px-4 py-2 rounded-md font-semibold hover:bg-indigo-50 transition duration-150 ease-in-out" href="#contact">Contact</a>
+            </nav>
+            <button class="md:hidden rounded-lg focus:outline-none focus:shadow-outline mr-4" @click="isOpen = !isOpen">
+                <svg fill="currentColor" viewBox="0 0 20 20" class="w-6 h-6">
+                    <path x-show="!isOpen" fill-rule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM9 15a1 1 0 011-1h6a1 1 0 110 2h-6a1 1 0 01-1-1z" clip-rule="evenodd"></path>
+                    <path x-show="isOpen" fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                </svg>
+            </button>
         </div>
+        <nav class="flex flex-col md:hidden absolute top-full left-0 right-0 bg-white shadow-md rounded-b-lg" :class="{ 'hidden': !isOpen }" @click.away="isOpen = false">
+            <a class="py-2 px-4 text-gray-800 hover:bg-indigo-500 hover:text-white transition duration-150 ease-in-out" href="#home" @click="isOpen = false">Accueil</a>
+            <a class="py-2 px-4 text-gray-800 hover:bg-indigo-500 hover:text-white transition duration-150 ease-in-out" href="#services" @click="isOpen = false">Services</a>
+            <a class="py-2 px-4 text-gray-800 hover:bg-indigo-500 hover:text-white transition duration-150 ease-in-out" href="#about" @click="isOpen = false">À propos</a>
+            <a class="py-2 px-4 text-gray-800 hover:bg-indigo-500 hover:text-white transition duration-150 ease-in-out" href="#portfolio" @click="isOpen = false">Portfolio</a>
+            <a class="py-2 px-4 text-gray-800 hover:bg-indigo-500 hover:text-white transition duration-150 ease-in-out" href="#testimonials" @click="isOpen = false">Témoignages</a>
+            <a class="py-2 px-4 text-gray-800 hover:bg-indigo-500 hover:text-white transition duration-150 ease-in-out" href="blog.html" @click="isOpen = false">Blog</a>
+            <a class="py-2 px-4 text-gray-800 hover:bg-indigo-500 hover:text-white transition duration-150 ease-in-out" href="#contact" @click="isOpen = false">Contact</a>
+        </nav>
     </header>
 
     <main class="pt-20">
@@ -28,16 +53,67 @@
         </section>
     </main>
 
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-wrap -mx-4">
+                <div class="w-full md:w-1/4 px-4 mb-8 md:mb-0">
+                    <h3 class="text-2xl font-semibold mb-4">WeAreWe</h3>
+                    <p class="mb-4">Votre partenaire pour une présence en ligne exceptionnelle.</p>
+                    <p>&copy; 2024 WeAreWe. Tous droits réservés.</p>
+                </div>
+                <div class="w-full md:w-1/4 px-4 mb-8 md:mb-0">
+                    <h4 class="text-xl font-semibold mb-4">Liens rapides</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#home" class="hover:text-indigo-400">Accueil</a></li>
+                        <li><a href="#services" class="hover:text-indigo-400">Services</a></li>
+                        <li><a href="#about" class="hover:text-indigo-400">À propos</a></li>
+                        <li><a href="#portfolio" class="hover:text-indigo-400">Portfolio</a></li>
+                        <li><a href="#contact" class="hover:text-indigo-400">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="w-full md:w-1/4 px-4 mb-8 md:mb-0">
+                    <h4 class="text-xl font-semibold mb-4">Services</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="hover:text-indigo-400">SEO & SEM</a></li>
+                        <li><a href="#" class="hover:text-indigo-400">Web Design & UX</a></li>
+                        <li><a href="#" class="hover:text-indigo-400">Social Media Marketing</a></li>
+                        <li><a href="#" class="hover:text-indigo-400">Content Marketing</a></li>
+                        <li><a href="#" class="hover:text-indigo-400">Analyse de données</a></li>
+                    </ul>
+                </div>
+                <div class="w-full md:w-1/4 px-4">
+                    <h4 class="text-xl font-semibold mb-4">Newsletter</h4>
+                    <p class="mb-4">Restez informé des dernières tendances en marketing digital.</p>
+                    <form class="flex">
+                        <input type="email" placeholder="Votre email" class="w-full px-4 py-2 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-900">
+                        <button type="submit" class="bg-indigo-500 text-white px-4 py-2 rounded-r-lg hover:bg-indigo-600 transition duration-300 ease-in-out">S'abonner</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
+
+
     <script>
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true,
+            mirror: false
+        });
+    
         // Fonction pour récupérer un paramètre d'URL (slug dans ce cas)
         function getQueryParam(param) {
             const urlParams = new URLSearchParams(window.location.search);
             return urlParams.get(param);
         }
-
+    
         // Récupérer le slug depuis l'URL
         const slug = getQueryParam('slug');
-
+    
         // Récupérer l'article correspondant au slug
         fetch('https://www.wearewework.com/api/articles')
             .then(response => response.json())
@@ -45,6 +121,48 @@
                 const article = articles.find(a => a.slug === slug);
                 if (article) {
                     document.title = `${article.title} - WeAreWe`;
+    
+                    // Insérer les balises SEO dynamiques
+                    const metaDescription = document.createElement('meta');
+                    metaDescription.name = 'description';
+                    metaDescription.content = article.metaDescription;
+                    document.head.appendChild(metaDescription);
+    
+                    const metaOgTitle = document.createElement('meta');
+                    metaOgTitle.setAttribute('property', 'og:title');
+                    metaOgTitle.content = article.title;
+                    document.head.appendChild(metaOgTitle);
+    
+                    const metaOgDescription = document.createElement('meta');
+                    metaOgDescription.setAttribute('property', 'og:description');
+                    metaOgDescription.content = article.metaDescription;
+                    document.head.appendChild(metaOgDescription);
+    
+                    const metaOgImage = document.createElement('meta');
+                    metaOgImage.setAttribute('property', 'og:image');
+                    metaOgImage.content = article.imageUrl;
+                    document.head.appendChild(metaOgImage);
+    
+                    const metaOgUrl = document.createElement('meta');
+                    metaOgUrl.setAttribute('property', 'og:url');
+                    metaOgUrl.content = window.location.href;
+                    document.head.appendChild(metaOgUrl);
+    
+                    const metaTwitterTitle = document.createElement('meta');
+                    metaTwitterTitle.name = 'twitter:title';
+                    metaTwitterTitle.content = article.title;
+                    document.head.appendChild(metaTwitterTitle);
+    
+                    const metaTwitterDescription = document.createElement('meta');
+                    metaTwitterDescription.name = 'twitter:description';
+                    metaTwitterDescription.content = article.metaDescription;
+                    document.head.appendChild(metaTwitterDescription);
+    
+                    const metaTwitterImage = document.createElement('meta');
+                    metaTwitterImage.name = 'twitter:image';
+                    metaTwitterImage.content = article.imageUrl;
+                    document.head.appendChild(metaTwitterImage);
+    
                     const articleContent = document.getElementById('article-content');
                     articleContent.innerHTML = `
                         <h1 class="text-4xl font-bold mb-4">${article.title}</h1>
@@ -62,5 +180,6 @@
                 console.error('Erreur lors du chargement de l\'article :', error);
             });
     </script>
+    
 </body>
 </html>
