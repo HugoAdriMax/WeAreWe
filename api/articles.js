@@ -1,34 +1,9 @@
 const express = require('express');
-const fs = require('fs');
-const path = require('path');
 const app = express();
 app.use(express.json());
 
-// Stockage en mémoire des articles
+// Stockage en mémoire des articles (aucune sauvegarde sur disque)
 let articles = [];
-
-// Chemin vers le fichier JSON des articles
-const articlesFilePath = path.join(__dirname, './articles.json');
-
-// Charger les articles depuis le fichier JSON lors du démarrage
-if (fs.existsSync(articlesFilePath)) {
-    try {
-        articles = JSON.parse(fs.readFileSync(articlesFilePath, 'utf8'));
-        console.log("Articles chargés depuis le fichier JSON.");
-    } catch (err) {
-        console.error('Erreur lors du chargement des articles :', err);
-    }
-}
-
-// Fonction pour sauvegarder les articles dans le fichier JSON
-function saveArticlesToFile() {
-    try {
-        fs.writeFileSync(articlesFilePath, JSON.stringify(articles, null, 2));
-        console.log('Articles sauvegardés dans le fichier JSON.');
-    } catch (err) {
-        console.error('Erreur lors de la sauvegarde des articles :', err);
-    }
-}
 
 // Route pour récupérer tous les articles
 app.get('/api/articles', (req, res) => {
@@ -68,7 +43,6 @@ app.post('/api/articles', (req, res) => {
     };
 
     articles.push(newArticle);
-    saveArticlesToFile();
     res.status(201).json(newArticle);
 });
 
@@ -86,7 +60,6 @@ app.put('/api/articles/:id', (req, res) => {
             imageUrl,
             content
         };
-        saveArticlesToFile();
         res.json(articles[index]);
     } else {
         res.status(404).send('Article non trouvé');
@@ -100,7 +73,6 @@ app.delete('/api/articles/:id', (req, res) => {
     articles = articles.filter(a => a.id !== id);
 
     if (articles.length !== initialLength) {
-        saveArticlesToFile();
         res.status(204).send(); // Renvoie un 204 sans contenu
     } else {
         res.status(404).json({ error: 'Article non trouvé' });
