@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CMS - Gestion des Articles</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.tiny.cloud/1/yvlqpv5o38e5lbw0ao8rtwqkzr6bcptnwsjonwqs5w86c5wp/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto py-12">
+        <h1 class="text-4xl font-bold text-center mb-6">Gestion des Articles</h1>
+        
+        <!-- Connexion -->
+        <div id="login-form" class="w-full max-w-sm mx-auto bg-white p-8 rounded-lg shadow-md mb-6">
+            <h2 class="text-2xl font-bold mb-4">Connexion</h2>
+            <form id="login">
+                <div class="mb-4">
+                    <label for="username" class="block text-gray-700">ID</label>
+                    <input type="text" id="username" class="w-full px-4 py-2 border rounded-lg focus:outline-none" required>
+                </div>
+                <div class="mb-4">
+                    <label for="password" class="block text-gray-700">Mot de passe</label>
+                    <input type="password" id="password" class="w-full px-4 py-2 border rounded-lg focus:outline-none" required>
+                </div>
+                <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded-lg w-full">Se connecter</button>
+            </form>
+        </div>
+
+        <!-- CMS -->
+        <div id="cms" class="hidden">
+            <h2 class="text-2xl font-bold mb-4">Créer un nouvel article</h2>
+            <form id="article-form">
+                <div class="mb-4">
+                    <label for="title" class="block text-gray-700">Titre</label>
+                    <input type="text" id="title" class="w-full px-4 py-2 border rounded-lg focus:outline-none" required>
+                </div>
+                <div class="mb-4">
+                    <label for="url" class="block text-gray-700">URL de l'article (SEO-friendly)</label>
+                    <input type="text" id="url" class="w-full px-4 py-2 border rounded-lg focus:outline-none" required>
+                </div>
+                <div class="mb-4">
+                    <label for="metaDescription" class="block text-gray-700">Meta Description</label>
+                    <input type="text" id="metaDescription" class="w-full px-4 py-2 border rounded-lg focus:outline-none" required>
+                </div>
+                <div class="mb-4">
+                    <label for="imageUrl" class="block text-gray-700">URL de l'image</label>
+                    <input type="text" id="imageUrl" class="w-full px-4 py-2 border rounded-lg focus:outline-none" required>
+                </div>
+                <textarea id="editor"></textarea>
+                <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded-lg mt-4">Créer l'article</button>
+            </form>
+
+            <h2 class="text-2xl font-bold mt-8 mb-4">Articles existants</h2>
+            <ul id="article-list" class="space-y-4"></ul>
+        </div>
+    </div>
+
+    <script>
+        // TinyMCE initialization
+        tinymce.init({
+            selector: '#editor',
+            height: 400,
+            plugins: 'link image code',
+            toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | code',
+        });
+
+        // Auth logic
+        document.getElementById('login').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            if (username === 'admin' && password === 'password') {
+                document.getElementById('login-form').style.display = 'none';
+                document.getElementById('cms').style.display = 'block';
+                loadArticles();
+            } else {
+                alert('ID ou Mot de passe incorrect');
+            }
+        });
+
+        // Load articles
+        function loadArticles() {
+            fetch('https://www.wearewework.com/api/articles')
+                .then(response => response.json())
+                .then(data => {
+                    const articleList = document.getElementById('article-list');
+                    articleList.innerHTML = '';
+
+                    data.forEach(article => {
+                        const li = document.createElement('li');
+                        li.innerHTML = `
+                            <h3 class="text-xl">${article.title}</h3>
+                            <button onclick="editArticle('${article.id}')" class="bg-yellow-500 text-white px-4 py-2 rounded-lg mr-2">Modifier</button>
+                            <button onclick="deleteArticle('${article.id}')" class="bg-red-600 text-white px-4 py-2 rounded-lg">Supprimer</button>
+                        `;
+                        articleList.appendChild(li);
+                    });
+                });
+        }
+
+        // Function to sanitize the URL for SEO-friendly format
+        function createSEOUrl(title) {
+            return title.trim().toLowerCase()
+                .replace(/[àáâäæãåā]/g, 'a')
+                .replace(/[çćč]/g, 'c')
+                .replace(/[èéêëēėę]/g, 'e')
+                .replace(/[îïíīįì]/g, 'i')
+                .replace(/[ôöòóœøōõ]/g, 'o')
+                .replace(/[ùûüūú]/g, 'u')
+                .replace(/[ÿ]/g, 'y')
+                .replace(/[ñ]/g, 'n')
+                .replace(/[ß]/g, 'ss')
+                .replace(/[^a-z0-9]/g, '-') // Replace spaces and special characters by '-'
+                .replace(/-+/g, '-') // Replace multiple '-' by single '-'
+                .replace(/^-|-$/g, ''); // Remove leading/trailing '-'
+        }
+
+        // Create new article
+        document.getElementById('article-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const title = document.getElementById('title').value;
+            const url = createSEOUrl(title); // Génère l'URL SEO-friendly
+            const metaDescription = document.getElementById('metaDescription').value;
+            const imageUrl = document.getElementById('imageUrl').value;
+            const content = tinymce.get('editor').getContent();
+
+            fetch('https://www.wearewework.com/api/articles', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ title, url, metaDescription, imageUrl, content })
+            }).then(response => response.json())
+              .then(() => {
+                  alert('Article créé avec succès');
+                  loadArticles();
+              });
+        });
+
+        // Edit article
+        function editArticle(id) {
+            fetch(`https://www.wearewework.com/api/articles/${id}`)
+                .then(response => response.json())
+                .then(article => {
+                    document.getElementById('title').value = article.title;
+                    document.getElementById('url').value = article.url;
+                    document.getElementById('metaDescription').value = article.metaDescription;
+                    document.getElementById('imageUrl').value = article.imageUrl;
+                    tinymce.get('editor').setContent(article.content);
+                });
+        }
+
+        // Delete article
+        function deleteArticle(id) {
+            fetch(`https://www.wearewework.com/api/articles/${id}`, { method: 'DELETE' })
+                .then(() => {
+                    alert('Article supprimé avec succès');
+                    loadArticles();
+                });
+        }
+    </script>
+</body>
+</html>
