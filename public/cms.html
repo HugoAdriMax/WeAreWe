@@ -88,7 +88,10 @@
         // Load articles
         function loadArticles() {
             fetch('https://www.wearewework.com/api/articles')
-                .then(response => response.json())
+                .then(response => {
+                    if (!response.ok) throw new Error('Erreur lors de la récupération des articles');
+                    return response.json();
+                })
                 .then(data => {
                     const articleList = document.getElementById('article-list');
                     articleList.innerHTML = '';
@@ -102,7 +105,8 @@
                         `;
                         articleList.appendChild(li);
                     });
-                });
+                })
+                .catch(error => console.error(error));
         }
 
         // Function to sanitize the URL for SEO-friendly format
@@ -131,37 +135,59 @@
             const imageUrl = document.getElementById('imageUrl').value;
             const content = tinymce.get('editor').getContent();
 
+            if (!title || !metaDescription || !imageUrl || !content) {
+                alert('Tous les champs doivent être remplis.');
+                return;
+            }
+
             fetch('https://www.wearewework.com/api/articles', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ title, url, metaDescription, imageUrl, content })
-            }).then(response => response.json())
-              .then(() => {
-                  alert('Article créé avec succès');
-                  loadArticles();
-              });
+            })
+            .then(response => {
+                if (!response.ok) throw new Error('Erreur lors de la création de l\'article');
+                return response.json();
+            })
+            .then(() => {
+                alert('Article créé avec succès');
+                loadArticles();
+            })
+            .catch(error => {
+                console.error(error);
+                alert('Erreur lors de la création de l\'article.');
+            });
         });
 
         // Edit article
         function editArticle(id) {
             fetch(`https://www.wearewework.com/api/articles/${id}`)
-                .then(response => response.json())
+                .then(response => {
+                    if (!response.ok) throw new Error('Erreur lors de la récupération de l\'article');
+                    return response.json();
+                })
                 .then(article => {
                     document.getElementById('title').value = article.title;
                     document.getElementById('url').value = article.url;
                     document.getElementById('metaDescription').value = article.metaDescription;
                     document.getElementById('imageUrl').value = article.imageUrl;
                     tinymce.get('editor').setContent(article.content);
-                });
+                })
+                .catch(error => console.error(error));
         }
 
         // Delete article
         function deleteArticle(id) {
             fetch(`https://www.wearewework.com/api/articles/${id}`, { method: 'DELETE' })
+                .then(response => {
+                    if (!response.ok) throw new Error('Erreur lors de la suppression de l\'article');
+                    return response.json();
+                })
                 .then(() => {
                     alert('Article supprimé avec succès');
                     loadArticles();
-                });
+                })
+                .catch(error => console.error(error));
         }
     </script>
 </body>
