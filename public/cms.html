@@ -176,19 +176,30 @@
                 .catch(error => console.error(error));
         }
 
-        // Delete article
-        function deleteArticle(id) {
-            fetch(`https://www.wearewework.com/api/articles/${id}`, { method: 'DELETE' })
-                .then(response => {
-                    if (!response.ok) throw new Error('Erreur lors de la suppression de l\'article');
-                    return response.json();
-                })
-                .then(() => {
-                    alert('Article supprimé avec succès');
-                    loadArticles();
-                })
-                .catch(error => console.error(error));
-        }
+// Fonction pour supprimer un article
+function deleteArticle(id) {
+    // Confirmer avant de supprimer
+    if (confirm('Êtes-vous sûr de vouloir supprimer cet article ?')) {
+        fetch(`https://www.wearewework.com/api/articles/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => {
+            if (response.ok) {
+                alert('Article supprimé avec succès');
+                loadArticles(); // Recharger la liste des articles après suppression
+            } else {
+                alert('Erreur lors de la suppression de l\'article');
+            }
+        })
+        .catch(error => {
+            console.error('Erreur lors de la suppression de l\'article :', error);
+        });
+    }
+}
+
     </script>
 </body>
 </html>

@@ -79,15 +79,19 @@ app.put('/api/articles/:id', (req, res) => {
 
 // Route pour supprimer un article
 app.delete('/api/articles/:id', (req, res) => {
+    const { id } = req.params;
     const initialLength = articles.length;
-    articles = articles.filter(a => a.id !== req.params.id);
+    articles = articles.filter(a => a.id !== id);
 
     if (articles.length !== initialLength) {
-        res.status(204).send();
+        // Sauvegarder les modifications
+        saveArticlesToFile(); // ou équivalent pour sauvegarder
+        res.status(204).send(); // Renvoie un 204 sans contenu
     } else {
-        res.status(404).send('Article non trouvé');
+        res.status(404).json({ error: 'Article non trouvé' });
     }
 });
+
 
 // Sauvegarder les articles manuellement (par exemple, via un appel à cette route)
 app.get('/api/save-articles', (req, res) => {
