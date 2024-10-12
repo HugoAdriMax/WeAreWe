@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 app.use(express.json());
 
-// Stockage en mémoire des articles (aucune sauvegarde sur disque)
+// Stockage en mémoire des articles
 let articles = [];
 
 // Route pour récupérer tous les articles
@@ -24,15 +24,12 @@ app.get('/api/articles/:id', (req, res) => {
 app.post('/api/articles', (req, res) => {
     const { title, url, metaDescription, imageUrl, content } = req.body;
 
-    // Validation des champs
     if (!title || !metaDescription || !content || !imageUrl) {
         return res.status(400).json({ error: 'Champs manquants' });
     }
 
-    // Création du slug SEO-friendly
     const slug = url || title.trim().toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]+/g, '');
 
-    // Création d'un nouvel article
     const newArticle = {
         id: Date.now().toString(),
         title,
@@ -44,7 +41,6 @@ app.post('/api/articles', (req, res) => {
         author: 'WeAreWe Team'
     };
 
-    // Ajout de l'article dans la liste
     articles.push(newArticle);
     res.status(201).json(newArticle);
 });
@@ -55,7 +51,6 @@ app.put('/api/articles/:id', (req, res) => {
     const index = articles.findIndex(a => a.id === req.params.id);
 
     if (index !== -1) {
-        // Mise à jour des propriétés de l'article
         articles[index] = {
             ...articles[index],
             title,
@@ -77,7 +72,7 @@ app.delete('/api/articles/:id', (req, res) => {
     articles = articles.filter(a => a.id !== id);
 
     if (articles.length !== initialLength) {
-        res.status(204).send(); // Renvoie un 204 sans contenu
+        res.status(204).send();
     } else {
         res.status(404).json({ error: 'Article non trouvé' });
     }
