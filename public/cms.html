@@ -101,8 +101,7 @@
                         li.innerHTML = `
                             <h3 class="text-xl">${article.title}</h3>
                             <button onclick="editArticle('${article.id}')" class="bg-yellow-500 text-white px-4 py-2 rounded-lg mr-2">Modifier</button>
-                            <button onclick="deleteArticle('${article.id}')" class="bg-red-600 text-white px-4 py-2 rounded-lg">Supprimer</button>
-                        `;
+                            <button onclick="deleteArticle('${article.id}')" class="bg-red-600 text-white px-4 py-2 rounded-lg">Supprimer</button>`;
                         articleList.appendChild(li);
                     });
                 })
@@ -176,20 +175,29 @@
                 .catch(error => console.error(error));
         }
 
-    app.delete('/api/articles/:id', (req, res) => {
-    const { id } = req.params;
-    console.log(`Suppression de l'article avec l'ID : ${id}`);
-    const initialLength = articles.length;
-    articles = articles.filter(a => a.id !== id);
-
-    if (articles.length !== initialLength) {
-        console.log('Article supprimé avec succès');
-        res.status(204).send();
-    } else {
-        console.log('Article non trouvé');
-        res.status(404).json({ error: 'Article non trouvé' });
+// Fonction pour supprimer un article
+function deleteArticle(id) {
+    if (confirm('Êtes-vous sûr de vouloir supprimer cet article ?')) {
+        fetch(`https://www.wearewework.com/api/articles/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => {
+            if (response.ok) {
+                alert('Article supprimé avec succès');
+                loadArticles(); // Recharger la liste des articles après suppression
+            } else {
+                alert('Erreur lors de la suppression de l\'article');
+            }
+        })
+        .catch(error => {
+            console.error('Erreur lors de la suppression de l\'article :', error);
+        });
     }
-});
+}
+
 
 
     </script>
