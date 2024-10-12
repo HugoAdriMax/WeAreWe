@@ -4,8 +4,9 @@ const mongoose = require('mongoose');
 const app = express();
 app.use(express.json());
 
-// Remplacez 'your_mongo_db_uri' par la variable d'environnement
-const mongoURI = process.env.MONGO_URI; // Utilisez la variable d'environnement
+// URI de connexion à votre base de données
+const mongoURI = 'mongodb+srv://contact:8MtNaCQgwOo5e2Up@wearewe.87p9p.mongodb.net/wearewe?retryWrites=true&w=majority';
+
 mongoose.connect(mongoURI)
     .then(() => console.log('Connecté à MongoDB...'))
     .catch(err => console.error('Erreur de connexion à MongoDB', err));
