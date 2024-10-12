@@ -29,6 +29,15 @@
         html, body {
             font-family: 'Poppins', sans-serif;
             overflow-x: hidden;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Correction de décalage à droite */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
         
         .gradient-bg {
@@ -47,6 +56,7 @@
         .text-gradient {
             background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
             -webkit-background-clip: text;
+            color: transparent;
         }
         
         .custom-shape-divider-bottom-1623858235 {
@@ -62,7 +72,7 @@
         .custom-shape-divider-bottom-1623858235 svg {
             position: relative;
             display: block;
-            width: calc(100% + 1.3px);
+            width: 100%; /* Correction de largeur */
             height: 150px;
         }
 

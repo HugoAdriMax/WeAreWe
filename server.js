@@ -1,19 +1,11 @@
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
-const bodyParser = require('body-parser');
-const cors = require('cors');
-
 const app = express();
-const PORT = 3000;
+app.use(express.json());
 
-// Middleware
-app.use(cors()); // Autoriser les requêtes CORS
-app.use(bodyParser.json());
-app.use(express.static(path.join(__dirname, 'public')));
-
-// Chemin du fichier JSON pour stocker les articles
-const articlesFilePath = path.join(__dirname, 'articles.json');
+// Chemin vers le fichier JSON des articles
+const articlesFilePath = path.join(__dirname, './articles.json');
 
 // Fonction pour lire les articles
 function readArticles() {
@@ -34,55 +26,80 @@ app.get('/api/articles', (req, res) => {
     res.json(articles);
 });
 
-// Route pour récupérer un article spécifique
-app.get('/api/articles/:slug', (req, res) => {
+// Route pour récupérer un article par ID
+app.get('/api/articles/:id', (req, res) => {
     const articles = readArticles();
-    const article = articles.find(a => a.title.toLowerCase().replace(/\s+/g, '-') === req.params.slug);
+    const article = articles.find(a => a.id === req.params.id);
     if (article) {
         res.json(article);
     } else {
-        res.status(404).json({ message: 'Article non trouvé' });
+        res.status(404).send('Article non trouvé');
     }
 });
 
-// Route pour ajouter un nouvel article
+// Route pour créer un nouvel article
 app.post('/api/articles', (req, res) => {
-    const { title, author, content, coverImage } = req.body;
+    const { title, url, metaDescription, imageUrl, content } = req.body;
+
+    // Générer le slug SEO-friendly s'il n'est pas fourni
+    const slug = url || title.trim().toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]+/g, '');
+
+    const newArticle = {
+        id: Date.now().toString(),
+        title,
+        slug, // URL SEO-friendly
+        metaDescription,
+        imageUrl,
+        content,
+        date: new Date().toISOString(),
+        author: 'WeAreWe Team' // Auteur par défaut
+    };
+
     const articles = readArticles();
-    const newArticle = { title, author, content, coverImage: coverImage || '', date: new Date().toLocaleDateString() };
     articles.push(newArticle);
     writeArticles(articles);
-    res.status(201).json({ message: 'Article ajouté avec succès', article: newArticle });
+    res.status(201).json(newArticle);
 });
 
-// Route pour modifier un article
-app.put('/api/articles/:slug', (req, res) => {
-    const { title, author, content, coverImage } = req.body;
+// Route pour mettre à jour un article existant
+app.put('/api/articles/:id', (req, res) => {
+    const { title, url, metaDescription, imageUrl, content } = req.body;
     const articles = readArticles();
-    const articleIndex = articles.findIndex(a => a.title.toLowerCase().replace(/\s+/g, '-') === req.params.slug);
+    const index = articles.findIndex(a => a.id === req.params.id);
 
-    if (articleIndex !== -1) {
-        articles[articleIndex] = { title, author, content, coverImage, date: new Date().toLocaleDateString() };
+    if (index !== -1) {
+        // Mettre à jour l'article
+        articles[index] = {
+            ...articles[index],
+            title,
+            slug: url || title.trim().toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]+/g, ''),
+            metaDescription,
+            imageUrl,
+            content
+        };
         writeArticles(articles);
-        res.json({ message: 'Article modifié avec succès', article: articles[articleIndex] });
+        res.json(articles[index]);
     } else {
-        res.status(404).json({ message: 'Article non trouvé' });
+        res.status(404).send('Article non trouvé');
     }
 });
 
 // Route pour supprimer un article
-app.delete('/api/articles/:slug', (req, res) => {
-    const articles = readArticles();
-    const newArticles = articles.filter(a => a.title.toLowerCase().replace(/\s+/g, '-') !== req.params.slug);
-    if (newArticles.length !== articles.length) {
-        writeArticles(newArticles);
-        res.json({ message: 'Article supprimé avec succès' });
+app.delete('/api/articles/:id', (req, res) => {
+    let articles = readArticles();
+    const initialLength = articles.length;
+    articles = articles.filter(a => a.id !== req.params.id);
+
+    if (articles.length !== initialLength) {
+        writeArticles(articles);
+        res.status(204).send();
     } else {
-        res.status(404).json({ message: 'Article non trouvé' });
+        res.status(404).send('Article non trouvé');
     }
 });
 
 // Démarrage du serveur
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    console.log(`Serveur démarré sur le port ${PORT}`);
+    console.log(`Serveur démarré sur http://localhost:${PORT}`);
 });
