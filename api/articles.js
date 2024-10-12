@@ -21,8 +21,9 @@ const articleSchema = new mongoose.Schema({
     author: { type: String, default: 'WeAreWe Team' }
 });
 
-// Modèle pour les articles avec la collection "articles"
-const Article = mongoose.model('Article', articleSchema, 'articles'); // Indiquez le nom de la collection ici
+
+// Modèle pour les articles
+const Article = mongoose.model('Article', articleSchema, 'articles'); // Notez ici 'articles'
 
 // Route pour récupérer tous les articles
 app.get('/api/articles', async (req, res) => {
@@ -30,7 +31,7 @@ app.get('/api/articles', async (req, res) => {
         const articles = await Article.find();
         res.json(articles);
     } catch (error) {
-        console.error('Erreur lors de la récupération des articles:', error); // Ajoutez ce log pour le débogage
+        console.error('Erreur lors de la récupération des articles:', error);
         res.status(500).json({ error: 'Erreur lors de la récupération des articles' });
     }
 });
