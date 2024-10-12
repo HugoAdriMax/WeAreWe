@@ -6,7 +6,7 @@ app.use(express.json());
 
 // Utilisez la variable d'environnement pour l'URI de connexion à votre base de données
 const mongoURI = process.env.MONGO_URI; 
-mongoose.connect(mongoURI)
+mongoose.connect(mongoURI, { serverSelectionTimeoutMS: 20000 }) // Augmente le timeout à 20 secondes
     .then(() => console.log('Connecté à MongoDB...'))
     .catch(err => console.error('Erreur de connexion à MongoDB', err));
 
