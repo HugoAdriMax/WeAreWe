@@ -79,21 +79,29 @@
             const urlParams = new URLSearchParams(window.location.search);
             return urlParams.get(param);
         }
-    
+
+        // Normaliser le slug (retirer les accents et remplacer les espaces)
+        function normalizeSlug(title) {
+            return title.toLowerCase()
+                .replace(/\s+/g, '-')               // Remplacer les espaces par des tirets
+                .normalize("NFD")                   // Normaliser les caractères
+                .replace(/[\u0300-\u036f]/g, "");   // Supprimer les accents
+        }
+
         // Récupérer l'article correspondant au slug
         async function fetchArticle() {
             const slug = getQueryParam('slug');
             try {
                 const response = await fetch('https://www.wearewework.com/api/articles');
                 const articles = await response.json();
-                const article = articles.find(a => a.title.toLowerCase().replace(/\s+/g, '-') === slug);
+                const article = articles.find(a => normalizeSlug(a.title) === slug); // Normaliser le slug ici
                 if (article) {
                     document.title = `${article.title} - WeAreWe Blog`;
                     document.querySelector('meta[name="description"]').setAttribute('content', article.content.substring(0, 150));
                     document.getElementById('og-url').setAttribute('content', window.location.href);
                     document.getElementById('og-image').setAttribute('content', article.coverImage);
                     document.getElementById('twitter-image').setAttribute('content', article.coverImage);
-    
+
                     // Mettre à jour les données JSON-LD pour SEO
                     const schemaData = {
                         "@context": "https://schema.org",
@@ -116,7 +124,7 @@
                         }
                     };
                     document.getElementById('schema-json').textContent = JSON.stringify(schemaData);
-    
+
                     const articleContent = document.getElementById('article-content');
                     articleContent.innerHTML = `
                         <h1 class="text-4xl font-bold mb-4">${article.title}</h1>
@@ -139,10 +147,9 @@
                 console.error('Erreur lors du chargement de l\'article:', error);
             }
         }
-    
+
         // Appeler la fonction pour récupérer l'article
         fetchArticle();
     </script>
-    
 </body>
 </html>
