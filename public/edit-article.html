@@ -163,30 +163,37 @@
             }
         });
 
-        // Charger la liste des articles
-        function loadArticles() {
-            fetch('https://www.wearewework.com/api/articles')
-                .then(response => response.json())
-                .then(articles => {
-                    const articleItems = document.getElementById('article-items');
-                    articleItems.innerHTML = '';
+// Charger la liste des articles
+function loadArticles() {
+    fetch('https://www.wearewework.com/api/articles')
+        .then(response => {
+            console.log('Response:', response); // Vérification de la réponse
+            return response.json();
+        })
+        .then(articles => {
+            const articleItems = document.getElementById('article-items');
+            articleItems.innerHTML = '';
 
-                    articles.forEach(article => {
-                        const slug = article.title.toLowerCase().replace(/\s+/g, '-');
-                        const articleItem = document.createElement('li');
-                        articleItem.innerHTML = `
-                            <div class="flex justify-between items-center">
-                                <span>${article.title}</span>
-                                <div>
-                                    <button onclick="editArticle('${slug}')" class="bg-yellow-500 text-white px-4 py-2 rounded-md hover:bg-yellow-600 mr-2">Modifier</button>
-                                    <button onclick="deleteArticle('${slug}')" class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600">Supprimer</button>
-                                </div>
-                            </div>
-                        `;
-                        articleItems.appendChild(articleItem);
-                    });
-                });
-        }
+            articles.forEach(article => {
+                const slug = article.title.toLowerCase().replace(/\s+/g, '-');
+                const articleItem = document.createElement('li');
+                articleItem.innerHTML = `
+                    <div class="flex justify-between items-center">
+                        <span>${article.title}</span>
+                        <div>
+                            <button onclick="editArticle('${slug}')" class="bg-yellow-500 text-white px-4 py-2 rounded-md hover:bg-yellow-600 mr-2">Modifier</button>
+                            <button onclick="deleteArticle('${slug}')" class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600">Supprimer</button>
+                        </div>
+                    </div>
+                `;
+                articleItems.appendChild(articleItem);
+            });
+        })
+        .catch(error => {
+            console.error('Erreur lors du chargement des articles :', error);
+        });
+}
+
 
         // Fonction pour charger les données d'un article à modifier
         function editArticle(slug) {
