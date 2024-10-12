@@ -131,7 +131,7 @@
         let articles = [];
     
         // Charger et afficher les articles
-        fetch('https://www.wearewework.com/api/articles')
+        fetch('/api/articles')
             .then(response => response.json())
             .then(data => {
                 articles = data; // Sauvegarder les articles pour la pagination
