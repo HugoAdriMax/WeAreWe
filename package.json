@@ -16,6 +16,6 @@
         "mongoose": "^8.7.1"
     },
     "engines": {
-        "node": "14.x" // ou "16.x", selon votre version préférée
+        "node": "14.x"
     }
 }
