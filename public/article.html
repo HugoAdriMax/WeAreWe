@@ -7,6 +7,44 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
     <link rel="icon" href="https://i.imgur.com/PL6qLai.png" type="image/png">
 </head>
+
+<style>
+    article h2 {
+        font-size: 1.75rem; /* Taille pour les <h2> */
+        font-weight: bold;
+        margin-bottom: 1rem;
+    }
+
+    article p {
+        font-size: 1.125rem; /* Taille pour les paragraphes */
+        line-height: 1.75rem;
+        margin-bottom: 1.5rem;
+    }
+
+    article h3 {
+        font-size: 1.5rem; /* Taille pour les <h3> */
+        font-weight: bold;
+        margin-bottom: 1rem;
+    }
+
+    article ul, article ol {
+        margin-left: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    article ul li, article ol li {
+        list-style-type: disc;
+        margin-bottom: 0.75rem;
+    }
+
+    article a {
+        color: #6366F1; /* Couleur des liens */
+        text-decoration: underline;
+    }
+</style>
+
+
+
 <body class="antialiased text-gray-800 leading-normal tracking-wider bg-gray-100">
     <header style="background-color: #6366F1;" class="fixed w-full z-30 top-0 text-white" x-data="{ isOpen: false }" @keydown.escape="isOpen = false">
         <div class="container mx-auto py-5 flex items-center justify-between">
@@ -167,10 +205,11 @@
 articleContent.innerHTML = `
     <h1 class="text-4xl font-bold mb-4">${article.title}</h1>
     <img src="${article.imageUrl}" alt="${article.title}" class="w-full h-64 object-cover rounded-lg mb-8">
-    <div class="prose prose-lg text-gray-700 mb-4">
+    <div class="text-gray-700 mb-4">
         ${article.content}
     </div>
 `;
+
 
                 } else {
                     document.getElementById('article-content').innerHTML = `
