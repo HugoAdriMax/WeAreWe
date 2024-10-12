@@ -6,20 +6,20 @@
     <title>WeAreWe Blog - Actualités et conseils en marketing digital</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
-     
-     <meta name="description" content="Découvrez nos derniers articles, conseils et tendances en marketing digital sur le blog WeAreWe. Stratégies SEO, médias sociaux, et plus encore.">
-     <meta name="keywords" content="marketing digital, SEO, conseils, médias sociaux, web design, WeAreWe blog">
-     <meta name="robots" content="index, follow">
-     <meta property="og:title" content="WeAreWe Blog - Actualités et conseils en marketing digital">
-     <meta property="og:description" content="Consultez les derniers articles et astuces en marketing digital sur le blog WeAreWe.">
-     <meta property="og:type" content="website">
-     <meta property="og:url" content="https://www.wearewework.com/blog.html">
-     <meta property="og:image" content="https://i.imgur.com/WHhujBy.jpeg">
-     <meta name="twitter:card" content="summary_large_image">
-     <meta name="twitter:title" content="WeAreWe Blog - Actualités et conseils en marketing digital">
-     <meta name="twitter:description" content="Découvrez les meilleurs conseils en marketing digital sur le blog WeAreWe.">
-     <meta name="twitter:image" content="https://i.imgur.com/WHhujBy.jpeg">
-     <link rel="icon" href="https://i.imgur.com/PL6qLai.png" type="image/png">
+
+    <meta name="description" content="Découvrez nos derniers articles, conseils et tendances en marketing digital sur le blog WeAreWe. Stratégies SEO, médias sociaux, et plus encore.">
+    <meta name="keywords" content="marketing digital, SEO, conseils, médias sociaux, web design, WeAreWe blog">
+    <meta name="robots" content="index, follow">
+    <meta property="og:title" content="WeAreWe Blog - Actualités et conseils en marketing digital">
+    <meta property="og:description" content="Consultez les derniers articles et astuces en marketing digital sur le blog WeAreWe.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.wearewework.com/blog.html">
+    <meta property="og:image" content="https://i.imgur.com/WHhujBy.jpeg">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="WeAreWe Blog - Actualités et conseils en marketing digital">
+    <meta name="twitter:description" content="Découvrez les meilleurs conseils en marketing digital sur le blog WeAreWe.">
+    <meta name="twitter:image" content="https://i.imgur.com/WHhujBy.jpeg">
+    <link rel="icon" href="https://i.imgur.com/PL6qLai.png" type="image/png">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
         body {
@@ -125,10 +125,19 @@
             once: true,
             mirror: false
         });
-    
+
         const articlesPerPage = 6;
         let currentPage = 1;
-    
+        let articles = [];
+
+        // Fonction pour normaliser le slug (retirer les accents et remplacer les espaces)
+        function normalizeSlug(title) {
+            return title.toLowerCase()
+                .replace(/\s+/g, '-')               // Remplacer les espaces par des tirets
+                .normalize("NFD")                   // Normaliser les caractères
+                .replace(/[\u0300-\u036f]/g, "");   // Supprimer les accents
+        }
+
         // Charger et afficher les articles
         fetch('https://www.wearewework.com/api/articles')
             .then(response => response.json())
@@ -140,23 +149,23 @@
             .catch(error => {
                 console.error('Erreur lors du chargement des articles :', error);
             });
-    
+
         // Fonction pour afficher les articles pour la page courante
         function displayArticles(page) {
             const container = document.getElementById('articles-container');
             container.innerHTML = '';
-    
+
             // Calculer les index des articles à afficher
             const startIndex = (page - 1) * articlesPerPage;
             const endIndex = startIndex + articlesPerPage;
-    
+
             // Afficher les articles pour la page courante
             const articlesToDisplay = articles.slice(startIndex, endIndex);
             articlesToDisplay.forEach(article => {
-                const slug = article.title.toLowerCase().replace(/\s+/g, '-');
+                const slug = normalizeSlug(article.title); // Normaliser le slug ici
                 const articleElement = document.createElement('article');
                 articleElement.classList.add('bg-white', 'rounded-lg', 'shadow-lg', 'overflow-hidden');
-    
+
                 articleElement.innerHTML = `
                     <img src="${article.coverImage || 'https://via.placeholder.com/600x400'}" alt="${article.title}" class="w-full h-48 object-cover">
                     <div class="p-6">
@@ -170,23 +179,23 @@
                 container.appendChild(articleElement);
             });
         }
-    
+
         // Fonction pour mettre à jour la pagination
         function updatePagination() {
             const totalPages = Math.ceil(articles.length / articlesPerPage);
             const pageInfo = document.getElementById('page-info');
             pageInfo.textContent = `Page ${currentPage} sur ${totalPages}`;
-    
+
             const prevButton = document.getElementById('prev-page');
             const nextButton = document.getElementById('next-page');
-    
+
             prevButton.disabled = currentPage === 1;
             nextButton.disabled = currentPage === totalPages;
-    
+
             prevButton.classList.toggle('opacity-50', currentPage === 1);
             nextButton.classList.toggle('opacity-50', currentPage === totalPages);
         }
-    
+
         // Navigation entre les pages
         document.getElementById('prev-page').addEventListener('click', () => {
             if (currentPage > 1) {
@@ -195,7 +204,7 @@
                 updatePagination(); // Mettre à jour la pagination après changement de page
             }
         });
-    
+
         document.getElementById('next-page').addEventListener('click', () => {
             const totalPages = Math.ceil(articles.length / articlesPerPage);
             if (currentPage < totalPages) {
@@ -205,6 +214,6 @@
             }
         });
     </script>
-    
+
 </body>
 </html>

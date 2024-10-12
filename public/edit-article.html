@@ -142,6 +142,7 @@
             if (username === validUsername && password === validPassword) {
                 document.getElementById('auth-section').classList.add('hidden');
                 document.getElementById('protected-content').classList.remove('hidden');
+                loadArticles(); // Charger les articles après authentification
             } else {
                 alert('Identifiant ou mot de passe incorrect');
             }
@@ -155,11 +156,6 @@
             plugins: 'link image code lists',
             toolbar: 'undo redo | formatselect | bold italic | alignleft aligncenter alignright | bullist numlist | link image',
             content_style: 'body { font-family: Poppins, sans-serif; }',
-            setup: (editor) => {
-                editor.on('init', () => {
-                    editor.setContent(''); // Assurez-vous que le contenu n'est pas en lecture seule
-                });
-            }
         });
 
         // Charger la liste des articles
