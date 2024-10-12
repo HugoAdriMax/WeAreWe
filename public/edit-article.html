@@ -165,7 +165,7 @@ tinymce.init({
 
         // Charger la liste des articles
         function loadArticles() {
-            fetch('/api/articles')
+            fetch('https://www.wearewework.com/api/articles')
                 .then(response => response.json())
                 .then(articles => {
                     const articleItems = document.getElementById('article-items');
