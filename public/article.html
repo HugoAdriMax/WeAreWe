@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Article - WeAreWe Blog</title>
+    <title>Article - WeAreWe</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
 </head>
-<body class="antialiased text-gray-800 leading-normal tracking-wider bg-gray-100">
+<body class="bg-gray-100 antialiased">
     <header style="background-color: #6366F1;" class="fixed w-full z-30 top-0 text-white">
         <div class="container mx-auto py-5 flex items-center justify-between px-4">
             <a class="flex items-center hover:opacity-75 transition duration-150 ease-in-out" href="index.html">
@@ -28,53 +28,28 @@
         </section>
     </main>
 
-    <footer class="bg-gray-900 text-white py-12">
-        <div class="container mx-auto px-4">
-            <div class="flex flex-wrap -mx-4">
-                <div class="w-full md:w-1/4 px-4 mb-8 md:mb-0">
-                    <h3 class="text-2xl font-semibold mb-4">WeAreWe</h3>
-                    <p class="mb-4">Votre partenaire pour une présence en ligne exceptionnelle.</p>
-                    <p>&copy; 2024 WeAreWe. Tous droits réservés.</p>
-                </div>
-                <div class="w-full md:w-1/4 px-4 mb-8 md:mb-0">
-                    <h4 class="text-xl font-semibold mb-4">Liens rapides</h4>
-                    <ul class="space-y-2">
-                        <li><a href="index.html#home" class="hover:text-indigo-400">Accueil</a></li>
-                        <li><a href="index.html#services" class="hover:text-indigo-400">Services</a></li>
-                        <li><a href="index.html#about" class="hover:text-indigo-400">À propos</a></li>
-                        <li><a href="index.html#portfolio" class="hover:text-indigo-400">Portfolio</a></li>
-                        <li><a href="index.html#contact" class="hover:text-indigo-400">Contact</a></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </footer>
-
     <script>
+        // Fonction pour récupérer un paramètre d'URL (slug dans ce cas)
         function getQueryParam(param) {
             const urlParams = new URLSearchParams(window.location.search);
             return urlParams.get(param);
         }
 
+        // Récupérer le slug depuis l'URL
         const slug = getQueryParam('slug');
 
-        fetch('/api/articles')
+        // Récupérer l'article correspondant au slug
+        fetch('https://www.wearewework.com/api/articles')
             .then(response => response.json())
             .then(articles => {
                 const article = articles.find(a => a.slug === slug);
                 if (article) {
-                    document.title = `${article.title} - WeAreWe Blog`;
+                    document.title = `${article.title} - WeAreWe`;
                     const articleContent = document.getElementById('article-content');
                     articleContent.innerHTML = `
                         <h1 class="text-4xl font-bold mb-4">${article.title}</h1>
-                        <div class="mb-6 text-gray-600">
-                            <span class="mr-4">${article.date}</span>
-                            <span>Par ${article.author}</span>
-                        </div>
                         <img src="${article.imageUrl}" alt="${article.title}" class="w-full h-64 object-cover rounded-lg mb-8">
-                        <div class="prose lg:prose-xl">
-                            ${article.content}
-                        </div>
+                        <div class="text-gray-700 mb-4">${article.content}</div>
                     `;
                 } else {
                     document.getElementById('article-content').innerHTML = `
@@ -84,7 +59,7 @@
                 }
             })
             .catch(error => {
-                console.error('Erreur lors du chargement de l\'article:', error);
+                console.error('Erreur lors du chargement de l\'article :', error);
             });
     </script>
 </body>
