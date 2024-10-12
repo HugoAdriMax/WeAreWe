@@ -1,12 +1,12 @@
 // Stockage en mémoire des articles
 let articles = [];
 
-// Charger les articles depuis le fichier JSON lors du démarrage
+// Charger les articles depuis le fichier JSON (lecture seule)
 const fs = require('fs');
 const path = require('path');
 const articlesFilePath = path.join(__dirname, './articles.json');
 
-// Charger les articles depuis le fichier JSON si disponible
+// Charger les articles depuis le fichier JSON si disponible (uniquement lecture)
 if (fs.existsSync(articlesFilePath)) {
     try {
         articles = JSON.parse(fs.readFileSync(articlesFilePath, 'utf8'));
@@ -16,14 +16,9 @@ if (fs.existsSync(articlesFilePath)) {
     }
 }
 
-// Fonction pour sauvegarder les articles dans le fichier JSON
+// Ne plus tenter de sauvegarder dans le fichier car le système est en lecture seule
 function saveArticlesToFile() {
-    try {
-        fs.writeFileSync(articlesFilePath, JSON.stringify(articles, null, 2));
-        console.log('Articles sauvegardés dans le fichier JSON.');
-    } catch (err) {
-        console.error('Erreur lors de la sauvegarde des articles :', err);
-    }
+    console.log('Le système de fichiers est en lecture seule, les modifications ne seront pas enregistrées.');
 }
 
 module.exports = (req, res) => {
@@ -55,7 +50,7 @@ module.exports = (req, res) => {
 
             // Ajouter le nouvel article en mémoire
             articles.push(newArticle);
-            saveArticlesToFile(); // Sauvegarder dans le fichier
+            saveArticlesToFile();  // Ne fait rien dans le cas d'un système en lecture seule
             res.json(newArticle);
         } catch (err) {
             console.error('Erreur lors de la création de l\'article :', err);
@@ -68,7 +63,7 @@ module.exports = (req, res) => {
 
         if (index !== -1) {
             articles[index] = { ...articles[index], ...updatedArticle };
-            saveArticlesToFile(); // Sauvegarder après la mise à jour
+            saveArticlesToFile();  // Ne fait rien dans le cas d'un système en lecture seule
             res.json(updatedArticle);
         } else {
             res.status(404).json({ error: 'Article non trouvé' });
@@ -80,7 +75,7 @@ module.exports = (req, res) => {
         articles = articles.filter(article => article.slug !== slug);
 
         if (articles.length !== initialLength) {
-            saveArticlesToFile(); // Sauvegarder après suppression
+            saveArticlesToFile();  // Ne fait rien dans le cas d'un système en lecture seule
             res.json({ success: true });
         } else {
             res.status(404).json({ error: 'Article non trouvé' });
