@@ -65,18 +65,19 @@ app.put('/api/articles/:id', (req, res) => {
     }
 });
 
-// Route pour supprimer un article
-app.delete('/api/articles/:id', (req, res) => {
-    const { id } = req.params;
-    const initialLength = articles.length;
-    articles = articles.filter(a => a.id !== id);
-
-    if (articles.length !== initialLength) {
-        res.status(204).send();
+// Route pour récupérer un article par ID
+app.get('/api/articles/:id', (req, res) => {
+    console.log('Articles chargés en mémoire :', articles);
+    const article = articles.find(a => a.id === req.params.id);
+    if (article) {
+        res.json(article);
     } else {
-        res.status(404).json({ error: 'Article non trouvé' });
+        res.status(404).send('Article non trouvé');
     }
 });
+
+
+
 
 // Démarrage du serveur
 const PORT = process.env.PORT || 3000;
