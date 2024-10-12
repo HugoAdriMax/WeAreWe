@@ -2,6 +2,7 @@ const express = require('express');
 const fs = require('fs');
 const path = require('path');
 const bodyParser = require('body-parser');
+const { v4: uuidv4 } = require('uuid'); // Utilisé pour générer des identifiants uniques
 
 const app = express();
 const PORT = 3000;
@@ -13,17 +14,26 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Chemin du fichier JSON pour stocker les articles (articles.json)
 const articlesFilePath = path.join(__dirname, 'articles.json');
 
-// Fonction pour lire les articles
+// Fonction pour lire les articles avec gestion des erreurs
 function readArticles() {
-    if (fs.existsSync(articlesFilePath)) {
-        return JSON.parse(fs.readFileSync(articlesFilePath));
+    try {
+        if (fs.existsSync(articlesFilePath)) {
+            return JSON.parse(fs.readFileSync(articlesFilePath));
+        }
+        return [];
+    } catch (error) {
+        console.error('Erreur lors de la lecture des articles :', error);
+        return [];
     }
-    return [];
 }
 
-// Fonction pour écrire les articles
+// Fonction pour écrire les articles avec gestion des erreurs
 function writeArticles(articles) {
-    fs.writeFileSync(articlesFilePath, JSON.stringify(articles, null, 2));
+    try {
+        fs.writeFileSync(articlesFilePath, JSON.stringify(articles, null, 2));
+    } catch (error) {
+        console.error('Erreur lors de l\'écriture des articles :', error);
+    }
 }
 
 // Route pour récupérer tous les articles
@@ -32,10 +42,10 @@ app.get('/api/articles', (req, res) => {
     res.json(articles);
 });
 
-// Route pour récupérer un article spécifique
-app.get('/api/articles/:slug', (req, res) => {
+// Route pour récupérer un article spécifique par son id
+app.get('/api/articles/:id', (req, res) => {
     const articles = readArticles();
-    const article = articles.find(a => a.title.toLowerCase().replace(/\s+/g, '-') === req.params.slug);
+    const article = articles.find(a => a.id === req.params.id);
     if (article) {
         res.json(article);
     } else {
@@ -43,24 +53,45 @@ app.get('/api/articles/:slug', (req, res) => {
     }
 });
 
-// Route pour ajouter un nouvel article
+// Route pour ajouter un nouvel article avec validation
 app.post('/api/articles', (req, res) => {
     const { title, author, content, coverImage } = req.body;
+    if (!title || !author || !content) {
+        return res.status(400).json({ message: 'Tous les champs requis ne sont pas remplis' });
+    }
     const articles = readArticles();
-    const newArticle = { title, author, content, coverImage: coverImage || '', date: new Date().toLocaleDateString() };
+    const newArticle = {
+        id: uuidv4(), // Génère un identifiant unique
+        title,
+        author,
+        content,
+        coverImage: coverImage || '',
+        date: new Date().toLocaleDateString()
+    };
     articles.push(newArticle);
     writeArticles(articles);
     res.status(201).json({ message: 'Article ajouté avec succès', article: newArticle });
 });
 
-// Route pour modifier un article
-app.put('/api/articles/:slug', (req, res) => {
+// Route pour modifier un article par son id
+app.put('/api/articles/:id', (req, res) => {
     const { title, author, content, coverImage } = req.body;
+    if (!title || !author || !content) {
+        return res.status(400).json({ message: 'Tous les champs requis ne sont pas remplis' });
+    }
+
     const articles = readArticles();
-    const articleIndex = articles.findIndex(a => a.title.toLowerCase().replace(/\s+/g, '-') === req.params.slug);
+    const articleIndex = articles.findIndex(a => a.id === req.params.id);
 
     if (articleIndex !== -1) {
-        articles[articleIndex] = { title, author, content, coverImage, date: new Date().toLocaleDateString() };
+        articles[articleIndex] = {
+            id: req.params.id,
+            title,
+            author,
+            content,
+            coverImage: coverImage || '',
+            date: new Date().toLocaleDateString()
+        };
         writeArticles(articles);
         res.json({ message: 'Article modifié avec succès', article: articles[articleIndex] });
     } else {
@@ -68,10 +99,10 @@ app.put('/api/articles/:slug', (req, res) => {
     }
 });
 
-// Route pour supprimer un article
-app.delete('/api/articles/:slug', (req, res) => {
+// Route pour supprimer un article par son id
+app.delete('/api/articles/:id', (req, res) => {
     const articles = readArticles();
-    const newArticles = articles.filter(a => a.title.toLowerCase().replace(/\s+/g, '-') !== req.params.slug);
+    const newArticles = articles.filter(a => a.id !== req.params.id);
     if (newArticles.length !== articles.length) {
         writeArticles(newArticles);
         res.json({ message: 'Article supprimé avec succès' });
