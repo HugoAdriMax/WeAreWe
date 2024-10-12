@@ -18,7 +18,7 @@ const articlesFilePath = path.join(__dirname, 'articles.json');
 function readArticles() {
     try {
         if (fs.existsSync(articlesFilePath)) {
-            return JSON.parse(fs.readFileSync(articlesFilePath));
+            return JSON.parse(fs.readFileSync(articlesFilePath, 'utf-8'));
         }
         return [];
     } catch (error) {
@@ -56,9 +56,12 @@ app.get('/api/articles/:id', (req, res) => {
 // Route pour ajouter un nouvel article avec validation
 app.post('/api/articles', (req, res) => {
     const { title, author, content, coverImage } = req.body;
+
+    // Validation des champs
     if (!title || !author || !content) {
         return res.status(400).json({ message: 'Tous les champs requis ne sont pas remplis' });
     }
+
     const articles = readArticles();
     const newArticle = {
         id: uuidv4(), // Génère un identifiant unique
@@ -66,16 +69,19 @@ app.post('/api/articles', (req, res) => {
         author,
         content,
         coverImage: coverImage || '',
-        date: new Date().toLocaleDateString()
+        date: new Date().toLocaleDateString() // Ajoute la date du jour
     };
+
     articles.push(newArticle);
     writeArticles(articles);
     res.status(201).json({ message: 'Article ajouté avec succès', article: newArticle });
 });
 
-// Route pour modifier un article par son id
+// Route pour modifier un article par son id avec validation
 app.put('/api/articles/:id', (req, res) => {
     const { title, author, content, coverImage } = req.body;
+
+    // Validation des champs
     if (!title || !author || !content) {
         return res.status(400).json({ message: 'Tous les champs requis ne sont pas remplis' });
     }
