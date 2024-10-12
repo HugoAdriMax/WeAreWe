@@ -84,7 +84,7 @@
         async function fetchArticle() {
             const slug = getQueryParam('slug');
             try {
-                const response = await fetch('https://www.wearewework.comhttps://www.wearewework.com/api/articles');
+                const response = await fetch('https://www.wearewework.com/api/articles');
                 const articles = await response.json();
                 const article = articles.find(a => a.title.toLowerCase().replace(/\s+/g, '-') === slug);
                 if (article) {
