@@ -6,20 +6,6 @@
     <title>WeAreWe Blog - Actualités et conseils en marketing digital</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
-
-    <meta name="description" content="Découvrez nos derniers articles, conseils et tendances en marketing digital sur le blog WeAreWe. Stratégies SEO, médias sociaux, et plus encore.">
-    <meta name="keywords" content="marketing digital, SEO, conseils, médias sociaux, web design, WeAreWe blog">
-    <meta name="robots" content="index, follow">
-    <meta property="og:title" content="WeAreWe Blog - Actualités et conseils en marketing digital">
-    <meta property="og:description" content="Consultez les derniers articles et astuces en marketing digital sur le blog WeAreWe.">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://www.wearewework.com/blog.html">
-    <meta property="og:image" content="https://i.imgur.com/WHhujBy.jpeg">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="WeAreWe Blog - Actualités et conseils en marketing digital">
-    <meta name="twitter:description" content="Découvrez les meilleurs conseils en marketing digital sur le blog WeAreWe.">
-    <meta name="twitter:image" content="https://i.imgur.com/WHhujBy.jpeg">
-    <link rel="icon" href="https://i.imgur.com/PL6qLai.png" type="image/png">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
         body {
@@ -28,25 +14,11 @@
     </style>
 </head>
 <body class="antialiased text-gray-800 leading-normal tracking-wider bg-gray-100">
-
-    <!-- Nav Bar -->
     <header style="background-color: #6366F1;" class="fixed w-full z-30 top-0 text-white">
         <div class="container mx-auto py-5 flex items-center justify-between px-4">
             <a class="flex items-center hover:opacity-75 transition duration-150 ease-in-out" href="index.html">
-                <svg class="w-10 h-10 text-white p-2 bg-indigo-500 rounded-full" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-                </svg>
                 <span class="ml-3 text-xl font-bold">WeAreWe</span>
             </a>
-            <nav class="hidden md:flex space-x-10 items-center">
-                <a class="hover:text-indigo-200" href="index.html#home">Accueil</a>
-                <a class="hover:text-indigo-200" href="index.html#services">Services</a>
-                <a class="hover:text-indigo-200" href="index.html#about">À propos</a>
-                <a class="hover:text-indigo-200" href="index.html#portfolio">Portfolio</a>
-                <a class="hover:text-indigo-200" href="index.html#testimonials">Témoignages</a>
-                <a class="hover:text-indigo-200" href="blog.html">Blog</a>
-                <a class="bg-white text-indigo-600 px-4 py-2 rounded-md font-semibold hover:bg-indigo-50 transition duration-150 ease-in-out" href="index.html#contact">Contact</a>
-            </nav>
         </div>
     </header>
 
@@ -63,62 +35,18 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="articles-container">
                     <!-- Les articles seront insérés ici -->
                 </div>
-                
-                <!-- Pagination -->
-                <div class="mt-12 flex justify-center items-center space-x-4">
-                    <button id="prev-page" class="bg-indigo-500 text-white px-4 py-2 rounded-lg hover:bg-indigo-600 transition duration-300 ease-in-out">&larr; Précédent</button>
-                    <span id="page-info" class="text-gray-600"></span>
-                    <button id="next-page" class="bg-indigo-500 text-white px-4 py-2 rounded-lg hover:bg-indigo-600 transition duration-300 ease-in-out">Suivant &rarr;</button>
-                </div>
             </div>
         </section>
     </main>
 
-    <!-- Footer -->
     <footer class="bg-gray-900 text-white py-12">
         <div class="container mx-auto px-4">
-            <div class="flex flex-wrap -mx-4">
-                <div class="w-full md:w-1/4 px-4 mb-8 md:mb-0">
-                    <h3 class="text-2xl font-semibold mb-4">WeAreWe</h3>
-                    <p class="mb-4">Votre partenaire pour une présence en ligne exceptionnelle.</p>
-                    <p>&copy; 2024 WeAreWe. Tous droits réservés.</p>
-                </div>
-                <div class="w-full md:w-1/4 px-4 mb-8 md:mb-0">
-                    <h4 class="text-xl font-semibold mb-4">Liens rapides</h4>
-                    <ul class="space-y-2">
-                        <li><a href="index.html#home" class="hover:text-indigo-400">Accueil</a></li>
-                        <li><a href="index.html#services" class="hover:text-indigo-400">Services</a></li>
-                        <li><a href="index.html#about" class="hover:text-indigo-400">À propos</a></li>
-                        <li><a href="index.html#portfolio" class="hover:text-indigo-400">Portfolio</a></li>
-                        <li><a href="blog.html" class="hover:text-indigo-400">Blog</a></li>
-                        <li><a href="index.html#contact" class="hover:text-indigo-400">Contact</a></li>
-                    </ul>
-                </div>
-                <div class="w-full md:w-1/4 px-4 mb-8 md:mb-0">
-                    <h4 class="text-xl font-semibold mb-4">Services</h4>
-                    <ul class="space-y-2">
-                        <li><a href="#" class="hover:text-indigo-400">SEO & SEM</a></li>
-                        <li><a href="#" class="hover:text-indigo-400">Web Design & UX</a></li>
-                        <li><a href="#" class="hover:text-indigo-400">Social Media Marketing</a></li>
-                        <li><a href="#" class="hover:text-indigo-400">Content Marketing</a></li>
-                        <li><a href="#" class="hover:text-indigo-400">Analyse de données</a></li>
-                    </ul>
-                </div>
-                <div class="w-full md:w-1/4 px-4">
-                    <h4 class="text-xl font-semibold mb-4">Newsletter</h4>
-                    <p class="mb-4">Restez informé des dernières tendances en marketing digital.</p>
-                    <form class="flex">
-                        <input type="email" placeholder="Votre email" class="w-full px-4 py-2 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-900">
-                        <button type="submit" class="bg-indigo-500 text-white px-4 py-2 rounded-r-lg hover:bg-indigo-600 transition duration-300 ease-in-out">S'abonner</button>
-                    </form>
-                </div>
-            </div>
+            <!-- Footer content -->
         </div>
     </footer>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
     <script>
-        // Initialiser AOS
         AOS.init({
             duration: 800,
             easing: 'ease-in-out',
@@ -126,97 +54,35 @@
             mirror: false
         });
 
-        const articlesPerPage = 6;
-        let currentPage = 1;
-        let articles = [];
-
-        // Fonction pour normaliser le slug (retirer les accents et remplacer les espaces)
-        function normalizeSlug(title) {
-            return title.toLowerCase()
-                .replace(/\s+/g, '-')               // Remplacer les espaces par des tirets
-                .normalize("NFD")                   // Normaliser les caractères
-                .replace(/[\u0300-\u036f]/g, "");   // Supprimer les accents
-        }
-
         // Charger et afficher les articles
-        fetch('https://www.wearewework.com/api/articles')
-            .then(response => {
-                if (!response.ok) throw new Error('Erreur lors du chargement des articles');
-                return response.json();
-            })
-            .then(data => {
-                articles = data; // Sauvegarder les articles pour la pagination
-                displayArticles(currentPage); // Afficher la première page des articles
-                updatePagination(); // Mettre à jour la pagination
+        fetch('/api/articles')
+            .then(response => response.json())
+            .then(articles => {
+                const container = document.getElementById('articles-container');
+                container.innerHTML = '';
+
+                articles.forEach(article => {
+                    const slug = article.title.toLowerCase().replace(/\s+/g, '-');
+                    const articleElement = document.createElement('article');
+                    articleElement.classList.add('bg-white', 'rounded-lg', 'shadow-lg', 'overflow-hidden');
+                    articleElement.setAttribute('data-aos', 'fade-up');
+
+                    articleElement.innerHTML = `
+                        <img src="${article.coverImage || 'https://via.placeholder.com/600x400'}" alt="${article.title}" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <h2 class="text-2xl font-semibold mb-2">
+                                <a href="article.html?slug=${slug}" class="text-gray-900 hover:text-indigo-600 transition duration-300 ease-in-out">${article.title}</a>
+                            </h2>
+                            <p class="text-gray-600 mb-4">${article.content.substring(0, 100)}...</p>
+                            <a href="article.html?slug=${slug}" class="text-indigo-600 font-semibold hover:text-indigo-800 transition duration-300 ease-in-out">Lire la suite →</a>
+                        </div>
+                    `;
+                    container.appendChild(articleElement);
+                });
             })
             .catch(error => {
                 console.error('Erreur lors du chargement des articles :', error);
             });
-
-        // Fonction pour afficher les articles pour la page courante
-        function displayArticles(page) {
-            const container = document.getElementById('articles-container');
-            container.innerHTML = '';
-
-            // Calculer les index des articles à afficher
-            const startIndex = (page - 1) * articlesPerPage;
-            const endIndex = startIndex + articlesPerPage;
-
-            // Afficher les articles pour la page courante
-            const articlesToDisplay = articles.slice(startIndex, endIndex);
-            articlesToDisplay.forEach(article => {
-                const slug = normalizeSlug(article.title); // Normaliser le slug ici
-                const articleElement = document.createElement('article');
-                articleElement.classList.add('bg-white', 'rounded-lg', 'shadow-lg', 'overflow-hidden');
-
-                articleElement.innerHTML = `
-                    <img src="${article.coverImage || 'https://via.placeholder.com/600x400'}" alt="${article.title}" class="w-full h-48 object-cover">
-                    <div class="p-6">
-                        <h2 class="text-2xl font-semibold mb-2">
-                            <a href="article.html?slug=${slug}" class="text-gray-900 hover:text-indigo-600 transition duration-300 ease-in-out">${article.title}</a>
-                        </h2>
-                        <p class="text-gray-600 mb-4">${article.content.substring(0, 100)}...</p>
-                        <a href="article.html?slug=${slug}" class="text-indigo-600 font-semibold hover:text-indigo-800 transition duration-300 ease-in-out">Lire la suite →</a>
-                    </div>
-                `;
-                container.appendChild(articleElement);
-            });
-        }
-
-        // Fonction pour mettre à jour la pagination
-        function updatePagination() {
-            const totalPages = Math.ceil(articles.length / articlesPerPage);
-            const pageInfo = document.getElementById('page-info');
-            pageInfo.textContent = `Page ${currentPage} sur ${totalPages}`;
-
-            const prevButton = document.getElementById('prev-page');
-            const nextButton = document.getElementById('next-page');
-
-            prevButton.disabled = currentPage === 1;
-            nextButton.disabled = currentPage === totalPages;
-
-            prevButton.classList.toggle('opacity-50', currentPage === 1);
-            nextButton.classList.toggle('opacity-50', currentPage === totalPages);
-        }
-
-        // Navigation entre les pages
-        document.getElementById('prev-page').addEventListener('click', () => {
-            if (currentPage > 1) {
-                currentPage--;
-                displayArticles(currentPage);
-                updatePagination(); // Mettre à jour la pagination après changement de page
-            }
-        });
-
-        document.getElementById('next-page').addEventListener('click', () => {
-            const totalPages = Math.ceil(articles.length / articlesPerPage);
-            if (currentPage < totalPages) {
-                currentPage++;
-                displayArticles(currentPage);
-                updatePagination(); // Mettre à jour la pagination après changement de page
-            }
-        });
     </script>
-
 </body>
 </html>
