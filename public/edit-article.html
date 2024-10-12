@@ -5,8 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gérer les articles - WeAreWe Blog</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
-    <link rel="icon" href="https://i.imgur.com/PL6qLai.png" type="image/png">
-    <script src="https://cdn.tiny.cloud/1/yvlqpv5o38e5lbw0ao8rtwqkzr6bcptnwsjonwqs5w86c5wp/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
         body {
@@ -21,159 +19,59 @@
             <a class="flex items-center hover:opacity-75 transition duration-150 ease-in-out" href="index.html">
                 <span class="ml-3 text-xl font-bold">WeAreWe</span>
             </a>
-            <nav class="hidden md:flex space-x-10 items-center">
-                <a class="hover:text-indigo-200" href="index.html#home">Accueil</a>
-                <a class="hover:text-indigo-200" href="index.html#services">Services</a>
-                <a class="hover:text-indigo-200" href="index.html#about">À propos</a>
-                <a class="hover:text-indigo-200" href="index.html#portfolio">Portfolio</a>
-                <a class="hover:text-indigo-200" href="index.html#testimonials">Témoignages</a>
-                <a class="hover:text-indigo-200" href="blog.html">Blog</a>
-                <a class="bg-white text-indigo-600 px-4 py-2 rounded-md font-semibold hover:bg-indigo-50 transition duration-150 ease-in-out" href="index.html#contact">Contact</a>
-            </nav>
         </div>
     </header>
 
     <main class="pt-20">
         <section class="py-20 bg-gray-100">
             <div class="container mx-auto px-4">
-                <!-- Formulaire d'authentification -->
-                <div id="auth-section" class="mb-12 bg-white p-8 rounded-lg shadow-md">
-                    <h2 class="text-2xl font-bold mb-6 text-center">Authentification</h2>
-                    <form id="auth-form" class="space-y-4">
-                        <div>
-                            <label class="block text-gray-700 text-sm font-bold mb-2" for="username">ID</label>
-                            <input type="text" id="username" placeholder="Votre ID" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500" required>
-                        </div>
-                        <div>
-                            <label class="block text-gray-700 text-sm font-bold mb-2" for="password">Mot de passe</label>
-                            <input type="password" id="password" placeholder="Votre mot de passe" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500" required>
-                        </div>
-                        <button type="submit" class="w-full bg-indigo-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50">Se connecter</button>
-                    </form>
+
+                <!-- Liste des articles existants -->
+                <h1 class="text-4xl font-bold text-center mb-8">Gérer les articles</h1>
+                <div id="articles-list" class="mb-12 bg-white p-8 rounded-lg shadow-md">
+                    <h2 class="text-2xl font-bold mb-6">Articles existants</h2>
+                    <ul id="article-items" class="space-y-4">
+                        <!-- Les articles seront affichés ici -->
+                    </ul>
                 </div>
 
-                <!-- Contenu protégé -->
-                <div id="protected-content" class="hidden">
-                    <h1 class="text-4xl font-bold text-center mb-8">Gérer les articles</h1>
-                    <div id="articles-list" class="mb-12 bg-white p-8 rounded-lg shadow-md">
-                        <h2 class="text-2xl font-bold mb-6">Articles existants</h2>
-                        <ul id="article-items" class="space-y-4">
-                            <!-- Les articles seront affichés ici -->
-                        </ul>
+                <!-- Formulaire d'ajout / modification d'article -->
+                <form id="add-edit-article-form" class="max-w-2xl mx-auto bg-white p-8 rounded-lg shadow-md">
+                    <h2 id="form-title" class="text-2xl font-bold mb-6">Ajouter un article</h2>
+                    <input type="hidden" id="article-slug" value="">
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="title">Titre</label>
+                        <input type="text" name="title" id="title" placeholder="Titre de l'article" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500" required>
                     </div>
-
-                    <!-- Formulaire d'ajout / modification d'article -->
-                    <form id="add-edit-article-form" class="max-w-2xl mx-auto bg-white p-8 rounded-lg shadow-md">
-                        <h2 id="form-title" class="text-2xl font-bold mb-6">Ajouter un article</h2>
-                        <input type="hidden" id="article-slug" value="">
-                        <div class="mb-4">
-                            <label class="block text-gray-700 text-sm font-bold mb-2" for="title">Titre</label>
-                            <input type="text" name="title" id="title" placeholder="Titre de l'article" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500" required>
-                        </div>
-                        <div class="mb-4">
-                            <label class="block text-gray-700 text-sm font-bold mb-2" for="author">Auteur</label>
-                            <input type="text" name="author" id="author" placeholder="Nom de l'auteur" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500" required>
-                        </div>
-                        <div class="mb-4">
-                            <label class="block text-gray-700 text-sm font-bold mb-2" for="content">Contenu</label>
-                            <textarea name="content" id="content" rows="5" placeholder="Contenu de l'article" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500"></textarea>
-                        </div>
-                        <div class="mb-4">
-                            <label class="block text-gray-700 text-sm font-bold mb-2" for="coverImage">URL de l'image de couverture</label>
-                            <input type="url" name="coverImage" id="coverImage" placeholder="URL de l'image de couverture (facultatif)" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500">
-                        </div>
-                        <button type="submit" class="w-full bg-indigo-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50">Enregistrer l'article</button>
-                    </form>
-                </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="author">Auteur</label>
+                        <input type="text" name="author" id="author" placeholder="Nom de l'auteur" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500" required>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="content">Contenu</label>
+                        <textarea name="content" id="content" rows="5" placeholder="Contenu de l'article" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500" required></textarea>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="coverImage">URL de l'image de couverture</label>
+                        <input type="url" name="coverImage" id="coverImage" placeholder="URL de l'image de couverture (facultatif)" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500">
+                    </div>
+                    <button type="submit" class="w-full bg-indigo-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50">Enregistrer l'article</button>
+                </form>
             </div>
         </section>
     </main>
 
-    <footer class="bg-gray-900 text-white py-12">
-        <div class="container mx-auto px-4">
-            <div class="flex flex-wrap -mx-4">
-                <div class="w-full md:w-1/4 px-4 mb-8 md:mb-0">
-                    <h3 class="text-2xl font-semibold mb-4">WeAreWe</h3>
-                    <p class="mb-4">Votre partenaire pour une présence en ligne exceptionnelle.</p>
-                    <p>&copy; 2024 WeAreWe. Tous droits réservés.</p>
-                </div>
-                <div class="w-full md:w-1/4 px-4 mb-8 md:mb-0">
-                    <h4 class="text-xl font-semibold mb-4">Liens rapides</h4>
-                    <ul class="space-y-2">
-                        <li><a href="index.html#home" class="hover:text-indigo-400">Accueil</a></li>
-                        <li><a href="index.html#services" class="hover:text-indigo-400">Services</a></li>
-                        <li><a href="index.html#about" class="hover:text-indigo-400">À propos</a></li>
-                        <li><a href="index.html#portfolio" class="hover:text-indigo-400">Portfolio</a></li>
-                        <li><a href="blog.html" class="hover:text-indigo-400">Blog</a></li>
-                        <li><a href="index.html#contact" class="hover:text-indigo-400">Contact</a></li>
-                    </ul>
-                </div>
-                <div class="w-full md:w-1/4 px-4 mb-8 md:mb-0">
-                    <h4 class="text-xl font-semibold mb-4">Services</h4>
-                    <ul class="space-y-2">
-                        <li><a href="#" class="hover:text-indigo-400">SEO & SEM</a></li>
-                        <li><a href="#" class="hover:text-indigo-400">Web Design & UX</a></li>
-                        <li><a href="#" class="hover:text-indigo-400">Social Media Marketing</a></li>
-                        <li><a href="#" class="hover:text-indigo-400">Content Marketing</a></li>
-                        <li><a href="#" class="hover:text-indigo-400">Analyse de données</a></li>
-                    </ul>
-                </div>
-                <div class="w-full md:w-1/4 px-4">
-                    <h4 class="text-xl font-semibold mb-4">Newsletter</h4>
-                    <p class="mb-4">Restez informé des dernières tendances en marketing digital.</p>
-                    <form class="flex">
-                        <input type="email" placeholder="Votre email" class="w-full px-4 py-2 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-900">
-                        <button type="submit" class="bg-indigo-500 text-white px-4 py-2 rounded-r-lg hover:bg-indigo-600 transition duration-300 ease-in-out">S'abonner</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </footer>
-
     <script>
-        // Authentification
-        const validUsername = 'admin'; // Remplacez par votre ID
-        const validPassword = 'password'; // Remplacez par votre mot de passe
-    
-        document.getElementById('auth-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-    
-            if (username === validUsername && password === validPassword) {
-                document.getElementById('auth-section').classList.add('hidden');
-                document.getElementById('protected-content').classList.remove('hidden');
-                loadArticles(); // Charger les articles après authentification
-            } else {
-                alert('Identifiant ou mot de passe incorrect');
-            }
-        });
-    
-        // Initialiser TinyMCE pour la zone de texte de contenu
-        tinymce.init({
-            selector: '#content',
-            height: 300,
-            menubar: false,
-            plugins: 'link image code lists',
-            toolbar: 'undo redo | formatselect | bold italic | alignleft aligncenter alignright | bullist numlist | link image',
-            content_style: 'body { font-family: Poppins, sans-serif; }',
-        });
-    
         // Charger la liste des articles
         function loadArticles() {
-            fetch('https://www.wearewework.com/api/articles')
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Erreur lors du chargement des articles');
-                    }
-                    return response.json();
-                })
+            fetch('/api/articles')
+                .then(response => response.json())
                 .then(articles => {
                     const articleItems = document.getElementById('article-items');
                     articleItems.innerHTML = '';
-    
+
                     articles.forEach(article => {
-                        const slug = article.slug;
+                        const slug = article.title.toLowerCase().replace(/\s+/g, '-');
                         const articleItem = document.createElement('li');
                         articleItem.innerHTML = `
                             <div class="flex justify-between items-center">
@@ -186,44 +84,28 @@
                         `;
                         articleItems.appendChild(articleItem);
                     });
-                })
-                .catch(error => {
-                    console.error('Erreur lors du chargement des articles :', error);
                 });
         }
-    
+
         // Fonction pour charger les données d'un article à modifier
         function editArticle(slug) {
-            fetch(`https://www.wearewework.com/api/articles/${slug}`)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Erreur lors de la récupération de l\'article');
-                    }
-                    return response.json();
-                })
+            fetch(`/api/articles/${slug}`)
+                .then(response => response.json())
                 .then(article => {
                     document.getElementById('form-title').textContent = "Modifier l'article";
                     document.getElementById('article-slug').value = slug;
                     document.getElementById('title').value = article.title;
                     document.getElementById('author').value = article.author;
-                    tinymce.get('content').setContent(article.content);
+                    document.getElementById('content').value = article.content;
                     document.getElementById('coverImage').value = article.coverImage;
-                })
-                .catch(error => {
-                    console.error('Erreur lors de la récupération de l\'article :', error);
                 });
         }
-    
+
         // Fonction pour supprimer un article
         function deleteArticle(slug) {
             if (confirm("Êtes-vous sûr de vouloir supprimer cet article ?")) {
-                fetch(`https://www.wearewework.com/api/articles/${slug}`, { method: 'DELETE' })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Erreur lors de la suppression de l\'article');
-                        }
-                        return response.json();
-                    })
+                fetch(`/api/articles/${slug}`, { method: 'DELETE' })
+                    .then(response => response.json())
                     .then(data => {
                         alert('Article supprimé avec succès !');
                         loadArticles(); // Recharger la liste des articles après suppression
@@ -231,34 +113,33 @@
                     .catch(error => console.error('Erreur lors de la suppression :', error));
             }
         }
-    
+
         // Fonction pour ajouter ou modifier un article
         document.getElementById('add-edit-article-form').addEventListener('submit', async (e) => {
             e.preventDefault();
-    
-            // Récupérer le contenu formaté depuis TinyMCE
             const formData = new FormData(e.target);
             const articleData = Object.fromEntries(formData.entries());
-            articleData.content = tinymce.get('content').getContent();
-    
             const slug = document.getElementById('article-slug').value;
+
             let method = 'POST';
-            let url = 'https://www.wearewework.com/api/articles';
-    
-            if (slug) {
+            let url = '/api/articles';
+            if (slug) { // Si un slug est défini, on modifie l'article
                 method = 'PUT';
-                url = `https://www.wearewework.com/api/articles/${slug}`;
+                url = `/api/articles/${slug}`;
             }
-    
+
             try {
                 const response = await fetch(url, {
                     method: method,
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(articleData),
                 });
-    
+
                 if (response.ok) {
                     alert('Article enregistré avec succès !');
+                    document.getElementById('form-title').textContent = "Ajouter un article";
+                    e.target.reset();
+                    document.getElementById('article-slug').value = ''; // Réinitialiser le formulaire
                     loadArticles(); // Recharger la liste des articles
                 } else {
                     alert('Erreur lors de l\'enregistrement de l\'article.');
@@ -268,10 +149,9 @@
                 alert('Une erreur s\'est produite. Veuillez réessayer.');
             }
         });
-    
+
         // Charger la liste des articles lors du chargement de la page
         loadArticles();
     </script>
-    
 </body>
 </html>
