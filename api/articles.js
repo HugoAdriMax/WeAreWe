@@ -2,14 +2,6 @@ const fs = require('fs');
 const path = require('path');
 
 const articlesFilePath = path.join(__dirname, './articles.json');
-const cors = require('cors');
-
-// Ajouter le middleware CORS
-app.use(cors({
-    origin: '*', // Autorise toutes les origines
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization']
-}));
 
 // Lire les articles à partir du fichier JSON
 function readArticles() {
