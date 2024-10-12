@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const articlesFilePath = path.join(__dirname, '../articles.json');
+const articlesFilePath = path.join(__dirname, './articles.json');
 
 // Lire les articles à partir du fichier JSON
 function readArticles() {
