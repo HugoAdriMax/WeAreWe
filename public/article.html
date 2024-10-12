@@ -10,20 +10,20 @@
 <body class="antialiased text-gray-800 leading-normal tracking-wider bg-gray-100">
     <header style="background-color: #6366F1;" class="fixed w-full z-30 top-0 text-white" x-data="{ isOpen: false }" @keydown.escape="isOpen = false">
         <div class="container mx-auto py-5 flex items-center justify-between">
-            <a class="flex items-center hover:opacity-75 transition duration-150 ease-in-out" href="/index.html">
+            <a class="flex items-center hover:opacity-75 transition duration-150 ease-in-out" href="#">
                 <svg class="w-10 h-10 text-white p-2 bg-indigo-500 rounded-full" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
                 </svg>
                 <span class="ml-3 text-xl font-bold">WeAreWe</span>
             </a>
             <nav class="hidden md:flex space-x-10 items-center">
-                <a class="hover:text-indigo-200" href="/index.html">Accueil</a>
-                <a class="hover:text-indigo-200" href="/#services">Services</a>
-                <a class="hover:text-indigo-200" href="/#about">À propos</a>
-                <a class="hover:text-indigo-200" href="/#portfolio">Portfolio</a>
-                <a class="hover:text-indigo-200" href="/#testimonials">Témoignages</a>
-                <a class="hover:text-indigo-200" href="/blog.html">Blog</a>
-                <a class="bg-white text-indigo-600 px-4 py-2 rounded-md font-semibold hover:bg-indigo-50 transition duration-150 ease-in-out" href="/#contact">Contact</a>
+                <a class="hover:text-indigo-200" href="#home">Accueil</a>
+                <a class="hover:text-indigo-200" href="#services">Services</a>
+                <a class="hover:text-indigo-200" href="#about">À propos</a>
+                <a class="hover:text-indigo-200" href="#portfolio">Portfolio</a>
+                <a class="hover:text-indigo-200" href="#testimonials">Témoignages</a>
+                <a class="hover:text-indigo-200" href="blog.html">Blog</a>
+                <a class="bg-white text-indigo-600 px-4 py-2 rounded-md font-semibold hover:bg-indigo-50 transition duration-150 ease-in-out" href="#contact">Contact</a>
             </nav>
             <button class="md:hidden rounded-lg focus:outline-none focus:shadow-outline mr-4" @click="isOpen = !isOpen">
                 <svg fill="currentColor" viewBox="0 0 20 20" class="w-6 h-6">
@@ -33,13 +33,13 @@
             </button>
         </div>
         <nav class="flex flex-col md:hidden absolute top-full left-0 right-0 bg-white shadow-md rounded-b-lg" :class="{ 'hidden': !isOpen }" @click.away="isOpen = false">
-            <a class="py-2 px-4 text-gray-800 hover:bg-indigo-500 hover:text-white transition duration-150 ease-in-out" href="/index.html" @click="isOpen = false">Accueil</a>
-            <a class="py-2 px-4 text-gray-800 hover:bg-indigo-500 hover:text-white transition duration-150 ease-in-out" href="/#services" @click="isOpen = false">Services</a>
-            <a class="py-2 px-4 text-gray-800 hover:bg-indigo-500 hover:text-white transition duration-150 ease-in-out" href="/#about" @click="isOpen = false">À propos</a>
-            <a class="py-2 px-4 text-gray-800 hover:bg-indigo-500 hover:text-white transition duration-150 ease-in-out" href="/#portfolio" @click="isOpen = false">Portfolio</a>
-            <a class="py-2 px-4 text-gray-800 hover:bg-indigo-500 hover:text-white transition duration-150 ease-in-out" href="/#testimonials" @click="isOpen = false">Témoignages</a>
-            <a class="py-2 px-4 text-gray-800 hover:bg-indigo-500 hover:text-white transition duration-150 ease-in-out" href="/blog.html" @click="isOpen = false">Blog</a>
-            <a class="py-2 px-4 text-gray-800 hover:bg-indigo-500 hover:text-white transition duration-150 ease-in-out" href="/#contact" @click="isOpen = false">Contact</a>
+            <a class="py-2 px-4 text-gray-800 hover:bg-indigo-500 hover:text-white transition duration-150 ease-in-out" href="#home" @click="isOpen = false">Accueil</a>
+            <a class="py-2 px-4 text-gray-800 hover:bg-indigo-500 hover:text-white transition duration-150 ease-in-out" href="#services" @click="isOpen = false">Services</a>
+            <a class="py-2 px-4 text-gray-800 hover:bg-indigo-500 hover:text-white transition duration-150 ease-in-out" href="#about" @click="isOpen = false">À propos</a>
+            <a class="py-2 px-4 text-gray-800 hover:bg-indigo-500 hover:text-white transition duration-150 ease-in-out" href="#portfolio" @click="isOpen = false">Portfolio</a>
+            <a class="py-2 px-4 text-gray-800 hover:bg-indigo-500 hover:text-white transition duration-150 ease-in-out" href="#testimonials" @click="isOpen = false">Témoignages</a>
+            <a class="py-2 px-4 text-gray-800 hover:bg-indigo-500 hover:text-white transition duration-150 ease-in-out" href="blog.html" @click="isOpen = false">Blog</a>
+            <a class="py-2 px-4 text-gray-800 hover:bg-indigo-500 hover:text-white transition duration-150 ease-in-out" href="#contact" @click="isOpen = false">Contact</a>
         </nav>
     </header>
 
@@ -96,7 +96,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
 
-dezezdada
+
     <script>
         AOS.init({
             duration: 800,
@@ -180,7 +180,6 @@ dezezdada
                 console.error('Erreur lors du chargement de l\'article :', error);
             });
     </script>
-    
     
 </body>
 </html>
