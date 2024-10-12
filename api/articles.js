@@ -5,6 +5,19 @@ app.use(express.json());
 // Stockage en mémoire des articles
 let articles = [];
 
+app.get('/api/articles/:id', (req, res) => {
+    articles = JSON.parse(fs.readFileSync(articlesFilePath, 'utf8')); // Recharger depuis le fichier
+    console.log('Articles rechargés depuis le fichier JSON :', articles);
+    const article = articles.find(a => a.id === req.params.id);
+    if (article) {
+        res.json(article);
+    } else {
+        console.log('Article non trouvé pour l\'ID :', req.params.id);
+        res.status(404).send('Article non trouvé');
+    }
+});
+
+
 // Route pour récupérer tous les articles
 app.get('/api/articles', (req, res) => {
     res.json(articles);
@@ -12,7 +25,7 @@ app.get('/api/articles', (req, res) => {
 
 // Route pour récupérer un article par ID
 app.get('/api/articles/:id', (req, res) => {
-    const article = articles.find(a => a.id === req.params.id);
+    const article = articles.find(a => a.id === String(req.params.id));
     if (article) {
         res.json(article);
     } else {
@@ -67,14 +80,16 @@ app.put('/api/articles/:id', (req, res) => {
 
 // Route pour récupérer un article par ID
 app.get('/api/articles/:id', (req, res) => {
-    console.log('Articles chargés en mémoire :', articles);
+    console.log('Articles en mémoire au moment de la requête :', articles);
     const article = articles.find(a => a.id === req.params.id);
     if (article) {
         res.json(article);
     } else {
+        console.log('Article non trouvé pour l\'ID :', req.params.id);
         res.status(404).send('Article non trouvé');
     }
 });
+
 
 
 
