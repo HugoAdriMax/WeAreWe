@@ -40,6 +40,13 @@ app.get('/api/articles/:id', (req, res) => {
 // Route pour créer un nouvel article
 app.post('/api/articles', (req, res) => {
     const { title, url, metaDescription, imageUrl, content } = req.body;
+    console.log('Données reçues :', req.body); // Log des données reçues
+
+    // Vérifie que tous les champs requis sont présents
+    if (!title || !metaDescription || !content || !imageUrl) {
+        console.error('Champs manquants dans la requête');
+        return res.status(400).json({ error: 'Champs manquants' });
+    }
 
     // Générer le slug SEO-friendly s'il n'est pas fourni
     const slug = url || title.trim().toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]+/g, '');
@@ -55,10 +62,15 @@ app.post('/api/articles', (req, res) => {
         author: 'WeAreWe Team' // Auteur par défaut
     };
 
-    const articles = readArticles();
-    articles.push(newArticle);
-    writeArticles(articles);
-    res.status(201).json(newArticle);
+    try {
+        const articles = readArticles();
+        articles.push(newArticle);
+        writeArticles(articles);
+        res.status(201).json(newArticle);
+    } catch (error) {
+        console.error('Erreur lors de l\'écriture dans le fichier articles.json :', error);
+        res.status(500).json({ error: 'Erreur lors de la création de l\'article' });
+    }
 });
 
 // Route pour mettre à jour un article existant
