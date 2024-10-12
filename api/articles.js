@@ -4,8 +4,8 @@ const mongoose = require('mongoose');
 const app = express();
 app.use(express.json());
 
-// Remplacez 'your_mongo_db_uri' par l'URI de connexion à votre base de données
-const mongoURI = process.env.MONGO_URI; // Utilisez la variable d'environnement
+// Utilisez la variable d'environnement pour l'URI de connexion à votre base de données
+const mongoURI = process.env.MONGO_URI; 
 mongoose.connect(mongoURI)
     .then(() => console.log('Connecté à MongoDB...'))
     .catch(err => console.error('Erreur de connexion à MongoDB', err));
@@ -21,8 +21,8 @@ const articleSchema = new mongoose.Schema({
     author: { type: String, default: 'WeAreWe Team' }
 });
 
-// Modèle pour les articles
-const Article = mongoose.model('Article', articleSchema);
+// Modèle pour les articles avec la collection "articles"
+const Article = mongoose.model('Article', articleSchema, 'articles'); // Indiquez le nom de la collection ici
 
 // Route pour récupérer tous les articles
 app.get('/api/articles', async (req, res) => {
@@ -30,6 +30,7 @@ app.get('/api/articles', async (req, res) => {
         const articles = await Article.find();
         res.json(articles);
     } catch (error) {
+        console.error('Erreur lors de la récupération des articles:', error); // Ajoutez ce log pour le débogage
         res.status(500).json({ error: 'Erreur lors de la récupération des articles' });
     }
 });
