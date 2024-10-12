@@ -5,8 +5,8 @@ const app = express();
 app.use(express.json());
 
 // Remplacez 'your_mongo_db_uri' par l'URI de connexion à votre base de données
-const mongoURI = 'mongodb+srv://contact:8MtNaCQgwOo5e2Up@wearewe.87p9p.mongodb.net/';
-mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
+const mongoURI = process.env.MONGO_URI; // Utilisez la variable d'environnement
+mongoose.connect(mongoURI)
     .then(() => console.log('Connecté à MongoDB...'))
     .catch(err => console.error('Erreur de connexion à MongoDB', err));
 
@@ -30,6 +30,7 @@ app.get('/api/articles', async (req, res) => {
         const articles = await Article.find();
         res.json(articles);
     } catch (error) {
+        console.error('Erreur lors de la récupération des articles:', error);
         res.status(500).json({ error: 'Erreur lors de la récupération des articles' });
     }
 });
@@ -44,6 +45,7 @@ app.get('/api/articles/:id', async (req, res) => {
             res.status(404).send('Article non trouvé');
         }
     } catch (error) {
+        console.error('Erreur lors de la récupération de l\'article:', error);
         res.status(500).send('Erreur lors de la récupération de l\'article');
     }
 });
@@ -71,6 +73,7 @@ app.post('/api/articles', async (req, res) => {
         const savedArticle = await newArticle.save();
         res.status(201).json(savedArticle);
     } catch (error) {
+        console.error('Erreur lors de la création de l\'article:', error);
         res.status(500).json({ error: 'Erreur lors de la création de l\'article' });
     }
 });
@@ -95,6 +98,7 @@ app.put('/api/articles/:id', async (req, res) => {
             res.status(404).send('Article non trouvé');
         }
     } catch (error) {
+        console.error('Erreur lors de la mise à jour de l\'article:', error);
         res.status(500).send('Erreur lors de la mise à jour de l\'article');
     }
 });
@@ -109,6 +113,7 @@ app.delete('/api/articles/:id', async (req, res) => {
             res.status(404).json({ error: 'Article non trouvé' });
         }
     } catch (error) {
+        console.error('Erreur lors de la suppression de l\'article:', error);
         res.status(500).json({ error: 'Erreur lors de la suppression de l\'article' });
     }
 });
