@@ -174,16 +174,15 @@
                     articles.forEach(article => {
                         const slug = article.title.toLowerCase().replace(/\s+/g, '-');
                         const articleItem = document.createElement('li');
-articleItem.innerHTML = `
-    <div class="flex justify-between items-center">
-        <span>${article.title}</span>
-        <div>
-            <button onclick="window.location.href='article.html?slug=${slug}'" class="bg-yellow-500 text-white px-4 py-2 rounded-md hover:bg-yellow-600 mr-2">Modifier</button>
-            <button onclick="deleteArticle('${slug}')" class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600">Supprimer</button>
-        </div>
-    </div>
-`;
-
+                        articleItem.innerHTML = `
+                            <div class="flex justify-between items-center">
+                                <span>${article.title}</span>
+                                <div>
+                                    <button onclick="editArticle('${slug}')" class="bg-yellow-500 text-white px-4 py-2 rounded-md hover:bg-yellow-600 mr-2">Modifier</button>
+                                    <button onclick="deleteArticle('${slug}')" class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600">Supprimer</button>
+                                </div>
+                            </div>
+                        `;
                         articleItems.appendChild(articleItem);
                     });
                 })
