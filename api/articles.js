@@ -5,15 +5,24 @@ const articlesFilePath = path.join(__dirname, '../articles.json');
 
 // Lire les articles à partir du fichier JSON
 function readArticles() {
-    if (fs.existsSync(articlesFilePath)) {
-        return JSON.parse(fs.readFileSync(articlesFilePath));
+    try {
+        if (fs.existsSync(articlesFilePath)) {
+            const data = fs.readFileSync(articlesFilePath, 'utf8');
+            return JSON.parse(data);
+        }
+    } catch (err) {
+        console.error('Erreur lors de la lecture du fichier articles.json :', err);
     }
     return [];
 }
 
 // Écrire les articles dans le fichier JSON
 function writeArticles(articles) {
-    fs.writeFileSync(articlesFilePath, JSON.stringify(articles, null, 2));
+    try {
+        fs.writeFileSync(articlesFilePath, JSON.stringify(articles, null, 2));
+    } catch (err) {
+        console.error('Erreur lors de l\'écriture dans le fichier articles.json :', err);
+    }
 }
 
 module.exports = (req, res) => {
@@ -22,27 +31,36 @@ module.exports = (req, res) => {
         const articles = readArticles();
         res.json(articles);
     } else if (req.method === 'POST') {
-        // Créer un nouvel article
-        const { title, url, metaDescription, imageUrl, content } = req.body;
+        try {
+            const { title, url, metaDescription, imageUrl, content } = req.body;
 
-        // Générer le slug SEO-friendly si pas fourni
-        const slug = url || title.trim().toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]+/g, '');
+            // Vérifie que tous les champs requis sont présents
+            if (!title || !metaDescription || !content || !imageUrl) {
+                return res.status(400).json({ error: 'Champs manquants' });
+            }
 
-        const newArticle = {
-            id: Date.now().toString(),
-            title,
-            slug, // Utiliser l'URL SEO-friendly
-            metaDescription,
-            imageUrl,
-            content,
-            date: new Date().toISOString(),
-            author: 'WeAreWe Team' // Auteur par défaut
-        };
+            // Générer le slug SEO-friendly si pas fourni
+            const slug = url || title.trim().toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]+/g, '');
 
-        const articles = readArticles();
-        articles.push(newArticle);
-        writeArticles(articles);
-        res.json(newArticle);
+            const newArticle = {
+                id: Date.now().toString(),
+                title,
+                slug, // Utiliser l'URL SEO-friendly
+                metaDescription,
+                imageUrl,
+                content,
+                date: new Date().toISOString(),
+                author: 'WeAreWe Team' // Auteur par défaut
+            };
+
+            const articles = readArticles();
+            articles.push(newArticle);
+            writeArticles(articles);
+            res.json(newArticle);
+        } catch (err) {
+            console.error('Erreur lors de la création de l\'article :', err);
+            res.status(500).json({ error: 'Erreur lors de la création de l\'article' });
+        }
     } else if (req.method === 'PUT') {
         // Mettre à jour un article existant
         const updatedArticle = req.body;
@@ -50,7 +68,6 @@ module.exports = (req, res) => {
         const index = articles.findIndex(article => article.slug === updatedArticle.slug);
 
         if (index !== -1) {
-            // Mettre à jour l'article existant
             articles[index] = { ...articles[index], ...updatedArticle };
             writeArticles(articles);
             res.json(updatedArticle);
@@ -71,7 +88,6 @@ module.exports = (req, res) => {
             res.status(404).json({ error: 'Article non trouvé' });
         }
     } else {
-        // Méthode non autorisée
         res.status(405).json({ error: 'Méthode non autorisée' });
     }
 };
