@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gérer les articles - WeAreWe Blog</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    
     <link rel="icon" href="https://i.imgur.com/PL6qLai.png" type="image/png">
     <script src="https://cdn.tiny.cloud/1/yvlqpv5o38e5lbw0ao8rtwqkzr6bcptnwsjonwqs5w86c5wp/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
     <style>
@@ -164,7 +165,7 @@
 
         // Charger la liste des articles
         function loadArticles() {
-            fetch('/api/articles')
+            fetch('https://www.wearewework.com/api/articles')
                 .then(response => response.json())
                 .then(articles => {
                     const articleItems = document.getElementById('article-items');
@@ -189,7 +190,7 @@
 
         // Fonction pour charger les données d'un article à modifier
         function editArticle(slug) {
-            fetch(`/api/articles/${slug}`)
+            fetch(`https://www.wearewework.com/api/articles/${slug}`)
                 .then(response => response.json())
                 .then(article => {
                     document.getElementById('form-title').textContent = "Modifier l'article";
@@ -204,7 +205,7 @@
         // Fonction pour supprimer un article
         function deleteArticle(slug) {
             if (confirm("Êtes-vous sûr de vouloir supprimer cet article ?")) {
-                fetch(`/api/articles/${slug}`, { method: 'DELETE' })
+                fetch(`https://www.wearewework.com/api/articles/${slug}`, { method: 'DELETE' })
                     .then(response => response.json())
                     .then(data => {
                         alert('Article supprimé avec succès !');
@@ -225,12 +226,12 @@
 
             const slug = document.getElementById('article-slug').value;
             let method = 'POST';
-            let url = '/api/articles';
+            let url = 'https://www.wearewework.com/api/articles';
 
             if (slug) {
                 // Si un slug est défini, on modifie l'article existant
                 method = 'PUT';
-                url = `/api/articles/${slug}`;
+                url = `https://www.wearewework.com/api/articles/${slug}`;
             }
 
             try {

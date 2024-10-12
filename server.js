@@ -37,13 +37,13 @@ function writeArticles(articles) {
 }
 
 // Route pour récupérer tous les articles
-app.get('/api/articles', (req, res) => {
+app.get('https://www.wearewework.com/api/articles', (req, res) => {
     const articles = readArticles();
     res.json(articles);
 });
 
 // Route pour récupérer un article spécifique par son id
-app.get('/api/articles/:id', (req, res) => {
+app.get('https://www.wearewework.com/api/articles/:id', (req, res) => {
     const articles = readArticles();
     const article = articles.find(a => a.id === req.params.id);
     if (article) {
@@ -54,7 +54,7 @@ app.get('/api/articles/:id', (req, res) => {
 });
 
 // Route pour ajouter un nouvel article avec validation
-app.post('/api/articles', (req, res) => {
+app.post('https://www.wearewework.com/api/articles', (req, res) => {
     const { title, author, content, coverImage } = req.body;
 
     // Validation des champs
@@ -78,7 +78,7 @@ app.post('/api/articles', (req, res) => {
 });
 
 // Route pour modifier un article par son id avec validation
-app.put('/api/articles/:id', (req, res) => {
+app.put('https://www.wearewework.com/api/articles/:id', (req, res) => {
     const { title, author, content, coverImage } = req.body;
 
     // Validation des champs
@@ -106,7 +106,7 @@ app.put('/api/articles/:id', (req, res) => {
 });
 
 // Route pour supprimer un article par son id
-app.delete('/api/articles/:id', (req, res) => {
+app.delete('https://www.wearewework.com/api/articles/:id', (req, res) => {
     const articles = readArticles();
     const newArticles = articles.filter(a => a.id !== req.params.id);
     if (newArticles.length !== articles.length) {
