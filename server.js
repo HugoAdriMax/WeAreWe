@@ -9,15 +9,24 @@ const articlesFilePath = path.join(__dirname, './articles.json');
 
 // Fonction pour lire les articles
 function readArticles() {
-    if (fs.existsSync(articlesFilePath)) {
-        return JSON.parse(fs.readFileSync(articlesFilePath));
+    try {
+        if (fs.existsSync(articlesFilePath)) {
+            const data = fs.readFileSync(articlesFilePath, 'utf8');
+            return JSON.parse(data);
+        }
+    } catch (err) {
+        console.error('Erreur lors de la lecture du fichier articles.json :', err);
     }
     return [];
 }
 
 // Fonction pour écrire les articles
 function writeArticles(articles) {
-    fs.writeFileSync(articlesFilePath, JSON.stringify(articles, null, 2));
+    try {
+        fs.writeFileSync(articlesFilePath, JSON.stringify(articles, null, 2));
+    } catch (err) {
+        console.error('Erreur lors de l\'écriture dans le fichier articles.json :', err);
+    }
 }
 
 // Route pour récupérer tous les articles
@@ -39,30 +48,30 @@ app.get('/api/articles/:id', (req, res) => {
 
 // Route pour créer un nouvel article
 app.post('/api/articles', (req, res) => {
-    const { title, url, metaDescription, imageUrl, content } = req.body;
-    console.log('Données reçues :', req.body); // Log des données reçues
-
-    // Vérifie que tous les champs requis sont présents
-    if (!title || !metaDescription || !content || !imageUrl) {
-        console.error('Champs manquants dans la requête');
-        return res.status(400).json({ error: 'Champs manquants' });
-    }
-
-    // Générer le slug SEO-friendly s'il n'est pas fourni
-    const slug = url || title.trim().toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]+/g, '');
-
-    const newArticle = {
-        id: Date.now().toString(),
-        title,
-        slug, // URL SEO-friendly
-        metaDescription,
-        imageUrl,
-        content,
-        date: new Date().toISOString(),
-        author: 'WeAreWe Team' // Auteur par défaut
-    };
-
     try {
+        const { title, url, metaDescription, imageUrl, content } = req.body;
+        console.log('Données reçues :', req.body); // Log des données reçues
+
+        // Vérifie que tous les champs requis sont présents
+        if (!title || !metaDescription || !content || !imageUrl) {
+            console.error('Champs manquants dans la requête');
+            return res.status(400).json({ error: 'Champs manquants' });
+        }
+
+        // Générer le slug SEO-friendly s'il n'est pas fourni
+        const slug = url || title.trim().toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]+/g, '');
+
+        const newArticle = {
+            id: Date.now().toString(),
+            title,
+            slug, // URL SEO-friendly
+            metaDescription,
+            imageUrl,
+            content,
+            date: new Date().toISOString(),
+            author: 'WeAreWe Team' // Auteur par défaut
+        };
+
         const articles = readArticles();
         articles.push(newArticle);
         writeArticles(articles);
@@ -80,7 +89,6 @@ app.put('/api/articles/:id', (req, res) => {
     const index = articles.findIndex(a => a.id === req.params.id);
 
     if (index !== -1) {
-        // Mettre à jour l'article
         articles[index] = {
             ...articles[index],
             title,
