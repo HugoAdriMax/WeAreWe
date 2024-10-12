@@ -120,3 +120,9 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Serveur démarré sur http://localhost:${PORT}`);
 });
+
+
+import { Analytics } from '@vercel/analytics/react';
+
+// Ajouter l'analytics dans ton fichier
+Analytics();
