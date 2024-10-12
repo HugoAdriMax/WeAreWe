@@ -6,7 +6,7 @@ app.use(express.json());
 
 // Remplacez 'your_mongo_db_uri' par l'URI de connexion à votre base de données
 const mongoURI = 'mongodb+srv://contact:8MtNaCQgwOo5e2Up@wearewe.87p9p.mongodb.net/';
-mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(mongoURI)
     .then(() => console.log('Connecté à MongoDB...'))
     .catch(err => console.error('Erreur de connexion à MongoDB', err));
 
@@ -23,6 +23,7 @@ const articleSchema = new mongoose.Schema({
 
 // Modèle pour les articles
 const Article = mongoose.model('Article', articleSchema);
+
 
 // Route pour récupérer tous les articles
 app.get('/api/articles', async (req, res) => {
