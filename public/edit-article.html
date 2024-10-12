@@ -193,25 +193,33 @@
 
         // Fonction pour charger les données d'un article à modifier
         function editArticle(slug) {
-            fetch(`https://www.wearewework.com/api/articles/${slug}`)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Erreur lors de la récupération de l\'article');
-                    }
-                    return response.json();
-                })
-                .then(article => {
-                    document.getElementById('form-title').textContent = "Modifier l'article";
-                    document.getElementById('article-slug').value = slug;
-                    document.getElementById('title').value = article.title;
-                    document.getElementById('author').value = article.author;
-                    tinymce.get('content').setContent(article.content); // Utiliser TinyMCE pour le champ contenu
-                    document.getElementById('coverImage').value = article.coverImage;
-                })
-                .catch(error => {
-                    console.error('Erreur lors de la récupération de l\'article :', error);
-                });
-        }
+    // Remplacez les espaces par des tirets et retirez les accents
+    const formattedSlug = slug
+        .toLowerCase()
+        .replace(/\s+/g, '-')
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, ""); // Supprime les accents
+
+    fetch(`https://www.wearewework.com/api/articles/${formattedSlug}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Erreur lors de la récupération de l\'article');
+            }
+            return response.json();
+        })
+        .then(article => {
+            document.getElementById('form-title').textContent = "Modifier l'article";
+            document.getElementById('article-slug').value = formattedSlug;
+            document.getElementById('title').value = article.title;
+            document.getElementById('author').value = article.author;
+            tinymce.get('content').setContent(article.content);
+            document.getElementById('coverImage').value = article.coverImage;
+        })
+        .catch(error => {
+            console.error('Erreur lors de la récupération de l\'article :', error);
+        });
+}
+
 
         // Fonction pour supprimer un article
         function deleteArticle(slug) {
@@ -233,46 +241,41 @@
 
         // Fonction pour ajouter ou modifier un article
         document.getElementById('add-edit-article-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
+    e.preventDefault();
 
-            // Récupérer le contenu formaté depuis TinyMCE
-            const formData = new FormData(e.target);
-            const articleData = Object.fromEntries(formData.entries());
-            articleData.content = tinymce.get('content').getContent(); // Obtenir le contenu TinyMCE
+    // Récupérer le contenu formaté depuis TinyMCE
+    const formData = new FormData(e.target);
+    const articleData = Object.fromEntries(formData.entries());
+    articleData.content = tinymce.get('content').getContent();
 
-            const slug = document.getElementById('article-slug').value;
-            let method = 'POST';
-            let url = 'https://www.wearewework.com/api/articles';
+    const slug = document.getElementById('article-slug').value;
+    let method = 'POST';
+    let url = 'https://www.wearewework.com/api/articles';
 
-            if (slug) {
-                // Si un slug est défini, on modifie l'article existant
-                method = 'PUT';
-                url = `https://www.wearewework.com/api/articles/${slug}`;
-            }
+    if (slug) {
+        method = 'PUT';
+        url = `https://www.wearewework.com/api/articles/${slug}`;
+    }
 
-            try {
-                const response = await fetch(url, {
-                    method: method,
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(articleData),
-                });
-
-                if (response.ok) {
-                    alert('Article enregistré avec succès !');
-                    // Réinitialiser le formulaire et l'éditeur TinyMCE
-                    document.getElementById('form-title').textContent = "Ajouter un article";
-                    e.target.reset();
-                    document.getElementById('article-slug').value = ''; 
-                    tinymce.get('content').setContent(''); // Vider le contenu de TinyMCE
-                    loadArticles(); // Recharger la liste des articles
-                } else {
-                    alert('Erreur lors de l\'enregistrement de l\'article.');
-                }
-            } catch (error) {
-                console.error('Erreur:', error);
-                alert('Une erreur s\'est produite. Veuillez réessayer.');
-            }
+    try {
+        const response = await fetch(url, {
+            method: method,
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(articleData),
         });
+
+        if (response.ok) {
+            alert('Article enregistré avec succès !');
+            loadArticles(); // Recharger la liste des articles
+        } else {
+            alert('Erreur lors de l\'enregistrement de l\'article.');
+        }
+    } catch (error) {
+        console.error('Erreur:', error);
+        alert('Une erreur s\'est produite. Veuillez réessayer.');
+    }
+});
+
 
         // Charger la liste des articles lors du chargement de la page
         loadArticles();
