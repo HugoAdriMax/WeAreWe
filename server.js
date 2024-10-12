@@ -3,6 +3,15 @@ const fs = require('fs');
 const path = require('path');
 const app = express();
 app.use(express.json());
+const cors = require('cors');
+
+// Ajouter le middleware CORS
+app.use(cors({
+    origin: '*', // Autorise toutes les origines
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
 
 // Chemin vers le fichier JSON des articles
 const articlesFilePath = path.join(__dirname, './articles.json');
