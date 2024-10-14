@@ -9,9 +9,9 @@ const mongoURI = process.env.MONGO_URI;
 mongoose.connect(mongoURI, {
     useNewUrlParser: true,          // Utilise le nouvel analyseur d'URL MongoDB
     useUnifiedTopology: true,       // Utilise le moteur d'unification du topologie pour gérer les connexions
-    serverSelectionTimeoutMS: 30000, // Timeout de 30 secondes pour la sélection du serveur
-    socketTimeoutMS: 45000,          // Timeout pour les sockets (inactivité)
-    connectTimeoutMS: 30000          // Timeout pour la connexion initiale
+    serverSelectionTimeoutMS: 60000, // Timeout de 30 secondes pour la sélection du serveur
+    socketTimeoutMS: 60000,          // Timeout pour les sockets (inactivité)
+    connectTimeoutMS: 60000          // Timeout pour la connexion initiale
 })
 .then(() => console.log('Connecté à MongoDB...'))
 .catch(err => {
@@ -37,16 +37,37 @@ const articleSchema = new mongoose.Schema({
 // Modèle pour les articles
 const Article = mongoose.model('Article', articleSchema, 'articles'); // Notez ici 'articles'
 
-// Route pour récupérer tous les articles
+// Route pour récupérer tous les articles avec pagination et limitation des champs
 app.get('/api/articles', async (req, res) => {
+    // Récupérer les paramètres de pagination depuis la requête (avec valeurs par défaut)
+    const page = parseInt(req.query.page) || 1;  // Par défaut, première page
+    const limit = parseInt(req.query.limit) || 10; // Par défaut, 10 articles par page
+    const skip = (page - 1) * limit;  // Calculer combien d'articles sauter
+
     try {
-        const articles = await Article.find();
-        res.json(articles);
+        // Récupérer uniquement certains champs pour alléger la réponse
+        const articles = await Article.find()
+            .select('title slug metaDescription date')  // Sélectionner uniquement les champs nécessaires
+            .skip(skip)  // Sauter les articles des pages précédentes
+            .limit(limit)  // Limiter le nombre d'articles retournés
+            .exec();
+
+        // Récupérer le nombre total d'articles pour calculer le nombre de pages
+        const total = await Article.countDocuments();
+
+        // Envoyer les articles avec des informations de pagination
+        res.json({
+            articles,
+            total,
+            totalPages: Math.ceil(total / limit),  // Calcul du nombre total de pages
+            currentPage: page
+        });
     } catch (error) {
-        console.error('Erreur lors de la récupération des articles:', error);
-        res.status(500).json({ error: 'Erreur lors de la récupération des articles' });
+        console.error('Erreur lors de la récupération des articles:', error.message);
+        res.status(500).json({ error: 'Erreur lors de la récupération des articles', details: error.message });
     }
 });
+
 
 // Route pour récupérer un article par ID
 app.get('/api/articles/:id', async (req, res) => {
