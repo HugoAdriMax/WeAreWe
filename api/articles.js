@@ -9,9 +9,9 @@ const mongoURI = process.env.MONGO_URI;
 mongoose.connect(mongoURI, {
     useNewUrlParser: true,          // Utilise le nouvel analyseur d'URL MongoDB
     useUnifiedTopology: true,       // Utilise le moteur d'unification du topologie pour gérer les connexions
-    serverSelectionTimeoutMS: 50000, // Timeout de 30 secondes pour la sélection du serveur
-    socketTimeoutMS: 50000,          // Timeout pour les sockets (inactivité)
-    connectTimeoutMS: 50000          // Timeout pour la connexion initiale
+    serverSelectionTimeoutMS: 120000, // Timeout de 30 secondes pour la sélection du serveur
+    socketTimeoutMS: 120000,          // Timeout pour les sockets (inactivité)
+    connectTimeoutMS: 120000          // Timeout pour la connexion initiale
 })
 .then(() => console.log('Connecté à MongoDB...'))
 .catch(err => {
