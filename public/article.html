@@ -145,9 +145,9 @@
 
     // Fonction pour récupérer les paramètres de l'URL
     function getQueryParam(param) {
-        const urlParams = new URLSearchParams(window.location.search);
-        return urlParams.get(param);
-    }
+    const urlParams = new URLSearchParams(window.location.search);
+    return decodeURIComponent(urlParams.get(param));  // Décoder l'URL encodée
+}
     
 // Récupérer le slug depuis l'URL
 const slug = getQueryParam('slug');
