@@ -69,22 +69,21 @@ app.get('/api/articles', async (req, res) => {
 });
 
 app.get('/api/articles/slug/:slug', async (req, res) => {
-    const slugRecu = req.params.slug;
-    console.log("Slug reçu dans l'API:", slugRecu);  // Log le slug reçu
-
+    console.log('Slug reçu:', req.params.slug);  // Ajout du log
     try {
-        const article = await Article.findOne({ slug: slugRecu });
+        const article = await Article.findOne({ slug: req.params.slug });
         if (article) {
             res.json(article);
         } else {
-            console.log('Article non trouvé avec le slug:', slugRecu);  // Log si l'article n'est pas trouvé
+            console.log('Article non trouvé avec le slug:', req.params.slug);  // Ajout du log
             res.status(404).json({ error: 'Article non trouvé' });
         }
     } catch (error) {
-        console.error('Erreur lors de la récupération de l\'article:', error);
+        console.error('Erreur lors de la récupération de l\'article:', error.message);
         res.status(500).json({ error: 'Erreur lors de la récupération de l\'article' });
     }
 });
+
 
 
 
