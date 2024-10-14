@@ -47,7 +47,7 @@ app.get('/api/articles', async (req, res) => {
     try {
         // Récupérer uniquement certains champs pour alléger la réponse
         const articles = await Article.find()
-            .select('title slug metaDescription date')  // Sélectionner uniquement les champs nécessaires
+            .select('title slug metaDescription date imageUrl')  // Sélectionner uniquement les champs nécessaires
             .skip(skip)  // Sauter les articles des pages précédentes
             .limit(limit)  // Limiter le nombre d'articles retournés
             .exec();
@@ -65,6 +65,20 @@ app.get('/api/articles', async (req, res) => {
     } catch (error) {
         console.error('Erreur lors de la récupération des articles:', error.message);
         res.status(500).json({ error: 'Erreur lors de la récupération des articles', details: error.message });
+    }
+});
+
+// Route pour récupérer un article par slug
+app.get('/api/articles/slug/:slug', async (req, res) => {
+    try {
+        const article = await Article.findOne({ slug: req.params.slug });
+        if (article) {
+            res.json(article);
+        } else {
+            res.status(404).json({ error: 'Article non trouvé' });
+        }
+    } catch (error) {
+        res.status(500).json({ error: 'Erreur lors de la récupération de l\'article' });
     }
 });
 
