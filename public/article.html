@@ -142,101 +142,85 @@
             once: true,
             mirror: false
         });
-
-    // Fonction pour récupérer les paramètres de l'URL
-    function getQueryParam(param) {
-    const urlParams = new URLSearchParams(window.location.search);
-    return decodeURIComponent(urlParams.get(param));  // Décoder l'URL encodée
-}
-
-// Fonction pour reformater le slug si nécessaire
-function sanitizeSlug(slug) {
-    return slug.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
-}
     
-// Récupérer le slug depuis l'URL
-let slug = getQueryParam('slug');
-slug = sanitizeSlug(slug);  // Appliquer le nettoyage du slug
-console.log("Slug récupéré et nettoyé:", slug);
-
-
-// Récupérer l'article correspondant au slug
-fetch(`https://www.wearewework.com/api/articles/slug/${encodeURIComponent(slug)}`)
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Article non trouvé ou problème serveur.');
+        // Fonction pour récupérer un paramètre d'URL (slug dans ce cas)
+        function getQueryParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
         }
-        return response.json();
-    })
-    .then(article => {
-        if (article) {
-            document.title = `${article.title} - WeAreWe`;
+    
+        // Récupérer le slug depuis l'URL
+        const slug = getQueryParam('slug');
+    
+        // Récupérer l'article correspondant au slug
+        fetch('https://www.wearewework.com/api/articles')
+            .then(response => response.json())
+            .then(articles => {
+                const article = articles.find(a => a.slug === slug);
+                if (article) {
+                    document.title = `${article.title} - WeAreWe`;
+    
+                    // Insérer les balises SEO dynamiques
+                    const metaDescription = document.createElement('meta');
+                    metaDescription.name = 'description';
+                    metaDescription.content = article.metaDescription;
+                    document.head.appendChild(metaDescription);
+    
+                    const metaOgTitle = document.createElement('meta');
+                    metaOgTitle.setAttribute('property', 'og:title');
+                    metaOgTitle.content = article.title;
+                    document.head.appendChild(metaOgTitle);
+    
+                    const metaOgDescription = document.createElement('meta');
+                    metaOgDescription.setAttribute('property', 'og:description');
+                    metaOgDescription.content = article.metaDescription;
+                    document.head.appendChild(metaOgDescription);
+    
+                    const metaOgImage = document.createElement('meta');
+                    metaOgImage.setAttribute('property', 'og:image');
+                    metaOgImage.content = article.imageUrl;
+                    document.head.appendChild(metaOgImage);
+    
+                    const metaOgUrl = document.createElement('meta');
+                    metaOgUrl.setAttribute('property', 'og:url');
+                    metaOgUrl.content = window.location.href;
+                    document.head.appendChild(metaOgUrl);
+    
+                    const metaTwitterTitle = document.createElement('meta');
+                    metaTwitterTitle.name = 'twitter:title';
+                    metaTwitterTitle.content = article.title;
+                    document.head.appendChild(metaTwitterTitle);
+    
+                    const metaTwitterDescription = document.createElement('meta');
+                    metaTwitterDescription.name = 'twitter:description';
+                    metaTwitterDescription.content = article.metaDescription;
+                    document.head.appendChild(metaTwitterDescription);
+    
+                    const metaTwitterImage = document.createElement('meta');
+                    metaTwitterImage.name = 'twitter:image';
+                    metaTwitterImage.content = article.imageUrl;
+                    document.head.appendChild(metaTwitterImage);
+    
+                    const articleContent = document.getElementById('article-content');
+articleContent.innerHTML = `
+    <h1 class="text-4xl font-bold mb-4">${article.title}</h1>
+    <img src="${article.imageUrl}" alt="${article.title}" class="w-full h-64 object-cover rounded-lg mb-8">
+    <div class="text-gray-700 mb-4">
+        ${article.content}
+    </div>
+`;
 
-            // Insérer les balises SEO dynamiques
-            const metaDescription = document.createElement('meta');
-            metaDescription.name = 'description';
-            metaDescription.content = article.metaDescription;
-            document.head.appendChild(metaDescription);
 
-            const metaOgTitle = document.createElement('meta');
-            metaOgTitle.setAttribute('property', 'og:title');
-            metaOgTitle.content = article.title;
-            document.head.appendChild(metaOgTitle);
-
-            const metaOgDescription = document.createElement('meta');
-            metaOgDescription.setAttribute('property', 'og:description');
-            metaOgDescription.content = article.metaDescription;
-            document.head.appendChild(metaOgDescription);
-
-            const metaOgImage = document.createElement('meta');
-            metaOgImage.setAttribute('property', 'og:image');
-            metaOgImage.content = article.imageUrl;
-            document.head.appendChild(metaOgImage);
-
-            const metaOgUrl = document.createElement('meta');
-            metaOgUrl.setAttribute('property', 'og:url');
-            metaOgUrl.content = window.location.href;
-            document.head.appendChild(metaOgUrl);
-
-            const metaTwitterTitle = document.createElement('meta');
-            metaTwitterTitle.name = 'twitter:title';
-            metaTwitterTitle.content = article.title;
-            document.head.appendChild(metaTwitterTitle);
-
-            const metaTwitterDescription = document.createElement('meta');
-            metaTwitterDescription.name = 'twitter:description';
-            metaTwitterDescription.content = article.metaDescription;
-            document.head.appendChild(metaTwitterDescription);
-
-            const metaTwitterImage = document.createElement('meta');
-            metaTwitterImage.name = 'twitter:image';
-            metaTwitterImage.content = article.imageUrl;
-            document.head.appendChild(metaTwitterImage);
-
-            // Affichage de l'article dans la page
-            const articleContent = document.getElementById('article-content');
-            articleContent.innerHTML = `
-                <h1 class="text-4xl font-bold mb-4">${article.title}</h1>
-                <img src="${article.imageUrl}" alt="${article.title}" class="w-full h-64 object-cover rounded-lg mb-8">
-                <div class="text-gray-700 mb-4">
-                    ${article.content}
-                </div>
-            `;
-        } else {
-            document.getElementById('article-content').innerHTML = `
-                <h1 class="text-4xl font-bold mb-4">Article non trouvé</h1>
-                <p>Désolé, l'article que vous recherchez n'existe pas ou a été supprimé.</p>
-            `;
-        }
-    })
-    .catch(error => {
-        console.error('Erreur lors du chargement de l\'article :', error);
-        document.getElementById('article-content').innerHTML = `
-            <h1 class="text-4xl font-bold mb-4">Erreur de chargement</h1>
-            <p>Une erreur est survenue lors de la récupération de l'article.</p>
-        `;
-    });
-
+                } else {
+                    document.getElementById('article-content').innerHTML = `
+                        <h1 class="text-4xl font-bold mb-4">Article non trouvé</h1>
+                        <p>Désolé, l'article que vous recherchez n'existe pas ou a été supprimé.</p>
+                    `;
+                }
+            })
+            .catch(error => {
+                console.error('Erreur lors du chargement de l\'article :', error);
+            });
     </script>
     
     
