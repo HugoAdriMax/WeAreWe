@@ -148,10 +148,17 @@
     const urlParams = new URLSearchParams(window.location.search);
     return decodeURIComponent(urlParams.get(param));  // Décoder l'URL encodée
 }
+
+// Fonction pour reformater le slug si nécessaire
+function sanitizeSlug(slug) {
+    return slug.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+}
     
 // Récupérer le slug depuis l'URL
-const slug = getQueryParam('slug');
-console.log("Slug récupéré:", slug);
+let slug = getQueryParam('slug');
+slug = sanitizeSlug(slug);  // Appliquer le nettoyage du slug
+console.log("Slug récupéré et nettoyé:", slug);
+
 
 // Récupérer l'article correspondant au slug
 fetch(`https://www.wearewework.com/api/articles/slug/${slug}`)
