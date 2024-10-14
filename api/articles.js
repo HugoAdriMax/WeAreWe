@@ -68,19 +68,24 @@ app.get('/api/articles', async (req, res) => {
     }
 });
 
-// Route pour récupérer un article par slug
 app.get('/api/articles/slug/:slug', async (req, res) => {
+    const slugRecu = req.params.slug;
+    console.log("Slug reçu dans l'API:", slugRecu);  // Log le slug reçu
+
     try {
-        const article = await Article.findOne({ slug: req.params.slug });
+        const article = await Article.findOne({ slug: slugRecu });
         if (article) {
             res.json(article);
         } else {
+            console.log('Article non trouvé avec le slug:', slugRecu);  // Log si l'article n'est pas trouvé
             res.status(404).json({ error: 'Article non trouvé' });
         }
     } catch (error) {
+        console.error('Erreur lors de la récupération de l\'article:', error);
         res.status(500).json({ error: 'Erreur lors de la récupération de l\'article' });
     }
 });
+
 
 
 // Route pour récupérer un article par ID
