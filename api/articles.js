@@ -47,7 +47,7 @@ app.get('/api/articles', async (req, res) => {
     try {
         // Récupérer uniquement certains champs pour alléger la réponse
         const articles = await Article.find()
-            .select('title slug metaDescription date imageUrl')  // Sélectionner uniquement les champs nécessaires
+            .select('title slug metaDescription date imageUrl content author')  // Sélectionner uniquement les champs nécessaires
             .skip(skip)  // Sauter les articles des pages précédentes
             .limit(limit)  // Limiter le nombre d'articles retournés
             .exec();
