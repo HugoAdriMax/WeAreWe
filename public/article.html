@@ -142,9 +142,16 @@
             once: true,
             mirror: false
         });
+
+    // Fonction pour récupérer les paramètres de l'URL
+    function getQueryParam(param) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(param);
+    }
     
 // Récupérer le slug depuis l'URL
 const slug = getQueryParam('slug');
+console.log("Slug récupéré:", slug);
 
 // Récupérer l'article correspondant au slug
 fetch(`https://www.wearewework.com/api/articles/slug/${slug}`)
