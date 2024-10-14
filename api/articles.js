@@ -105,7 +105,7 @@ app.post('/api/articles', async (req, res) => {
         return res.status(400).json({ error: 'Champs manquants' });
     }
 
-    const slug = url || title.trim().toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]+/g, '');
+    const slug = url || title.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
 
     const newArticle = new Article({
         title,
@@ -127,7 +127,7 @@ app.post('/api/articles', async (req, res) => {
 // Route pour mettre à jour un article existant
 app.put('/api/articles/:id', async (req, res) => {
     const { title, url, metaDescription, imageUrl, content } = req.body;
-    const slug = url || title.trim().toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]+/g, '');
+    const slug = url || title.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
 
     try {
         const article = await Article.findByIdAndUpdate(req.params.id, {
