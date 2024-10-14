@@ -9,9 +9,9 @@ const mongoURI = process.env.MONGO_URI;
 mongoose.connect(mongoURI, {
     useNewUrlParser: true,          // Utilise le nouvel analyseur d'URL MongoDB
     useUnifiedTopology: true,       // Utilise le moteur d'unification du topologie pour gérer les connexions
-    serverSelectionTimeoutMS: 120000, // Timeout de 30 secondes pour la sélection du serveur
-    socketTimeoutMS: 120000,          // Timeout pour les sockets (inactivité)
-    connectTimeoutMS: 120000          // Timeout pour la connexion initiale
+    serverSelectionTimeoutMS: 60000, // Timeout de 30 secondes pour la sélection du serveur
+    socketTimeoutMS: 60000,          // Timeout pour les sockets (inactivité)
+    connectTimeoutMS: 60000          // Timeout pour la connexion initiale
 })
 .then(() => console.log('Connecté à MongoDB...'))
 .catch(err => {
@@ -47,7 +47,7 @@ app.get('/api/articles', async (req, res) => {
     try {
         // Récupérer uniquement certains champs pour alléger la réponse
         const articles = await Article.find()
-            .select('title slug metaDescription date imageUrl content author')  // Sélectionner uniquement les champs nécessaires
+            .select('title slug metaDescription date')  // Sélectionner uniquement les champs nécessaires
             .skip(skip)  // Sauter les articles des pages précédentes
             .limit(limit)  // Limiter le nombre d'articles retournés
             .exec();
@@ -67,25 +67,6 @@ app.get('/api/articles', async (req, res) => {
         res.status(500).json({ error: 'Erreur lors de la récupération des articles', details: error.message });
     }
 });
-
-app.get('/api/articles/slug/:slug', async (req, res) => {
-    console.log('Slug reçu:', req.params.slug);  // Log du slug reçu par le serveur
-    try {
-        const article = await Article.findOne({ slug: req.params.slug });
-        if (article) {
-            res.json(article);
-        } else {
-            console.log('Article non trouvé avec le slug:', req.params.slug);  // Log si aucun article trouvé
-            res.status(404).json({ error: 'Article non trouvé' });
-        }
-    } catch (error) {
-        console.error('Erreur lors de la récupération de l\'article:', error.message);
-        res.status(500).json({ error: 'Erreur lors de la récupération de l\'article' });
-    }
-});
-
-
-
 
 
 // Route pour récupérer un article par ID
@@ -110,7 +91,7 @@ app.post('/api/articles', async (req, res) => {
         return res.status(400).json({ error: 'Champs manquants' });
     }
 
-    const slug = url || title.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+    const slug = url || title.trim().toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]+/g, '');
 
     const newArticle = new Article({
         title,
@@ -132,7 +113,7 @@ app.post('/api/articles', async (req, res) => {
 // Route pour mettre à jour un article existant
 app.put('/api/articles/:id', async (req, res) => {
     const { title, url, metaDescription, imageUrl, content } = req.body;
-    const slug = url || title.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+    const slug = url || title.trim().toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]+/g, '');
 
     try {
         const article = await Article.findByIdAndUpdate(req.params.id, {
@@ -172,4 +153,3 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Serveur démarré sur http://localhost:${PORT}`);
 });
-
