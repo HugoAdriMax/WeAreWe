@@ -4,6 +4,8 @@ const mongoose = require('mongoose');
 const app = express();
 app.use(express.json());
 
+// Utilisez la variable d'environnement pour l'URI de connexion à votre base de données
+const mongoURI = process.env.MONGO_URI; 
 mongoose.connect(mongoURI, {
     serverSelectionTimeoutMS: 30000, // Timeout de 30 secondes pour la sélection du serveur
     socketTimeoutMS: 45000,          // Timeout pour les sockets (inactivité)
@@ -16,7 +18,6 @@ mongoose.connect(mongoURI, {
         console.error('Problème réseau ou de configuration. Vérifiez l\'accès réseau.');
     }
 });
-
 
 // Schéma pour les articles
 const articleSchema = new mongoose.Schema({
