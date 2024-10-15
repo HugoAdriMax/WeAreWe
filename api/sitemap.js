@@ -5,13 +5,13 @@ const app = express();
 app.use(express.json());
 
 // Connexion à MongoDB
-const mongoURI = process.env.MONGO_URI;
+const mongoURI = process.env.MONGO_URI; // Assurez-vous que MONGO_URI est bien configurée dans vos variables d'environnement Vercel
 mongoose.connect(mongoURI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    serverSelectionTimeoutMS: 30000,
-    socketTimeoutMS: 45000,
-    connectTimeoutMS: 30000
+    serverSelectionTimeoutMS: 30000, 
+    socketTimeoutMS: 45000,          
+    connectTimeoutMS: 30000          
 })
 .then(() => console.log('Connecté à MongoDB...'))
 .catch(err => {
@@ -32,7 +32,7 @@ const articleSchema = new mongoose.Schema({
 const Article = mongoose.models.Article || mongoose.model('Article', articleSchema, 'articles');
 
 // Route pour générer le sitemap dynamique
-app.get('/', async (req, res) => { // ici, plus besoin de spécifier '/sitemap'
+app.get('/api/sitemap', async (req, res) => { // Utilisation explicite de la route complète
     try {
         const articles = await Article.find();
         let sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n`;
