@@ -9,14 +9,15 @@ const mongoURI = process.env.MONGO_URI; // Assurez-vous que MONGO_URI est bien c
 mongoose.connect(mongoURI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    serverSelectionTimeoutMS: 30000, 
-    socketTimeoutMS: 45000,          
-    connectTimeoutMS: 30000          
+    serverSelectionTimeoutMS: 30000,  // 30 secondes pour la sélection du serveur
+    socketTimeoutMS: 60000,           // 60 secondes pour les sockets inactifs
+    connectTimeoutMS: 60000           // 60 secondes pour la connexion initiale
 })
 .then(() => console.log('Connecté à MongoDB...'))
 .catch(err => {
     console.error('Erreur de connexion à MongoDB:', err.message);
 });
+
 
 // Schéma pour les articles
 const articleSchema = new mongoose.Schema({
