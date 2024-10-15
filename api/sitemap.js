@@ -1,8 +1,22 @@
 const express = require('express');
 const mongoose = require('mongoose');
-
 const app = express();
+
 app.use(express.json());
+
+// Connexion à MongoDB
+const mongoURI = process.env.MONGO_URI; // Assurez-vous que MONGO_URI est bien configurée dans vos variables d'environnement Vercel
+mongoose.connect(mongoURI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    serverSelectionTimeoutMS: 30000, // Timeout de 30 secondes
+    socketTimeoutMS: 45000,          // Timeout pour les sockets (inactivité)
+    connectTimeoutMS: 30000          // Timeout pour la connexion initiale
+})
+.then(() => console.log('Connecté à MongoDB...'))
+.catch(err => {
+    console.error('Erreur de connexion à MongoDB:', err.message);
+});
 
 // Schéma pour les articles
 const articleSchema = new mongoose.Schema({
@@ -15,11 +29,10 @@ const articleSchema = new mongoose.Schema({
     author: { type: String, default: 'WeAreWe Team' }
 });
 
-// Modèle pour les articles
 const Article = mongoose.models.Article || mongoose.model('Article', articleSchema, 'articles');
 
 // Route pour générer le sitemap dynamique
-app.get('/api/sitemap', async (req, res) => {
+app.get('/sitemap', async (req, res) => {
     try {
         const articles = await Article.find();
         let sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n`;
@@ -31,7 +44,6 @@ app.get('/api/sitemap', async (req, res) => {
             sitemap += `    <lastmod>${new Date(article.date).toISOString().split('T')[0]}</lastmod>\n`;
             sitemap += `    <changefreq>weekly</changefreq>\n`;
             sitemap += `    <priority>0.8</priority>\n`;
-            sitemap += `  </url>\n`;
         });
 
         sitemap += `</urlset>`;
@@ -43,5 +55,4 @@ app.get('/api/sitemap', async (req, res) => {
     }
 });
 
-// Exporter le module pour que Vercel puisse l'exécuter
 module.exports = app;
