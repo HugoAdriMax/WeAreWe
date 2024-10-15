@@ -1,7 +1,7 @@
 {
   "rewrites": [
     { "source": "/api/articles/:id", "destination": "/api/articles" },
-    { "source": "/sitemap.xml", "destination": "/sitemap" }
+    { "source": "/sitemap.xml", "destination": "/api/sitemap" }
   ],
   "redirects": [
     {
