@@ -158,12 +158,3 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Serveur démarré sur http://localhost:${PORT}`);
 });
-
-
-// SEO
-document.getElementById('seo-title').textContent = article.title;
-document.getElementById('seo-description').content = article.metaDescription;
-document.getElementById('og-title').content = article.title;
-document.getElementById('og-description').content = article.metaDescription;
-document.getElementById('og-image').content = article.imageUrl;
-document.getElementById('og-url').content = window.location.href;
