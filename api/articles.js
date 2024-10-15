@@ -123,39 +123,6 @@ app.delete('/api/articles/:id', async (req, res) => {
     }
 });
 
-app.get('/api/sitemap', async (req, res) => {
-    try {
-        // Récupérer tous les articles
-        const articles = await Article.find();
-
-        // Vérifier si des articles sont récupérés
-        console.log('Articles récupérés pour le sitemap:', articles);
-
-        // Générer le sitemap dynamique
-        let sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n`;
-        sitemap += `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
-
-        articles.forEach(article => {
-            sitemap += `  <url>\n`;
-            sitemap += `    <loc>https://www.wearewework.com/article.html?slug=${article.slug}</loc>\n`;
-            sitemap += `    <lastmod>${new Date(article.date).toISOString().split('T')[0]}</lastmod>\n`;
-            sitemap += `    <changefreq>weekly</changefreq>\n`;
-            sitemap += `    <priority>0.8</priority>\n`;
-            sitemap += `  </url>\n`;
-        });
-
-        sitemap += `</urlset>`;
-
-        // Envoyer le sitemap en réponse
-        res.header('Content-Type', 'application/xml');
-        res.send(sitemap);
-    } catch (error) {
-        console.error('Erreur lors de la génération du sitemap:', error);
-        res.status(500).send('Erreur lors de la génération du sitemap.');
-    }
-});
-
-
 
 // Démarrage du serveur
 const PORT = process.env.PORT || 3000;
