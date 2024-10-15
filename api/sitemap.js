@@ -10,8 +10,8 @@ mongoose.connect(mongoURI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     serverSelectionTimeoutMS: 30000,  // 30 secondes pour la sélection du serveur
-    socketTimeoutMS: 60000,           // 60 secondes pour les sockets inactifs
-    connectTimeoutMS: 60000           // 60 secondes pour la connexion initiale
+    socketTimeoutMS: 120000,           // 60 secondes pour les sockets inactifs
+    connectTimeoutMS: 120000           // 60 secondes pour la connexion initiale
 })
 .then(() => console.log('Connecté à MongoDB...'))
 .catch(err => {
