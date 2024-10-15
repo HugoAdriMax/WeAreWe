@@ -1,8 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const redis = require('redis');
-const axios = require('axios');
-const sharp = require('sharp');
 
 const app = express();
 app.use(express.json());
@@ -100,44 +98,17 @@ app.get('/api/articles', async (req, res) => {
     }
 });
 
-// Route pour servir les images optimisées
-app.get('/images-optimized', async (req, res) => {
+// Route pour récupérer un article par ID
+app.get('/api/articles/:id', async (req, res) => {
     try {
-        const imageUrl = req.query.url;
-        if (!imageUrl) {
-            return res.status(400).send('URL de l\'image manquante');
+        const article = await Article.findById(req.params.id);
+        if (article) {
+            res.json(article);
+        } else {
+            res.status(404).send('Article non trouvé');
         }
-
-        // Récupérer l'image depuis l'URL
-        const response = await axios({
-            url: imageUrl,
-            method: 'GET',
-            responseType: 'arraybuffer'
-        });
-
-        const buffer = Buffer.from(response.data);
-
-        // Vérifier le format supporté par le client
-        const accept = req.headers.accept;
-        let format = 'png'; // Par défaut
-
-        if (accept.includes('image/webp')) {
-            format = 'webp';
-        } else if (accept.includes('image/avif')) {
-            format = 'avif';
-        }
-
-        // Convertir l'image avec sharp
-        const optimizedImage = await sharp(buffer)
-            .toFormat(format, { quality: 80 }) // Qualité ajustable
-            .toBuffer();
-
-        // Définir l'en-tête Content-Type selon le format
-        res.set('Content-Type', `image/${format}`);
-        res.send(optimizedImage);
     } catch (error) {
-        console.error('Erreur lors de la récupération de l\'image :', error);
-        res.status(500).send('Erreur serveur');
+        res.status(500).send('Erreur lors de la récupération de l\'article');
     }
 });
 
@@ -172,7 +143,50 @@ app.post('/api/articles', async (req, res) => {
     }
 });
 
-// Autres routes (update, delete...) restent inchangées.
+// Route pour mettre à jour un article existant
+app.put('/api/articles/:id', async (req, res) => {
+    const { title, url, metaDescription, imageUrl, content } = req.body;
+    const slug = url || title.trim().toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]+/g, '');
+
+    try {
+        const article = await Article.findByIdAndUpdate(req.params.id, {
+            title,
+            slug,
+            metaDescription,
+            imageUrl,
+            content
+        }, { new: true });
+
+        // Invalider le cache
+        await redisClient.del('articles');
+
+        if (article) {
+            res.json(article);
+        } else {
+            res.status(404).send('Article non trouvé');
+        }
+    } catch (error) {
+        res.status(500).send('Erreur lors de la mise à jour de l\'article');
+    }
+});
+
+// Route pour supprimer un article
+app.delete('/api/articles/:id', async (req, res) => {
+    try {
+        const result = await Article.findByIdAndDelete(req.params.id);
+
+        // Invalider le cache
+        await redisClient.del('articles');
+
+        if (result) {
+            res.status(204).send(); // Suppression réussie
+        } else {
+            res.status(404).json({ error: 'Article non trouvé' });
+        }
+    } catch (error) {
+        res.status(500).json({ error: 'Erreur lors de la suppression de l\'article' });
+    }
+});
 
 // Démarrage du serveur
 const PORT = process.env.PORT || 3000;

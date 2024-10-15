@@ -144,42 +144,43 @@
     
         // Fonction pour récupérer et afficher les articles avec pagination
         function loadArticles(page = 1) {
-            fetch('https://www.wearewework.com/api/articles')
-                .then(response => response.json())
-                .then(articles => {
-                    // Trier les articles par date décroissante (du plus récent au plus ancien)
-                    articles.sort((a, b) => new Date(b.date) - new Date(a.date));
+        fetch('https://www.wearewework.com/api/articles')
+        .then(response => response.json())
+        .then(articles => {
+            // Trier les articles par date décroissante (du plus récent au plus ancien)
+            articles.sort((a, b) => new Date(b.date) - new Date(a.date));
 
-                    const container = document.getElementById('articles-container');
-                    container.innerHTML = '';
+            const container = document.getElementById('articles-container');
+            container.innerHTML = '';
 
-                    totalPages = Math.ceil(articles.length / articlesPerPage); // Calcul du nombre total de pages
-                    const startIndex = (page - 1) * articlesPerPage;
-                    const endIndex = startIndex + articlesPerPage;
+            totalPages = Math.ceil(articles.length / articlesPerPage); // Calcul du nombre total de pages
+            const startIndex = (page - 1) * articlesPerPage;
+            const endIndex = startIndex + articlesPerPage;
 
-                    const articlesToDisplay = articles.slice(startIndex, endIndex);
+            const articlesToDisplay = articles.slice(startIndex, endIndex);
 
-                    articlesToDisplay.forEach(article => {
-                        const articleElement = `
-                            <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
-                                <h2 class="text-2xl font-bold mb-4">${article.title}</h2>
-                                <img src="/images-optimized?url=${encodeURIComponent(article.imageUrl)}" alt="${article.title}" class="w-full h-48 object-cover rounded-lg mb-4">
-                                <p class="text-gray-600 mb-4">${article.metaDescription}</p>
-                                <a href="article.html?slug=${article.slug}" class="text-indigo-600 font-bold hover:underline">Lire la suite</a>
-                            </div>
-                        `;
-                        container.innerHTML += articleElement;
-                    });
+            articlesToDisplay.forEach(article => {
+                const articleElement = `
+                    <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+                        <h2 class="text-2xl font-bold mb-4">${article.title}</h2>
+                        <img src="${article.imageUrl}" alt="${article.title}" class="w-full h-48 object-cover rounded-lg mb-4">
+                        <p class="text-gray-600 mb-4">${article.metaDescription}</p>
+                        <a href="article.html?slug=${article.slug}" class="text-indigo-600 font-bold hover:underline">Lire la suite</a>
+                    </div>
+                `;
+                container.innerHTML += articleElement;
+            });
 
-                    // Afficher ou masquer les boutons de pagination en fonction de la page actuelle
-                    document.getElementById('prev-btn').style.display = page === 1 ? 'none' : 'inline-block';
-                    document.getElementById('next-btn').style.display = page === totalPages ? 'none' : 'inline-block';
-                })
-                .catch(error => {
-                    console.error('Erreur lors du chargement des articles:', error);
-                });
-        }
+            // Afficher ou masquer les boutons de pagination en fonction de la page actuelle
+            document.getElementById('prev-btn').style.display = page === 1 ? 'none' : 'inline-block';
+            document.getElementById('next-btn').style.display = page === totalPages ? 'none' : 'inline-block';
+        })
+        .catch(error => {
+            console.error('Erreur lors du chargement des articles:', error);
+        });
+}
 
+    
         // Gérer les clics sur les boutons "Suivant" et "Précédent"
         document.getElementById('prev-btn').addEventListener('click', () => {
             if (currentPage > 1) {
