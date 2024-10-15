@@ -5,7 +5,7 @@ const app = express();
 app.use(express.json());
 
 // Utilisez la variable d'environnement pour l'URI de connexion à votre base de données
-const mongoURI = process.env.MONGO_URI; 
+const mongoURI = process.env.MONGO_URI;
 mongoose.connect(mongoURI, {
     serverSelectionTimeoutMS: 30000, // Timeout de 30 secondes pour la sélection du serveur
     socketTimeoutMS: 45000,          // Timeout pour les sockets (inactivité)
@@ -30,8 +30,8 @@ const articleSchema = new mongoose.Schema({
     author: { type: String, default: 'WeAreWe Team' }
 });
 
-// Modèle pour les articles
-const Article = mongoose.model('Article', articleSchema, 'articles'); // Collection 'articles'
+// Vérifie si le modèle 'Article' existe déjà avant de le définir
+const Article = mongoose.models.Article || mongoose.model('Article', articleSchema, 'articles'); // Collection 'articles'
 
 // Route pour récupérer tous les articles
 app.get('/api/articles', async (req, res) => {
