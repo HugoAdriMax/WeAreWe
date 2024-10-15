@@ -37,7 +37,7 @@
                         document.querySelector('meta[name="description"]').setAttribute("content", article.metaDescription);
                         document.querySelector('meta[property="og:title"]').setAttribute("content", article.title);
                         document.querySelector('meta[property="og:description"]').setAttribute("content", article.metaDescription);
-                        document.querySelector('meta[property="og:image"]').setAttribute("content", article.imageUrl);
+                        document.querySelector('meta[property="og:image"]').setAttribute("content", `/images-optimized?url=${encodeURIComponent(article.imageUrl)}`);
                         document.querySelector('meta[property="og:url"]').setAttribute("content", window.location.href);
 
                         // Ajouter la balise canonical dynamique
@@ -45,6 +45,19 @@
                         canonicalLink.setAttribute('rel', 'canonical');
                         canonicalLink.setAttribute('href', window.location.href);  // URL dynamique
                         document.head.appendChild(canonicalLink);
+
+                        // Mise à jour du contenu de l'article
+                        const articleContent = document.getElementById('article-content');
+                        articleContent.innerHTML = `
+                            <h1 class="text-4xl font-bold mb-4">${article.title}</h1>
+                            <img src="/images-optimized?url=${encodeURIComponent(article.imageUrl)}" alt="${article.title}" class="w-full h-64 object-cover rounded-lg mb-8">
+                            <div class="text-gray-700 mb-4">${article.content}</div>
+                        `;
+                    } else {
+                        document.getElementById('article-content').innerHTML = `
+                            <h1 class="text-4xl font-bold mb-4">Article non trouvé</h1>
+                            <p>Désolé, l'article que vous recherchez n'existe pas ou a été supprimé.</p>
+                        `;
                     }
                 })
                 .catch(error => {
@@ -189,40 +202,6 @@
             once: true,
             mirror: false
         });
-    
-        document.addEventListener("DOMContentLoaded", function() {
-        // Fonction pour récupérer un paramètre d'URL (slug dans ce cas)
-        function getQueryParam(param) {
-            const urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get(param);
-        }
-
-        // Récupérer le slug depuis l'URL
-        const slug = getQueryParam('slug');
-
-        // Récupérer l'article correspondant au slug
-        fetch('https://www.wearewework.com/api/articles')
-            .then(response => response.json())
-            .then(articles => {
-                const article = articles.find(a => a.slug === slug);
-                if (article) {
-                    const articleContent = document.getElementById('article-content');
-                    articleContent.innerHTML = `
-                        <h1 class="text-4xl font-bold mb-4">${article.title}</h1>
-                        <img src="${article.imageUrl}" alt="${article.title}" class="w-full h-64 object-cover rounded-lg mb-8">
-                        <div class="text-gray-700 mb-4">${article.content}</div>
-                    `;
-                } else {
-                    document.getElementById('article-content').innerHTML = `
-                        <h1 class="text-4xl font-bold mb-4">Article non trouvé</h1>
-                        <p>Désolé, l'article que vous recherchez n'existe pas ou a été supprimé.</p>
-                    `;
-                }
-            })
-            .catch(error => {
-                console.error('Erreur lors du chargement de l\'article :', error);
-            });
-    });
     </script>
     
     
