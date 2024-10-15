@@ -13,7 +13,45 @@
     <meta property="og:description" id="og-description" content="Description par défaut de l'article.">
     <meta property="og:image" id="og-image" content="https://example.com/default-image.jpg">
     <meta property="og:url" id="og-url" content="https://wearewework.com/article">
-    <link rel="canonical" href="https://www.wearewework.com/">
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Fonction pour récupérer un paramètre d'URL (slug dans ce cas)
+            function getQueryParam(param) {
+                const urlParams = new URLSearchParams(window.location.search);
+                return urlParams.get(param);
+            }
+
+            // Récupérer le slug depuis l'URL
+            const slug = getQueryParam('slug');
+
+            // Récupérer l'article correspondant au slug
+            fetch('https://www.wearewework.com/api/articles')
+                .then(response => response.json())
+                .then(articles => {
+                    const article = articles.find(a => a.slug === slug);
+                    if (article) {
+                        document.title = `${article.title} - WeAreWe`;  // Titre de la page
+
+                        // Mise à jour des balises SEO
+                        document.querySelector('meta[name="description"]').setAttribute("content", article.metaDescription);
+                        document.querySelector('meta[property="og:title"]').setAttribute("content", article.title);
+                        document.querySelector('meta[property="og:description"]').setAttribute("content", article.metaDescription);
+                        document.querySelector('meta[property="og:image"]').setAttribute("content", article.imageUrl);
+                        document.querySelector('meta[property="og:url"]').setAttribute("content", window.location.href);
+
+                        // Ajouter la balise canonical dynamique
+                        const canonicalLink = document.createElement('link');
+                        canonicalLink.setAttribute('rel', 'canonical');
+                        canonicalLink.setAttribute('href', window.location.href);  // URL dynamique
+                        document.head.appendChild(canonicalLink);
+                    }
+                })
+                .catch(error => {
+                    console.error('Erreur lors du chargement de l\'article :', error);
+                });
+        });
+    </script>
 
 </head>
 
