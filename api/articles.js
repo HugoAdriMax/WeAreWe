@@ -123,11 +123,13 @@ app.delete('/api/articles/:id', async (req, res) => {
     }
 });
 
-// Route pour générer dynamiquement le sitemap.xml
 app.get('/api/sitemap', async (req, res) => {
     try {
         // Récupérer tous les articles
         const articles = await Article.find();
+
+        // Vérifier si des articles sont récupérés
+        console.log('Articles récupérés pour le sitemap:', articles);
 
         // Générer le sitemap dynamique
         let sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n`;
@@ -152,6 +154,7 @@ app.get('/api/sitemap', async (req, res) => {
         res.status(500).send('Erreur lors de la génération du sitemap.');
     }
 });
+
 
 
 // Démarrage du serveur
