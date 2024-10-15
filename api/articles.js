@@ -1,15 +1,16 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const redis = require('redis');
 
 const app = express();
 app.use(express.json());
 
-// Utilisez la variable d'environnement pour l'URI de connexion à votre base de données
+// Utilisez la variable d'environnement pour l'URI de connexion à votre base de données MongoDB
 const mongoURI = process.env.MONGO_URI;
 mongoose.connect(mongoURI, {
-    serverSelectionTimeoutMS: 30000, // Timeout de 30 secondes pour la sélection du serveur
-    socketTimeoutMS: 45000,          // Timeout pour les sockets (inactivité)
-    connectTimeoutMS: 30000          // Timeout pour la connexion initiale
+    serverSelectionTimeoutMS: 30000,
+    socketTimeoutMS: 45000,
+    connectTimeoutMS: 30000
 })
 .then(() => console.log('Connecté à MongoDB...'))
 .catch(err => {
@@ -18,6 +19,23 @@ mongoose.connect(mongoURI, {
         console.error('Problème réseau ou de configuration. Vérifiez l\'accès réseau.');
     }
 });
+
+// Créer un client Redis avec l'URL TLS fournie par Upstash
+const redisClient = redis.createClient({
+    url: process.env.REDIS_TLS_URL
+});
+
+redisClient.on('error', (err) => console.error('Erreur Redis', err));
+
+// Connexion à Redis
+(async () => {
+    try {
+        await redisClient.connect();
+        console.log('Connecté à Redis via Upstash');
+    } catch (error) {
+        console.error('Erreur de connexion à Redis:', error);
+    }
+})();
 
 // Schéma pour les articles
 const articleSchema = new mongoose.Schema({
@@ -31,12 +49,48 @@ const articleSchema = new mongoose.Schema({
 });
 
 // Vérifie si le modèle 'Article' existe déjà avant de le définir
-const Article = mongoose.models.Article || mongoose.model('Article', articleSchema, 'articles'); // Collection 'articles'
+const Article = mongoose.models.Article || mongoose.model('Article', articleSchema, 'articles');
+
+// Fonction pour mettre les articles en cache
+async function cacheArticles(key, value) {
+    try {
+        await redisClient.set(key, JSON.stringify(value), {
+            EX: 60 // Expire dans 60 secondes
+        });
+    } catch (error) {
+        console.error('Erreur lors de la mise en cache:', error);
+    }
+}
+
+// Fonction pour récupérer les articles depuis le cache
+async function getCachedArticles(key) {
+    try {
+        const data = await redisClient.get(key);
+        return data ? JSON.parse(data) : null;
+    } catch (error) {
+        console.error('Erreur lors de la récupération des données du cache:', error);
+        return null;
+    }
+}
 
 // Route pour récupérer tous les articles
 app.get('/api/articles', async (req, res) => {
     try {
-        const articles = await Article.find();
+        // Récupérez les articles depuis le cache
+        const cachedArticles = await getCachedArticles('articles');
+
+        if (cachedArticles) {
+            console.log('Données récupérées du cache');
+            return res.json(cachedArticles);
+        }
+
+        // Si les articles ne sont pas dans le cache, interrogez la base de données
+        const articles = await Article.find().sort({ date: -1 });
+
+        // Mettez les articles en cache
+        await cacheArticles('articles', articles);
+
+        console.log('Données récupérées de MongoDB et mises en cache');
         res.json(articles);
     } catch (error) {
         console.error('Erreur lors de la récupération des articles:', error);
@@ -79,6 +133,10 @@ app.post('/api/articles', async (req, res) => {
 
     try {
         const savedArticle = await newArticle.save();
+
+        // Invalider le cache
+        await redisClient.del('articles');
+
         res.status(201).json(savedArticle);
     } catch (error) {
         res.status(500).json({ error: 'Erreur lors de la création de l\'article' });
@@ -99,6 +157,9 @@ app.put('/api/articles/:id', async (req, res) => {
             content
         }, { new: true });
 
+        // Invalider le cache
+        await redisClient.del('articles');
+
         if (article) {
             res.json(article);
         } else {
@@ -113,6 +174,10 @@ app.put('/api/articles/:id', async (req, res) => {
 app.delete('/api/articles/:id', async (req, res) => {
     try {
         const result = await Article.findByIdAndDelete(req.params.id);
+
+        // Invalider le cache
+        await redisClient.del('articles');
+
         if (result) {
             res.status(204).send(); // Suppression réussie
         } else {
@@ -122,7 +187,6 @@ app.delete('/api/articles/:id', async (req, res) => {
         res.status(500).json({ error: 'Erreur lors de la suppression de l\'article' });
     }
 });
-
 
 // Démarrage du serveur
 const PORT = process.env.PORT || 3000;
