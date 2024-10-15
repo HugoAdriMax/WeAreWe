@@ -8,7 +8,7 @@ app.use(express.json());
 const mongoURI = process.env.MONGO_URI; 
 mongoose.connect(mongoURI, {
     useNewUrlParser: true,          // Utilise le nouvel analyseur d'URL MongoDB
-    useUnifiedTopology: true,       // Utilise le moteur d'unification du topologie pour gérer les connexions
+    useUnifiedTopology: true,       // Utilise le moteur d'unification de topologie pour gérer les connexions
     serverSelectionTimeoutMS: 30000, // Timeout de 30 secondes pour la sélection du serveur
     socketTimeoutMS: 45000,          // Timeout pour les sockets (inactivité)
     connectTimeoutMS: 30000          // Timeout pour la connexion initiale
@@ -21,7 +21,6 @@ mongoose.connect(mongoURI, {
     }
 });
 
-
 // Schéma pour les articles
 const articleSchema = new mongoose.Schema({
     title: { type: String, required: true },
@@ -33,9 +32,8 @@ const articleSchema = new mongoose.Schema({
     author: { type: String, default: 'WeAreWe Team' }
 });
 
-
 // Modèle pour les articles
-const Article = mongoose.model('Article', articleSchema, 'articles'); // Notez ici 'articles'
+const Article = mongoose.model('Article', articleSchema, 'articles'); // Collection 'articles'
 
 // Route pour récupérer tous les articles
 app.get('/api/articles', async (req, res) => {
@@ -127,8 +125,47 @@ app.delete('/api/articles/:id', async (req, res) => {
     }
 });
 
+// Route pour générer dynamiquement le sitemap.xml
+app.get('/sitemap.xml', async (req, res) => {
+    try {
+        // Récupérer tous les articles
+        const articles = await Article.find();
+
+        // Générer le sitemap dynamique
+        let sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n`;
+        sitemap += `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
+
+        articles.forEach(article => {
+            sitemap += `  <url>\n`;
+            sitemap += `    <loc>https://www.wearewework.com/article.html?slug=${article.slug}</loc>\n`;
+            sitemap += `    <lastmod>${new Date(article.date).toISOString().split('T')[0]}</lastmod>\n`;
+            sitemap += `    <changefreq>weekly</changefreq>\n`;
+            sitemap += `    <priority>0.8</priority>\n`;
+            sitemap += `  </url>\n`;
+        });
+
+        sitemap += `</urlset>`;
+
+        // Envoyer le sitemap en réponse
+        res.header('Content-Type', 'application/xml');
+        res.send(sitemap);
+    } catch (error) {
+        console.error('Erreur lors de la génération du sitemap:', error);
+        res.status(500).send('Erreur lors de la génération du sitemap.');
+    }
+});
+
 // Démarrage du serveur
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Serveur démarré sur http://localhost:${PORT}`);
 });
+
+
+// SEO
+document.getElementById('seo-title').textContent = article.title;
+document.getElementById('seo-description').content = article.metaDescription;
+document.getElementById('og-title').content = article.title;
+document.getElementById('og-description').content = article.metaDescription;
+document.getElementById('og-image').content = article.imageUrl;
+document.getElementById('og-url').content = window.location.href;

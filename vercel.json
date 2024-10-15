@@ -1,5 +1,13 @@
 {
   "rewrites": [
-    { "source": "/api/articles/:id", "destination": "/api/articles" }
+    { "source": "/api/articles/:id", "destination": "/api/articles" },
+    { "source": "/sitemap.xml", "destination": "/sitemap" }
+  ],
+  "redirects": [
+    {
+      "source": "/index.html",
+      "destination": "/",
+      "permanent": true
+    }
   ]
 }
