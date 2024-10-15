@@ -32,8 +32,7 @@ const articleSchema = new mongoose.Schema({
 
 const Article = mongoose.models.Article || mongoose.model('Article', articleSchema, 'articles');
 
-// Route pour générer le sitemap dynamique
-app.get('/api/sitemap', async (req, res) => { // Utilisation explicite de la route complète
+app.get('/api/sitemap', async (req, res) => {
     try {
         const articles = await Article.find();
         let sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n`;
@@ -45,9 +44,11 @@ app.get('/api/sitemap', async (req, res) => { // Utilisation explicite de la rou
             sitemap += `    <lastmod>${new Date(article.date).toISOString().split('T')[0]}</lastmod>\n`;
             sitemap += `    <changefreq>weekly</changefreq>\n`;
             sitemap += `    <priority>0.8</priority>\n`;
+            sitemap += `  </url>\n`;  // Fermeture correcte de la balise <url>
         });
 
-        sitemap += `</urlset>`;
+        sitemap += `</urlset>\n`;  // Fermeture correcte de la balise <urlset>
+
         res.header('Content-Type', 'application/xml');
         res.send(sitemap);
     } catch (error) {
@@ -55,5 +56,6 @@ app.get('/api/sitemap', async (req, res) => { // Utilisation explicite de la rou
         res.status(500).send('Erreur lors de la génération du sitemap.');
     }
 });
+
 
 module.exports = app;
