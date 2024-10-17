@@ -1,9 +1,14 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const redis = require('redis');
+const prerender = require('prerender-node'); // Ajoute Prerender ici
 
 const app = express();
 app.use(express.json());
+
+// Configure Prerender avec ton token
+prerender.set('prerenderToken', 'gyokaPTlHfzvz56lmXsN');
+app.use(prerender);
 
 // Utilisez la variable d'environnement pour l'URI de connexion à votre base de données MongoDB
 const mongoURI = process.env.MONGO_URI;
