@@ -1,7 +1,8 @@
 {
   "rewrites": [
     { "source": "/api/articles/:id", "destination": "/api/articles" },
-    { "source": "/sitemap.xml", "destination": "/api/sitemap" }
+    { "source": "/sitemap.xml", "destination": "/api/sitemap" },
+    { "source": "/robots.txt", "destination": "/robots.txt" }
   ],
   "redirects": [
     {
