@@ -8,6 +8,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
+    <link rel="stylesheet" href="/public/output.css">
     <meta name="keywords" content="marketing digital, stratégie digitale, SEO, SEM, social media marketing, web design, agence marketing, marketing numérique">
     <meta name="author" content="WeAreWe">
     <meta property="og:title" content="WeAreWe - L'excellence du marketing digital">
@@ -42,7 +43,7 @@
         }
         
         .gradient-bg {
-            background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
+            background: linear-gradient(135deg, #2E5751 0%, #2E5751 100%);
         }
         
         .hover-up {
@@ -55,8 +56,7 @@
         }
         
         .text-gradient {
-            background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
-            -webkit-background-clip: text;
+            background: linear-gradient(135deg, #2E5751 0%, #2E5751 100%);
             color: transparent;
         }
         
@@ -104,12 +104,9 @@
     </style>
 </head>
 <body class="antialiased text-gray-800 leading-normal tracking-wider bg-gray-100">
-    <header style="background-color: #6366F1;" class="fixed w-full z-30 top-0 text-white" x-data="{ isOpen: false }" @keydown.escape="isOpen = false">
+    <header style="background-color: #2E5751;" class="fixed w-full z-30 top-0 text-white" x-data="{ isOpen: false }" @keydown.escape="isOpen = false">
         <div class="container mx-auto py-5 flex items-center justify-between">
             <a class="flex items-center hover:opacity-75 transition duration-150 ease-in-out" href="#">
-                <svg class="w-10 h-10 text-white p-2 bg-indigo-500 rounded-full" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-                </svg>
                 <span class="ml-3 text-xl font-bold">WeAreWe</span>
             </a>
             <nav class="hidden md:flex space-x-10 items-center">
@@ -119,7 +116,7 @@
                 <a class="hover:text-indigo-200" href="#portfolio">Portfolio</a>
                 <a class="hover:text-indigo-200" href="#testimonials">Témoignages</a>
                 <a class="hover:text-indigo-200" href="blog.html">Blog</a>
-                <a class="bg-white text-indigo-600 px-4 py-2 rounded-md font-semibold hover:bg-indigo-50 transition duration-150 ease-in-out" href="#contact">Contact</a>
+                <a class="bg-emerald-950 text-white-600 px-4 py-2 rounded-md font-semibold hover:bg-emerald-800 transition duration-150 ease-in-out" href="#contact">Contact</a>
             </nav>
             <button class="md:hidden rounded-lg focus:outline-none focus:shadow-outline mr-4" @click="isOpen = !isOpen">
                 <svg fill="currentColor" viewBox="0 0 20 20" class="w-6 h-6">
@@ -129,13 +126,13 @@
             </button>
         </div>
         <nav class="flex flex-col md:hidden absolute top-full left-0 right-0 bg-white shadow-md rounded-b-lg" :class="{ 'hidden': !isOpen }" @click.away="isOpen = false">
-            <a class="py-2 px-4 text-gray-800 hover:bg-indigo-500 hover:text-white transition duration-150 ease-in-out" href="#home" @click="isOpen = false">Accueil</a>
-            <a class="py-2 px-4 text-gray-800 hover:bg-indigo-500 hover:text-white transition duration-150 ease-in-out" href="#services" @click="isOpen = false">Services</a>
-            <a class="py-2 px-4 text-gray-800 hover:bg-indigo-500 hover:text-white transition duration-150 ease-in-out" href="#about" @click="isOpen = false">À propos</a>
-            <a class="py-2 px-4 text-gray-800 hover:bg-indigo-500 hover:text-white transition duration-150 ease-in-out" href="#portfolio" @click="isOpen = false">Portfolio</a>
-            <a class="py-2 px-4 text-gray-800 hover:bg-indigo-500 hover:text-white transition duration-150 ease-in-out" href="#testimonials" @click="isOpen = false">Témoignages</a>
-            <a class="py-2 px-4 text-gray-800 hover:bg-indigo-500 hover:text-white transition duration-150 ease-in-out" href="blog.html" @click="isOpen = false">Blog</a>
-            <a class="py-2 px-4 text-gray-800 hover:bg-indigo-500 hover:text-white transition duration-150 ease-in-out" href="#contact" @click="isOpen = false">Contact</a>
+            <a class="py-2 px-4 text-gray-800 hover:bg-emerald-950 hover:text-white transition duration-150 ease-in-out" href="#home" @click="isOpen = false">Accueil</a>
+            <a class="py-2 px-4 text-gray-800 hover:bg-emerald-950 hover:text-white transition duration-150 ease-in-out" href="#services" @click="isOpen = false">Services</a>
+            <a class="py-2 px-4 text-gray-800 hover:bg-emerald-950 hover:text-white transition duration-150 ease-in-out" href="#about" @click="isOpen = false">À propos</a>
+            <a class="py-2 px-4 text-gray-800 hover:bg-emerald-950 hover:text-white transition duration-150 ease-in-out" href="#portfolio" @click="isOpen = false">Portfolio</a>
+            <a class="py-2 px-4 text-gray-800 hover:bg-emerald-950 hover:text-white transition duration-150 ease-in-out" href="#testimonials" @click="isOpen = false">Témoignages</a>
+            <a class="py-2 px-4 text-gray-800 hover:bg-emerald-950 hover:text-white transition duration-150 ease-in-out" href="blog.html" @click="isOpen = false">Blog</a>
+            <a class="py-2 px-4 text-gray-800 hover:bg-emerald-950 hover:text-white transition duration-150 ease-in-out" href="#contact" @click="isOpen = false">Contact</a>
         </nav>
     </header>
 
@@ -151,8 +148,8 @@
                 <h1 class="text-5xl md:text-6xl font-bold mb-8 md:mb-12" data-aos="fade-up">Propulsez votre entreprise avec<br><span>WeAreWe</span></h1>
                 <p class="text-xl md:text-2xl mb-12" data-aos="fade-up" data-aos-delay="200">Nous combinons stratégie, créativité et technologie pour offrir des solutions de marketing digital qui transforment votre présence en ligne.</p>
                 <div class="flex flex-col md:flex-row justify-center space-y-4 md:space-y-0 md:space-x-4">
-                    <a href="#contact" class="bg-white text-indigo-600 px-8 py-4 rounded-full font-semibold text-lg hover:bg-indigo-50 transition duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-lg" data-aos="fade-up" data-aos-delay="400">Commencer maintenant</a>
-                    <a href="#services" class="bg-transparent border-2 border-white text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-white hover:text-indigo-600 transition duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-lg" data-aos="fade-up" data-aos-delay="600">Découvrir nos services</a>
+                    <a href="#contact" class="bg-emerald-950 text-white-900 px-8 py-4 rounded-full font-semibold text-lg hover:bg-emerald-900 transition duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-lg">Commencer maintenant</a>
+                    <a href="#services" class="bg-transparent border-2 border-white text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-white hover:text-emerald-950 transition duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-lg" data-aos="fade-up" data-aos-delay="600">Découvrir nos services</a>
                 </div>
             </div>
             <div class="absolute inset-0 z-0">
@@ -168,21 +165,21 @@
                 <h2 class="text-4xl font-bold mb-8 text-center" data-aos="fade-up">Nos Services</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     <div class="bg-white rounded-lg shadow-lg p-8 hover-up" data-aos="fade-up" data-aos-delay="200">
-                        <div class="text-4xl mb-4 text-indigo-500">
+                        <div class="text-4xl mb-4 text-emerald-950">
                             <i class="fas fa-search"></i>
                         </div>
                         <h3 class="text-2xl font-semibold mb-4">SEO & SEM</h3>
-                        <p class="text-gray-600">Optimisez votre visibilité sur les moteurs de recherche et attirez un trafic qualifié vers votre site web.</p>
+                        <p class="text-gray-600 ">Optimisez votre visibilité sur les moteurs de recherche et attirez un trafic qualifié vers votre site web.</p>
                     </div>
                     <div class="bg-white rounded-lg shadow-lg p-8 hover-up" data-aos="fade-up" data-aos-delay="400">
-                        <div class="text-4xl mb-4 text-indigo-500">
+                        <div class="text-4xl mb-4 text-emerald-950">
                             <i class="fas fa-palette"></i>
                         </div>
                         <h3 class="text-2xl font-semibold mb-4">Web Design & UX</h3>
                         <p class="text-gray-600">Créez une expérience utilisateur exceptionnelle avec des designs modernes et intuitifs qui convertissent.</p>
                     </div>
                     <div class="bg-white rounded-lg shadow-lg p-8 hover-up" data-aos="fade-up" data-aos-delay="600">
-                        <div class="text-4xl mb-4 text-indigo-500">
+                        <div class="text-4xl mb-4 text-emerald-950">
                             <i class="fas fa-bullhorn"></i>
                         </div>
                         <h3 class="text-2xl font-semibold mb-4">Social Media Marketing</h3>
@@ -217,7 +214,7 @@
                                 Solutions personnalisées pour chaque client
                             </li>
                         </ul>
-                        <a href="#contact" class="bg-indigo-600 text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-indigo-700 transition duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-lg inline-block">Travaillons ensemble</a>
+                        <a href="#contact" class="bg-emerald-950 text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-emerald-900 transition duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-lg inline-block">Travaillons ensemble</a>
                     </div>
                 </div>
             </div>
@@ -234,7 +231,7 @@
                             <div class="text-center">
                                 <h3 class="text-2xl font-semibold text-white mb-2">BoutiqueChic</h3>
                                 <p class="text-gray-300 mb-4">Refonte complète du site e-commerce</p>
-                                <a href="#" class="bg-white text-indigo-600 px-6 py-2 rounded-full font-semibold hover:bg-indigo-50 transition duration-300 ease-in-out">Voir le projet</a>
+                                <a href="#" class="bg-white text-emerald-950 px-6 py-2 rounded-full font-semibold hover:bg-indigo-50 transition duration-300 ease-in-out">Voir le projet</a>
                             </div>
                         </div>
                     </div>
@@ -244,7 +241,7 @@
                             <div class="text-center">
                                 <h3 class="text-2xl font-semibold text-white mb-2">TechInnovate</h3>
                                 <p class="text-gray-300 mb-4">Optimisation SEO et content marketing</p>
-                                <a href="#" class="bg-white text-indigo-600 px-6 py-2 rounded-full font-semibold hover:bg-indigo-50 transition duration-300 ease-in-out">Voir le projet</a>
+                                <a href="#" class="bg-white text-emerald-950 px-6 py-2 rounded-full font-semibold hover:bg-indigo-50 transition duration-300 ease-in-out">Voir le projet</a>
                             </div>
                         </div>
                     </div>
@@ -254,7 +251,7 @@
                             <div class="text-center">
                                 <h3 class="text-2xl font-semibold text-white mb-2">FoodieParadise</h3>
                                 <p class="text-gray-300 mb-4">Campagne virale sur les réseaux sociaux</p>
-                                <a href="#" class="bg-white text-indigo-600 px-6 py-2 rounded-full font-semibold hover:bg-indigo-50 transition duration-300 ease-in-out">Voir le projet</a>
+                                <a href="#" class="bg-white text-emerald-950 px-6 py-2 rounded-full font-semibold hover:bg-indigo-50 transition duration-300 ease-in-out">Voir le projet</a>
                             </div>
                         </div>
                     </div>
@@ -329,7 +326,7 @@
                                 <label for="message" class="block text-gray-700 font-semibold mb-2">Message</label>
                                 <textarea id="message" name="message" rows="5" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-indigo-500" required></textarea>
                             </div>
-                            <button type="submit" class="w-full bg-indigo-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-indigo-700 transition duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-lg">Envoyer</button>
+                            <button type="submit" class="w-full bg-emerald-950 text-white px-6 py-3 rounded-lg font-semibold hover:bg-emerald-950 transition duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-lg">Envoyer</button>
                         </form>
                         
                     </div>
@@ -338,14 +335,14 @@
                             <h3 class="text-2xl font-semibold mb-6">Informations de contact</h3>
                             <ul class="space-y-4">
                                 <li class="flex items-center">
-                                    <svg class="w-6 h-6 mr-4 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                                    <svg class="w-6 h-6 mr-4 text-emerald-950" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
                                     contact@wearewework.com
                                 </li>
                             </ul>
                             <div class="mt-8">
                                 <h4 class="text-xl font-semibold mb-4">Suivez-nous</h4>
                                 <div class="flex space-x-4">
-                                    <a href="https://www.instagram.com/wearewework/" class="text-indigo-500 hover:text-indigo-600">
+                                    <a href="https://www.instagram.com/wearewework/" class="text-emerald-950 hover:text-emerald-950">
                                         <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M16.98 0a6.9 6.9 0 0 1 5.08 1.98A6.94 6.94 0 0 1 24 7.02v9.96c0 2.08-.68 3.87-1.98 5.13A7.14 7.14 0 0 1 16.94 24H7.06a7.06 7.06 0 0 1-5.03-1.89A6.96 6.96 0 0 1 0 16.94V7.02C0 2.8 2.8 0 7.02 0h9.96zm.05 2.23H7.06c-1.45 0-2.7.43-3.53 1.25a4.82 4.82 0 0 0-1.3 3.54v9.92c0 1.5.43 2.7 1.3 3.58a5 5 0 0 0 3.53 1.25h9.88a5 5 0 0 0 3.53-1.25 4.73 4.73 0 0 0 1.4-3.54V7.02a5 5 0 0 0-1.3-3.49 4.82 4.82 0 0 0-3.54-1.3zM12 5.76c3.39 0 6.2 2.8 6.2 6.2a6.2 6.2 0 0 1-12.4 0 6.2 6.2 0 0 1 6.2-6.2zm0 2.22a3.99 3.99 0 0 0-3.97 3.97A3.99 3.99 0 0 0 12 15.92a3.99 3.99 0 0 0 3.97-3.97A3.99 3.99 0 0 0 12 7.98zm6.44-3.77a1.4 1.4 0 1 1 0 2.8 1.4 1.4 0 0 1 0-2.8z"/></svg>
                                     </a>
                                 </div>
@@ -390,7 +387,7 @@
                     <p class="mb-4">Restez informé des dernières tendances en marketing digital.</p>
                     <form class="flex">
                         <input type="email" placeholder="Votre email" class="w-full px-4 py-2 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-900">
-                        <button type="submit" class="bg-indigo-500 text-white px-4 py-2 rounded-r-lg hover:bg-indigo-600 transition duration-300 ease-in-out">S'abonner</button>
+                        <button type="submit" class="bg-emerald-950 text-white px-4 py-2 rounded-r-lg hover:shadow-lg transition duration-300 ease-in-out">S'abonner</button>
                     </form>
                 </div>
             </div>
