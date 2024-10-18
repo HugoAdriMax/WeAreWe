@@ -2,7 +2,8 @@
   "rewrites": [
     { "source": "/sitemap", "destination": "/api/sitemap" },
     { "source": "/robots.txt", "destination": "/api/robots" },
-    { "source": "/api/articles/:id", "destination": "/api/articles" }
+    { "source": "/api/articles/:id", "destination": "/api/articles" },
+    { "source": "/dist/(.*)", "destination": "/dist/$1" }
   ],
   "redirects": [
     {
