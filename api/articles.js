@@ -25,10 +25,13 @@ mongoose.connect(mongoURI, {
     }
 });
 
-// Créer un client Redis avec l'URL TLS fournie par Upstash
 const redisClient = redis.createClient({
-    url: process.env.REDIS_TLS_URL
+    url: process.env.REDIS_TLS_URL,
+    socket: {
+        connectTimeout: 50000 // Augmentez le délai d'attente à 50 secondes
+    }
 });
+
 
 redisClient.on('error', (err) => console.error('Erreur Redis', err));
 
