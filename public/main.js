@@ -1,5 +1,3 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-// src/main.ts
-const analytics_1 = require("@vercel/analytics");
-(0, analytics_1.inject)();
+import { inject } from '@vercel/analytics';
+inject();
+console.log("Vercel Analytics script loaded successfully!");
