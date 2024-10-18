@@ -13,9 +13,9 @@ app.use(prerender);
 // Utilisez la variable d'environnement pour l'URI de connexion à votre base de données MongoDB
 const mongoURI = process.env.MONGO_URI;
 mongoose.connect(mongoURI, {
-    serverSelectionTimeoutMS: 30000,
-    socketTimeoutMS: 45000,
-    connectTimeoutMS: 30000
+    serverSelectionTimeoutMS: 50000,
+    socketTimeoutMS: 60000,
+    connectTimeoutMS: 50000
 })
 .then(() => console.log('Connecté à MongoDB...'))
 .catch(err => {
