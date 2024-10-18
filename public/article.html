@@ -217,8 +217,16 @@
                             <div class="text-gray-700 mb-4">${article.content}</div>
                         `;
     
+                        // Mettre à jour l'URL pour refléter le slug de l'article sans recharger la page
+                        window.history.replaceState(null, '', `?slug=${article.slug}`);
+    
                         // Injecter Vercel Analytics après le chargement de l'article
-                        inject(); // Injecter Vercel Analytics ici
+                        inject();
+    
+                        // Déclencher une nouvelle vue de page pour cet article
+                        if (window.analytics) {
+                            window.analytics.page();
+                        }
                     } else {
                         document.getElementById('article-content').innerHTML = `
                             <h1 class="text-4xl font-bold mb-4">Article non trouvé</h1>
@@ -227,11 +235,11 @@
                     }
                 })
                 .catch(error => {
-    console.error('Erreur lors du chargement de l\'article :', error);
-});
-
+                    console.error('Erreur lors du chargement de l\'article :', error);
+                });
         });
     </script>
+    
     
     
     
