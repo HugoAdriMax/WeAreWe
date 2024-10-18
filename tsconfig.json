@@ -1,12 +1,13 @@
 {
   "compilerOptions": {
+    "moduleResolution": "node",
     "target": "es2016",
-    "module": "commonjs",
+    "module": "es6",
     "esModuleInterop": true,
     "strict": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "outDir": "./dist",             /* Indique que les fichiers compilés iront dans le dossier "dist" */
-    "rootDir": "./src"              /* Indique que le code source TypeScript se trouve dans le dossier "src" */
+    "outDir": "./public",  // Ou dist si vous compilez là
+    "rootDir": "./src"
   }
 }
