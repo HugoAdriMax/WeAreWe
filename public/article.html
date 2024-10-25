@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Article - WeAreWe</title>
+    <title>Article - Tolly</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/output.css">
     <link rel="icon" href="https://i.imgur.com/PL6qLai.png" type="image/png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="seo-title">Article par défaut - WeAreWe</title>
+    <title id="seo-title">Article par défaut - Tolly</title>
     <meta name="description" id="seo-description" content="Description par défaut de l'article.">
-    <meta property="og:title" id="og-title" content="Article par défaut - WeAreWe">
+    <meta property="og:title" id="og-title" content="Article par défaut - Tolly">
     <meta property="og:description" id="og-description" content="Description par défaut de l'article.">
     <meta property="og:image" id="og-image" content="https://example.com/default-image.jpg">
     <meta property="og:url" id="og-url" content="https://tolly.fr/article">
@@ -32,7 +32,7 @@
                 .then(articles => {
                     const article = articles.find(a => a.slug === slug);
                     if (article) {
-                        document.title = `${article.title} - WeAreWe`;  // Titre de la page
+                        document.title = `${article.title} - Tolly`;  // Titre de la page
 
                         // Mise à jour des balises SEO
                         document.querySelector('meta[name="description"]').setAttribute("content", article.metaDescription);
@@ -97,7 +97,7 @@
     <header style="background-color: #2E5751;" class="fixed w-full z-30 top-0 text-white" x-data="{ isOpen: false }" @keydown.escape="isOpen = false">
         <div class="container mx-auto py-5 flex items-center justify-between">
             <a class="flex items-center hover:opacity-75 transition duration-150 ease-in-out" href="/index.html">
-                <span class="ml-3 text-xl font-bold">WeAreWe</span>
+                <span class="ml-3 text-xl font-bold">Tolly</span>
             </a>
             <nav class="hidden md:flex space-x-10 items-center">
                 <a class="hover:text-indigo-200" href="/index.html">Accueil</a>
@@ -140,9 +140,9 @@
         <div class="container mx-auto px-4">
             <div class="flex flex-wrap -mx-4">
                 <div class="w-full md:w-1/4 px-4 mb-8 md:mb-0">
-                    <h3 class="text-2xl font-semibold mb-4">WeAreWe</h3>
+                    <h3 class="text-2xl font-semibold mb-4">Tolly</h3>
                     <p class="mb-4">Votre partenaire pour une présence en ligne exceptionnelle.</p>
-                    <p>&copy; 2024 WeAreWe. Tous droits réservés.</p>
+                    <p>&copy; 2024 Tolly. Tous droits réservés.</p>
                 </div>
                 <div class="w-full md:w-1/4 px-4 mb-8 md:mb-0">
                     <h4 class="text-xl font-semibold mb-4">Liens rapides</h4>
