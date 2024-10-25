@@ -26,7 +26,7 @@ const articleSchema = new mongoose.Schema({
     imageUrl: { type: String, required: true },
     content: { type: String, required: true },
     date: { type: Date, default: Date.now },
-    author: { type: String, default: 'WeAreWe Team' }
+    author: { type: String, default: 'Tolly Team' }
 });
 
 const Article = mongoose.models.Article || mongoose.model('Article', articleSchema, 'articles');
