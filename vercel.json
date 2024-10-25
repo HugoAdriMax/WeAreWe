@@ -13,7 +13,13 @@
     {
       "source": "/(.*)",
       "destination": "https://tolly.fr/$1",
-      "permanent": true
+      "permanent": true,
+      "has": [
+        {
+          "type": "host",
+          "value": "wearewework.com"
+        }
+      ]
     }
   ]
 }
