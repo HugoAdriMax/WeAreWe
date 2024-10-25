@@ -3,5 +3,5 @@ export default function handler(req, res) {
     res.send(`User-agent: *
 Disallow: /api/
 Allow: /
-Sitemap: https://www.wearewework.com/api/sitemap`);
+Sitemap: https://www.tolly.fr/api/sitemap`);
 }

@@ -9,6 +9,11 @@
       "source": "/index.html",
       "destination": "/",
       "permanent": true
+    },
+    {
+      "source": "/(.*)",
+      "destination": "https://tolly.fr/$1",
+      "permanent": true
     }
   ]
 }

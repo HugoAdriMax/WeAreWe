@@ -107,7 +107,7 @@
 
         // Load articles
         function loadArticles() {
-            fetch('https://www.wearewework.com/api/articles')
+            fetch('https://www.tolly.fr/api/articles')
                 .then(response => {
                     if (!response.ok) throw new Error('Erreur lors de la récupération des articles');
                     return response.json();
@@ -160,7 +160,7 @@
                 return;
             }
 
-            fetch('https://www.wearewework.com/api/articles', {
+            fetch('https://www.tolly.fr/api/articles', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ title, url, metaDescription, imageUrl, content })
@@ -181,7 +181,7 @@
 
 // Edit article
 function editArticle(id) {
-    fetch(`https://www.wearewework.com/api/articles/${id}`)
+    fetch(`https://www.tolly.fr/api/articles/${id}`)
         .then(response => {
             if (!response.ok) throw new Error('Erreur lors de la récupération de l\'article');
             return response.json();
@@ -199,7 +199,7 @@ function editArticle(id) {
 // Fonction pour supprimer un article
 function deleteArticle(id) {
     if (confirm('Êtes-vous sûr de vouloir supprimer cet article ?')) {
-        fetch(`https://www.wearewework.com/api/articles/${id}`, {
+        fetch(`https://www.tolly.fr/api/articles/${id}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json'
