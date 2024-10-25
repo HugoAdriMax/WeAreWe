@@ -41,13 +41,13 @@ app.get('/api/sitemap', async (req, res) => {
         // URLs statiques à ajouter
         const staticUrls = [
             {
-                loc: 'https://www.wearewework.com/',
+                loc: 'https://www.tolly.fr/',
                 lastmod: new Date().toISOString().split('T')[0], // Date du jour
                 changefreq: 'weekly',
                 priority: '1.0'
             },
             {
-                loc: 'https://www.wearewework.com/blog.html',
+                loc: 'https://www.tolly.fr/blog.html',
                 lastmod: new Date().toISOString().split('T')[0],
                 changefreq: 'weekly',
                 priority: '0.8'
@@ -67,7 +67,7 @@ app.get('/api/sitemap', async (req, res) => {
         const articles = await Article.find();
         articles.forEach(article => {
             sitemap += `  <url>\n`;
-            sitemap += `    <loc>https://www.wearewework.com/article.html?slug=${article.slug}</loc>\n`;
+            sitemap += `    <loc>https://www.tolly.fr/article.html?slug=${article.slug}</loc>\n`;
             sitemap += `    <lastmod>${new Date(article.date).toISOString().split('T')[0]}</lastmod>\n`;
             sitemap += `    <changefreq>weekly</changefreq>\n`;
             sitemap += `    <priority>0.8</priority>\n`;

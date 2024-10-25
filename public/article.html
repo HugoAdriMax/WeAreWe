@@ -13,7 +13,7 @@
     <meta property="og:title" id="og-title" content="Article par défaut - WeAreWe">
     <meta property="og:description" id="og-description" content="Description par défaut de l'article.">
     <meta property="og:image" id="og-image" content="https://example.com/default-image.jpg">
-    <meta property="og:url" id="og-url" content="https://wearewework.com/article">
+    <meta property="og:url" id="og-url" content="https://tolly.fr/article">
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
@@ -27,7 +27,7 @@
             const slug = getQueryParam('slug');
 
             // Récupérer l'article correspondant au slug
-            fetch('https://www.wearewework.com/api/articles')
+            fetch('https://www.tolly.fr/api/articles')
                 .then(response => response.json())
                 .then(articles => {
                     const article = articles.find(a => a.slug === slug);
@@ -205,7 +205,7 @@
             const slug = getQueryParam('slug');
     
             // Récupérer l'article correspondant au slug
-            fetch('https://www.wearewework.com/api/articles')
+            fetch('https://www.tolly.fr/api/articles')
                 .then(response => response.json())
                 .then(articles => {
                     const article = articles.find(a => a.slug === slug);
