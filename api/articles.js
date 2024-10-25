@@ -136,7 +136,7 @@ app.post('/api/articles', async (req, res) => {
         metaDescription,
         imageUrl,
         content,
-        author: 'WeAreWe Team'
+        author: 'Tolly Team'
     });
 
     try {
