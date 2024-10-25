@@ -53,7 +53,7 @@ const articleSchema = new mongoose.Schema({
     imageUrl: { type: String, required: true },
     content: { type: String, required: true },
     date: { type: Date, default: Date.now },
-    author: { type: String, default: 'WeAreWe Team' }
+    author: { type: String, default: 'Tolly Team' }
 });
 
 // Vérifie si le modèle 'Article' existe déjà avant de le définir
