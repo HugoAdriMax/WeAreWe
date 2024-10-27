@@ -6,6 +6,7 @@ export default withAuth({
   },
 });
 
+
 export const config = {
   matcher: ["/cms/:path*"],  // Applique le middleware sur toutes les pages de /cms
 };
