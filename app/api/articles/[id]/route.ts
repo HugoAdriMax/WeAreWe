@@ -2,13 +2,9 @@ import { NextResponse } from 'next/server';
 import dbConnect from '@/app/lib/mongodb';
 import { Article } from '@/app/models/Article';
 
-interface RouteParams {
-  id: string;
-}
-
 export async function GET(
   request: Request,
-  { params }: { params: RouteParams }
+  { params }: any
 ) {
   try {
     await dbConnect();
@@ -33,7 +29,7 @@ export async function GET(
 
 export async function PUT(
   request: Request,
-  { params }: { params: RouteParams }
+  { params }: any
 ) {
   try {
     const { title, metaDescription, imageUrl, content } = await request.json();
@@ -83,7 +79,7 @@ export async function PUT(
 
 export async function DELETE(
   request: Request,
-  { params }: { params: RouteParams }
+  { params }: any
 ) {
   try {
     await dbConnect();
