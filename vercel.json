@@ -2,7 +2,14 @@
   "rewrites": [
     { "source": "/sitemap", "destination": "/api/sitemap" },
     { "source": "/robots.txt", "destination": "/api/robots" },
-    { "source": "/api/articles/:id", "destination": "/api/articles" }
+    { "source": "/api/articles/:id", "destination": "/api/articles/:id" }
+  ],
+  "routes": [
+    {
+      "src": "/api/articles/(.*)",
+      "methods": ["GET", "POST", "PUT", "DELETE"],
+      "dest": "/api/articles/$1"
+    }
   ],
   "redirects": [
     {
