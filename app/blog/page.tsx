@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Search, Filter, Calendar, User, Clock, ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
+import React from 'react';
+
 
 interface Article {
   _id: string;
