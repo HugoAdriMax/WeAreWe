@@ -2,102 +2,31 @@ import { NextResponse } from 'next/server';
 import dbConnect from '@/app/lib/mongodb';
 import { Article } from '@/app/models/Article';
 
-export async function GET(
-  request: Request,
-  { params }: any
-) {
-  try {
-    await dbConnect();
-    const article = await Article.findById(params.id);
-
-    if (!article) {
-      return NextResponse.json(
-        { error: 'Article non trouvé' },
-        { status: 404 }
-      );
-    }
-
-    return NextResponse.json(article);
-  } catch (error) {
-    console.error("Erreur lors de la récupération de l'article :", error);
-    return NextResponse.json(
-      { error: 'Erreur lors de la récupération de l\'article' },
-      { status: 500 }
-    );
-  }
+export async function GET(request: Request, { params }: any) {
+  await dbConnect();
+  const article = await Article.findById(params.id);
+  return article
+    ? NextResponse.json(article)
+    : NextResponse.json({ error: 'Article non trouvé' }, { status: 404 });
 }
 
-export async function PUT(
-  request: Request,
-  { params }: any
-) {
-  try {
-    const { title, metaDescription, imageUrl, content } = await request.json();
-    await dbConnect();
-
-    const slug = title.trim().toLowerCase()
-      .replace(/[àáâäæãåā]/g, 'a')
-      .replace(/[çćč]/g, 'c')
-      .replace(/[èéêëēėę]/g, 'e')
-      .replace(/[îïíīįì]/g, 'i')
-      .replace(/[ôöòóœøōõ]/g, 'o')
-      .replace(/[ùûüūú]/g, 'u')
-      .replace(/[ÿ]/g, 'y')
-      .replace(/[ñ]/g, 'n')
-      .replace(/[^a-z0-9]/g, '-')
-      .replace(/-+/g, '-')
-      .replace(/^-|-$/g, '');
-
-    const article = await Article.findByIdAndUpdate(
-      params.id,
-      {
-        title,
-        slug,
-        metaDescription,
-        imageUrl,
-        content,
-      },
-      { new: true }
-    );
-
-    if (!article) {
-      return NextResponse.json(
-        { error: 'Article non trouvé' },
-        { status: 404 }
-      );
-    }
-
-    return NextResponse.json(article);
-  } catch (error) {
-    console.error("Erreur lors de la mise à jour de l'article :", error);
-    return NextResponse.json(
-      { error: 'Erreur lors de la mise à jour de l\'article' },
-      { status: 500 }
-    );
-  }
+export async function PUT(request: Request, { params }: any) {
+  const { title, metaDescription, imageUrl, content } = await request.json();
+  await dbConnect();
+  const updatedArticle = await Article.findByIdAndUpdate(
+    params.id,
+    { title, metaDescription, imageUrl, content },
+    { new: true }
+  );
+  return updatedArticle
+    ? NextResponse.json(updatedArticle)
+    : NextResponse.json({ error: 'Article non trouvé' }, { status: 404 });
 }
 
-export async function DELETE(
-  request: Request,
-  { params }: any
-) {
-  try {
-    await dbConnect();
-    const article = await Article.findByIdAndDelete(params.id);
-
-    if (!article) {
-      return NextResponse.json(
-        { error: 'Article non trouvé' },
-        { status: 404 }
-      );
-    }
-
-    return new NextResponse(null, { status: 204 });
-  } catch (error) {
-    console.error("Erreur lors de la suppression de l'article :", error);
-    return NextResponse.json(
-      { error: 'Erreur lors de la suppression de l\'article' },
-      { status: 500 }
-    );
-  }
+export async function DELETE(request: Request, { params }: any) {
+  await dbConnect();
+  const deletedArticle = await Article.findByIdAndDelete(params.id);
+  return deletedArticle
+    ? new NextResponse(null, { status: 204 })
+    : NextResponse.json({ error: 'Article non trouvé' }, { status: 404 });
 }
