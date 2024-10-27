@@ -211,7 +211,7 @@ const categories = ['all', 'SEO', 'Web Design', 'Marketing', 'E-commerce']
                 >
                   <div className="relative h-48 overflow-hidden">
                     <Image
-                      src={article.imageUrl}
+                      src={decodeURIComponent(article.imageUrl)} // Décode l'URL ici
                       alt={article.title}
                       fill
                       className="object-cover transition-transform duration-300 group-hover:scale-110"
