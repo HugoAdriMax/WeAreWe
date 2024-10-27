@@ -3,9 +3,13 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Search, Filter, Calendar, User, Clock, ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Search, Calendar, ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import React from 'react';
 
+interface Tag {
+  id: string;
+  label: string;
+}
 
 interface Article {
   _id: string;
@@ -15,8 +19,11 @@ interface Article {
   imageUrl: string;
   date: string;
   author: string;
-  category?: string;
-  readTime?: string;
+}
+
+interface ArticleWithTags extends Article {
+  tags: Tag[];
+  category: string;
 }
 
 const ARTICLES_PER_PAGE = 9;
@@ -27,92 +34,112 @@ const categories = ['all', 'SEO', 'Web Design', 'Marketing', 'E-commerce']
     label: cat === 'all' ? 'Tous les articles' : cat
   }));
 
-  export default function BlogPage() {
-    const [articles, setArticles] = useState<Article[]>([]);
-    const [filteredArticles, setFilteredArticles] = useState<Article[]>([]);
-    const [isLoading, setIsLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
-    const [searchTerm, setSearchTerm] = useState('');
-    const [selectedCategory, setSelectedCategory] = useState('all');
-    const [currentPage, setCurrentPage] = useState(1);
-  
-    useEffect(() => {
-      async function fetchArticles() {
-        try {
-          const response = await fetch('/api/articles');
-          if (!response.ok) throw new Error('Erreur lors du chargement des articles');
-          const data = await response.json();
-          setArticles(data);
-          setFilteredArticles(data);
-        } catch (e) {
-          setError(e instanceof Error ? e.message : 'Une erreur est survenue');
-        } finally {
-          setIsLoading(false);
-        }
-      }
-      fetchArticles();
-    }, []);
-  
-    useEffect(() => {
-      const filtered = articles.filter(article => {
-        const matchesSearch = article.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          article.metaDescription.toLowerCase().includes(searchTerm.toLowerCase());
-        const matchesCategory = selectedCategory === 'all' || article.category === selectedCategory;
-        return matchesSearch && matchesCategory;
-      });
-      setFilteredArticles(filtered);
-      setCurrentPage(1);
-    }, [searchTerm, selectedCategory, articles]);
-  
-    // Logique de pagination
-    const totalPages = Math.ceil(filteredArticles.length / ARTICLES_PER_PAGE);
-    const startIndex = (currentPage - 1) * ARTICLES_PER_PAGE;
-    const endIndex = startIndex + ARTICLES_PER_PAGE;
-    const currentArticles = filteredArticles.slice(startIndex, endIndex);
-  
-    const goToPage = (page: number) => {
-      setCurrentPage(page);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    };
+// Liste de mots-clés prédéfinis par catégorie
+const keywordsByCategory = {
+  'SEO': ['référencement', 'google', 'ranking', 'backlinks', 'mots-clés', 'analytics', 'seo'],
+  'Web Design': ['ui', 'ux', 'responsive', 'mobile', 'design', 'interface', 'webdesign'],
+  'Marketing': ['stratégie', 'social media', 'conversion', 'communication', 'marketing'],
+  'E-commerce': ['vente', 'boutique', 'shop', 'conversion', 'panier', 'e-commerce']
+};
 
-    // Composant de pagination
+function determineCategory(article: Article): string {
+  for (const [category, keywords] of Object.entries(keywordsByCategory)) {
+    if (keywords.some(keyword => article.title.toLowerCase().includes(keyword) || article.metaDescription.toLowerCase().includes(keyword))) {
+      return category;
+    }
+  }
+  return 'Autres';
+}
+
+function generateTags(article: Article): Tag[] {
+  const tags = new Set<string>();
+  const content = `${article.title} ${article.metaDescription}`.toLowerCase();
+  const words = content.split(/[\s,.-]+/);
+  
+  words.forEach(word => {
+    if (word.length > 4 && !['le', 'la', 'les', 'un', 'une', 'des', 'ce', 'ces', 'sur', 'pour', 'dans'].includes(word)) {
+      tags.add(word);
+    }
+  });
+
+  return Array.from(tags).slice(0, 5).map(tag => ({
+    id: tag.replace(/\s+/g, '-'),
+    label: tag
+  }));
+}
+
+export default function BlogPage() {
+  const [articles, setArticles] = useState<ArticleWithTags[]>([]);
+  const [filteredArticles, setFilteredArticles] = useState<ArticleWithTags[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [currentPage, setCurrentPage] = useState(1);
+  
+  useEffect(() => {
+    async function fetchArticles() {
+      try {
+        const response = await fetch('/api/articles');
+        if (!response.ok) throw new Error('Erreur lors du chargement des articles');
+        const data: Article[] = await response.json();
+        
+        const articlesWithTags: ArticleWithTags[] = data.map(article => ({
+          ...article,
+          tags: generateTags(article),
+          category: determineCategory(article)
+        }));
+
+        setArticles(articlesWithTags);
+        setFilteredArticles(articlesWithTags);
+      } catch (e) {
+        setError(e instanceof Error ? e.message : 'Une erreur est survenue');
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    fetchArticles();
+  }, []);
+  
+  useEffect(() => {
+    const filtered = articles.filter(article => {
+      const matchesSearch = article.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        article.metaDescription.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesCategory = selectedCategory === 'all' || article.category.toLowerCase() === selectedCategory;
+      return matchesSearch && matchesCategory;
+    });
+    setFilteredArticles(filtered);
+    setCurrentPage(1);
+  }, [searchTerm, selectedCategory, articles]);
+  
+  const totalPages = Math.ceil(filteredArticles.length / ARTICLES_PER_PAGE);
+  const startIndex = (currentPage - 1) * ARTICLES_PER_PAGE;
+  const endIndex = startIndex + ARTICLES_PER_PAGE;
+  const currentArticles = filteredArticles.slice(startIndex, endIndex);
+  
+  const goToPage = (page: number) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   const Pagination = () => {
     return (
       <div className="flex justify-center items-center space-x-2 mt-12">
         <button
           onClick={() => goToPage(currentPage - 1)}
           disabled={currentPage === 1}
-          className={`p-2 rounded-full ${
-            currentPage === 1 
-              ? 'text-gray-400 cursor-not-allowed' 
-              : 'text-primary hover:bg-primary/10'
-          }`}
+          className={`p-2 rounded-full ${currentPage === 1 ? 'text-gray-400 cursor-not-allowed' : 'text-primary hover:bg-primary/10'}`}
         >
           <ChevronLeft size={24} />
         </button>
         
         {[...Array(totalPages)].map((_, index) => {
           const pageNumber = index + 1;
-          const isCurrentPage = pageNumber === currentPage;
-          const isNearCurrent = Math.abs(pageNumber - currentPage) <= 1;
-          const isEndPage = pageNumber === 1 || pageNumber === totalPages;
-
-          if (!isNearCurrent && !isEndPage) {
-            if (pageNumber === 2 || pageNumber === totalPages - 1) {
-              return <span key={pageNumber} className="text-gray-400">...</span>;
-            }
-            return null;
-          }
-
           return (
             <button
               key={pageNumber}
               onClick={() => goToPage(pageNumber)}
-              className={`w-10 h-10 rounded-full ${
-                isCurrentPage
-                  ? 'bg-primary text-white'
-                  : 'text-gray-600 hover:bg-primary/10'
-              }`}
+              className={`w-10 h-10 rounded-full ${pageNumber === currentPage ? 'bg-primary text-white' : 'text-gray-600 hover:bg-primary/10'}`}
             >
               {pageNumber}
             </button>
@@ -122,14 +149,26 @@ const categories = ['all', 'SEO', 'Web Design', 'Marketing', 'E-commerce']
         <button
           onClick={() => goToPage(currentPage + 1)}
           disabled={currentPage === totalPages}
-          className={`p-2 rounded-full ${
-            currentPage === totalPages 
-              ? 'text-gray-400 cursor-not-allowed' 
-              : 'text-primary hover:bg-primary/10'
-          }`}
+          className={`p-2 rounded-full ${currentPage === totalPages ? 'text-gray-400 cursor-not-allowed' : 'text-primary hover:bg-primary/10'}`}
         >
           <ChevronRight size={24} />
         </button>
+      </div>
+    );
+  };
+
+  const ArticleTags: React.FC<{ tags: Tag[] }> = ({ tags }) => {
+    return (
+      <div className="flex flex-wrap gap-2 mt-3">
+        {tags.map((tag) => (
+          <span
+            key={tag.id}
+            onClick={() => setSelectedCategory(tag.id)}
+            className="cursor-pointer px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full hover:bg-gray-200"
+          >
+            #{tag.label}
+          </span>
+        ))}
       </div>
     );
   };
@@ -155,17 +194,12 @@ const categories = ['all', 'SEO', 'Web Design', 'Marketing', 'E-commerce']
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Hero Section */}
-      <div className="bg-primary text-white py-16 md:py-24">
+      <div className="bg-primary text-white pt-32 pb-16 md:py-30 relative mt-16 md:mt-0">
         <div className="container mx-auto px-4">
-          <h1 className="text-4xl md:text-5xl font-bold text-center mb-6">
-            Notre Blog
-          </h1>
+          <h1 className="text-4xl md:text-5xl font-bold text-center mb-6">Notre Blog</h1>
           <p className="text-xl text-center max-w-2xl mx-auto mb-12">
             Découvrez nos derniers articles, conseils et actualités sur le marketing digital
           </p>
-          
-          {/* Barre de recherche */}
           <div className="max-w-2xl mx-auto relative">
             <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
             <input
@@ -182,23 +216,18 @@ const categories = ['all', 'SEO', 'Web Design', 'Marketing', 'E-commerce']
       </div>
 
       <div className="container mx-auto px-4 py-12">
-        {/* Filtres par catégorie */}
         <div className="flex flex-wrap justify-center gap-4 mb-12">
           {categories.map((category) => (
             <button
               key={category.id}
               onClick={() => setSelectedCategory(category.id)}
-              className={`px-6 py-2 rounded-full text-sm font-medium transition-all
-                ${category.id === selectedCategory
-                  ? 'bg-primary text-white'
-                  : 'bg-white text-gray-600 hover:bg-gray-100'}`}
+              className={`px-6 py-2 rounded-full text-sm font-medium transition-all ${category.id === selectedCategory ? 'bg-primary text-white' : 'bg-white text-gray-600 hover:bg-gray-100'}`}
             >
               {category.label}
             </button>
           ))}
         </div>
 
-        {/* Grille d'articles */}
         {currentArticles.length > 0 ? (
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -206,33 +235,27 @@ const categories = ['all', 'SEO', 'Web Design', 'Marketing', 'E-commerce']
                 <Link
                   key={article._id}
                   href={`/article/${article.slug}`}
-                  className="group bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl 
-                           transition-all duration-300 transform hover:-translate-y-1"
+                  className="group bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
                 >
                   <div className="relative h-48 overflow-hidden">
                     <Image
-                    src={decodeURIComponent(article.imageUrl)} // Décode l'URL ici
-                    alt={article.title}
+                      src={decodeURIComponent(article.imageUrl)}
+                      alt={article.title}
                       fill
                       className="object-cover transition-transform duration-300 group-hover:scale-110"
                     />
-                    {article.category && (
-                      <span className="absolute top-4 right-4 bg-primary/80 backdrop-blur-sm text-white 
-                                   px-3 py-1 rounded-full text-sm font-medium">
-                        {article.category}
-                      </span>
-                    )}
+                    <span className="absolute top-4 right-4 bg-primary/80 backdrop-blur-sm text-white px-3 py-1 rounded-full text-sm font-medium">
+                      {article.category}
+                    </span>
                   </div>
-                  
                   <div className="p-6">
-                    <h2 className="text-xl font-semibold text-gray-800 mb-3 group-hover:text-primary 
-                                 transition-colors">
+                    <h2 className="text-xl font-semibold text-gray-800 mb-3 group-hover:text-primary transition-colors">
                       {article.title}
                     </h2>
                     <p className="text-gray-600 mb-4 line-clamp-2">
                       {article.metaDescription}
                     </p>
-                    
+                    <ArticleTags tags={article.tags} />
                     <div className="flex justify-between items-center">
                       <div className="flex items-center text-sm text-gray-500">
                         <Calendar className="w-4 h-4 mr-1" />
@@ -250,8 +273,6 @@ const categories = ['all', 'SEO', 'Web Design', 'Marketing', 'E-commerce']
                 </Link>
               ))}
             </div>
-            
-            {/* Pagination */}
             {totalPages > 1 && <Pagination />}
           </>
         ) : (

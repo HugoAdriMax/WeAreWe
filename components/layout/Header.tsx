@@ -1,12 +1,11 @@
 "use client";
-
 import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 
 export const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
-
+  
   const menuItems = [
     { href: '#accueil', label: 'Accueil' },
     { href: '#services', label: 'Services' },
@@ -18,14 +17,15 @@ export const Header = () => {
 
   return (
     <header className="fixed w-full z-30 top-0" style={{ backgroundColor: '#2E5751' }}>
+      {/* Réduction du padding vertical de py-5 à py-2 */}
       <div className="container mx-auto py-5 flex items-center justify-between px-4">
         <Link href="/" className="flex items-center hover:opacity-75 transition">
           <Image
-            src="https://i.imgur.com/dlkbDqP.png"
+            src="https://i.imgur.com/AiCQYrS.png"
             alt="Logo Tolly"
-            width={40}
-            height={40}
-            className="h-10 w-auto"
+            width={50} // Réduction de la largeur de 80 à 50
+            height={50} // Réduction de la hauteur de 80 à 50
+            className="h-12 w-auto" // Réduction de h-20 à h-12
             priority
           />
         </Link>
@@ -36,14 +36,14 @@ export const Header = () => {
             <Link
               key={item.label}
               href={item.href}
-              className="text-white hover:text-[#FBD3C6] transition-colors duration-200"
+              className="text-white hover:text-[#FBD3C6] transition-colors duration-200 text-sm" // Ajout de text-sm
             >
               {item.label}
             </Link>
           ))}
           <Link
             href="#contact"
-            className="bg-[#023e35] text-white px-4 py-2 rounded-md font-semibold 
+            className="bg-[#023e35] text-white px-4 py-1.5 rounded-md font-semibold text-sm
                      hover:bg-[#FBD3C6] hover:text-[#023e35] transition-colors duration-200"
           >
             Contact
@@ -56,7 +56,7 @@ export const Header = () => {
           onClick={() => setIsOpen(!isOpen)}
           aria-label="Toggle menu"
         >
-          <svg fill="currentColor" viewBox="0 0 20 20" className="w-6 h-6">
+          <svg fill="currentColor" viewBox="0 0 20 20" className="w-5 h-5"> {/* Réduction de w-6 h-6 à w-5 h-5 */}
             <path
               className={!isOpen ? "block" : "hidden"}
               fillRule="evenodd"
@@ -81,7 +81,7 @@ export const Header = () => {
           <Link
             key={item.label}
             href={item.href}
-            className="block py-2 px-4 text-gray-800 hover:bg-[#2E5751] hover:text-white 
+            className="block py-2 px-4 text-sm text-gray-800 hover:bg-[#2E5751] hover:text-white
                      transition-colors duration-200"
             onClick={() => setIsOpen(false)}
           >
@@ -90,7 +90,7 @@ export const Header = () => {
         ))}
         <Link
           href="#contact"
-          className="block py-2 px-4 text-gray-800 hover:bg-[#2E5751] hover:text-white 
+          className="block py-2 px-4 text-sm text-gray-800 hover:bg-[#2E5751] hover:text-white
                    transition-colors duration-200"
           onClick={() => setIsOpen(false)}
         >
