@@ -2,14 +2,18 @@ import { NextResponse } from 'next/server';
 import dbConnect from '@/app/lib/mongodb';
 import { Article } from '@/app/models/Article';
 
+interface Params {
+  params: { id: string };
+}
+
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: Params
 ) {
   try {
     await dbConnect();
     const article = await Article.findById(params.id);
-    
+
     if (!article) {
       return NextResponse.json(
         { error: 'Article non trouvé' },
@@ -29,11 +33,11 @@ export async function GET(
 
 export async function PUT(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: Params
 ) {
   try {
     const { title, metaDescription, imageUrl, content } = await request.json();
-    
+
     await dbConnect();
 
     const slug = title.trim().toLowerCase()
@@ -80,7 +84,7 @@ export async function PUT(
 
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: Params
 ) {
   try {
     await dbConnect();
