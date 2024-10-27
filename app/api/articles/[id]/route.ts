@@ -2,10 +2,13 @@ import { NextResponse } from 'next/server';
 import dbConnect from '@/app/lib/mongodb';
 import { Article } from '@/app/models/Article';
 
-// Opération GET pour récupérer un article spécifique par ID
+interface RouteParams {
+  id: string;
+}
+
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: RouteParams }
 ) {
   try {
     await dbConnect();
@@ -28,14 +31,12 @@ export async function GET(
   }
 }
 
-// Opération PUT pour mettre à jour un article spécifique par ID
 export async function PUT(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: RouteParams }
 ) {
   try {
     const { title, metaDescription, imageUrl, content } = await request.json();
-    
     await dbConnect();
 
     const slug = title.trim().toLowerCase()
@@ -53,7 +54,13 @@ export async function PUT(
 
     const article = await Article.findByIdAndUpdate(
       params.id,
-      { title, slug, metaDescription, imageUrl, content },
+      {
+        title,
+        slug,
+        metaDescription,
+        imageUrl,
+        content,
+      },
       { new: true }
     );
 
@@ -74,10 +81,9 @@ export async function PUT(
   }
 }
 
-// Opération DELETE pour supprimer un article spécifique par ID
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: RouteParams }
 ) {
   try {
     await dbConnect();
