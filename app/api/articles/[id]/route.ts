@@ -2,15 +2,10 @@ import { NextResponse } from 'next/server';
 import dbConnect from '@/app/lib/mongodb';
 import { Article } from '@/app/models/Article';
 
-// Définition du type pour les paramètres
-interface RouteParams {
-  params: { id: string };
-}
-
 // Route GET pour récupérer un article par ID
 export async function GET(
   request: Request,
-  { params }: RouteParams
+  { params }: { params: { id: string } }
 ) {
   try {
     await dbConnect();
@@ -36,7 +31,7 @@ export async function GET(
 // Route PUT pour mettre à jour un article par ID
 export async function PUT(
   request: Request,
-  { params }: RouteParams
+  { params }: { params: { id: string } }
 ) {
   try {
     const { title, metaDescription, imageUrl, content } = await request.json();
@@ -88,7 +83,7 @@ export async function PUT(
 // Route DELETE pour supprimer un article par ID
 export async function DELETE(
   request: Request,
-  { params }: RouteParams
+  { params }: { params: { id: string } }
 ) {
   try {
     await dbConnect();
