@@ -1,0 +1,10 @@
+{
+  "/api/auth/[...nextauth]/route": "app/api/auth/[...nextauth]/route.js",
+  "/_not-found/page": "app/_not-found/page.js",
+  "/api/articles/route": "app/api/articles/route.js",
+  "/page": "app/page.js",
+  "/blog/page": "app/blog/page.js",
+  "/article/[slug]/page": "app/article/[slug]/page.js",
+  "/cms/dashboard/page": "app/cms/dashboard/page.js",
+  "/cms/page": "app/cms/page.js"
+}
