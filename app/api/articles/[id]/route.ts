@@ -1,15 +1,15 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/app/lib/mongodb';
 import { Article } from '@/app/models/Article';
+import { parse } from 'url';
 
-// Route GET pour récupérer un article par ID
-export async function GET(
-  request: Request,
-  { params }: { params: { id: string } }
-) {
+export async function GET(request: Request) {
   try {
     await dbConnect();
-    const article = await Article.findById(params.id);
+    const { query } = parse(request.url, true);
+    const articleId = query.id as string;
+
+    const article = await Article.findById(articleId);
 
     if (!article) {
       return NextResponse.json(
@@ -28,12 +28,10 @@ export async function GET(
   }
 }
 
-// Route PUT pour mettre à jour un article par ID
-export async function PUT(
-  request: Request,
-  { params }: { params: { id: string } }
-) {
+export async function PUT(request: Request) {
   try {
+    const { query } = parse(request.url, true);
+    const articleId = query.id as string;
     const { title, metaDescription, imageUrl, content } = await request.json();
 
     await dbConnect();
@@ -52,7 +50,7 @@ export async function PUT(
       .replace(/^-|-$/g, '');
 
     const article = await Article.findByIdAndUpdate(
-      params.id,
+      articleId,
       {
         title,
         slug,
@@ -80,14 +78,13 @@ export async function PUT(
   }
 }
 
-// Route DELETE pour supprimer un article par ID
-export async function DELETE(
-  request: Request,
-  { params }: { params: { id: string } }
-) {
+export async function DELETE(request: Request) {
   try {
     await dbConnect();
-    const article = await Article.findByIdAndDelete(params.id);
+    const { query } = parse(request.url, true);
+    const articleId = query.id as string;
+
+    const article = await Article.findByIdAndDelete(articleId);
 
     if (!article) {
       return NextResponse.json(
