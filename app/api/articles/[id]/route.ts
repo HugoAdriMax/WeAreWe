@@ -1,15 +1,18 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/app/lib/mongodb';
 import { Article } from '@/app/models/Article';
-import { parse } from 'url';
 
-export async function GET(request: Request) {
+interface Params {
+  params: { id: string };
+}
+
+export async function GET(
+  request: Request,
+  { params }: Params
+) {
   try {
     await dbConnect();
-    const { query } = parse(request.url, true);
-    const articleId = query.id as string;
-
-    const article = await Article.findById(articleId);
+    const article = await Article.findById(params.id);
 
     if (!article) {
       return NextResponse.json(
@@ -28,12 +31,12 @@ export async function GET(request: Request) {
   }
 }
 
-export async function PUT(request: Request) {
+export async function PUT(
+  request: Request,
+  { params }: Params
+) {
   try {
-    const { query } = parse(request.url, true);
-    const articleId = query.id as string;
     const { title, metaDescription, imageUrl, content } = await request.json();
-
     await dbConnect();
 
     const slug = title.trim().toLowerCase()
@@ -50,7 +53,7 @@ export async function PUT(request: Request) {
       .replace(/^-|-$/g, '');
 
     const article = await Article.findByIdAndUpdate(
-      articleId,
+      params.id,
       {
         title,
         slug,
@@ -78,13 +81,13 @@ export async function PUT(request: Request) {
   }
 }
 
-export async function DELETE(request: Request) {
+export async function DELETE(
+  request: Request,
+  { params }: Params
+) {
   try {
     await dbConnect();
-    const { query } = parse(request.url, true);
-    const articleId = query.id as string;
-
-    const article = await Article.findByIdAndDelete(articleId);
+    const article = await Article.findByIdAndDelete(params.id);
 
     if (!article) {
       return NextResponse.json(
