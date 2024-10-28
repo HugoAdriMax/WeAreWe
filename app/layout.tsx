@@ -35,7 +35,7 @@ export const metadata: Metadata = {
     locale: 'fr_FR',
     images: [
       {
-        url: '/og-image.jpg',
+        url: 'https://i.imgur.com/2IAHziM.png',
         width: 1200,
         height: 630,
         alt: siteMetadata.title,
@@ -47,15 +47,14 @@ export const metadata: Metadata = {
     title: siteMetadata.title,
     description: siteMetadata.description,
     creator: siteMetadata.twitterHandle,
-    images: ['/twitter-image.jpg'],
+    images: ['https://i.imgur.com/2IAHziM.png'],
   },
   icons: {
     icon: [
-      { url: '/favicon.ico' },
-      { url: '/icon.png', type: 'image/png' },
+      { url: 'https://i.imgur.com/2IAHziM.png', type: 'image/png' },
     ],
     apple: [
-      { url: '/apple-icon.png', type: 'image/png' },
+      { url: 'https://i.imgur.com/2IAHziM.png', type: 'image/png' },
     ],
   },
   manifest: '/site.webmanifest',
@@ -75,6 +74,8 @@ export default function RootLayout({
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="canonical" href={siteMetadata.siteUrl} />
+        <link rel="icon" href="https://i.imgur.com/2IAHziM.png" type="image/png" />
+        <link rel="apple-touch-icon" href="https://i.imgur.com/2IAHziM.png" />
       </head>
       <body className="flex flex-col min-h-screen">
         <Providers>
