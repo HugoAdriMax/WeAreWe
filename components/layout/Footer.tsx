@@ -99,7 +99,7 @@ export const Footer = () => {
                 />
                 <button
                   type="submit"
-                  className="w-full bg-secondary text-primary px-4 py-2 rounded-lg 
+                  className="w-full bg-secondary text-white px-4 py-2 rounded-lg 
                            font-semibold hover:bg-accent transition-colors duration-200"
                 >
                   S'abonner

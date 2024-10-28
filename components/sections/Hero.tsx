@@ -28,7 +28,7 @@ export function Hero() {
             transition={{ duration: 0.5 }}
             className="mb-8"
           >
-            <span className="bg-white/10 text-secondary px-4 py-2 rounded-full text-sm font-medium inline-block mb-6">
+            <span className="bg-white/10 text-white px-4 py-2 rounded-full text-sm font-medium inline-block mb-6">
               Agence Marketing Digital
             </span>
             <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight">
@@ -49,7 +49,7 @@ export function Hero() {
           >
             <Link
               href="#contact"
-              className="bg-secondary text-primary px-8 py-4 rounded-full font-semibold 
+              className="bg-secondary text-white px-8 py-4 rounded-full font-semibold 
                        flex items-center gap-2 hover:bg-accent transition-all duration-300 
                        transform hover:-translate-y-1 hover:shadow-lg group w-full sm:w-auto 
                        justify-center"

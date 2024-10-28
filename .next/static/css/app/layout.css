@@ -1671,7 +1671,7 @@ video {
 }
 .border-secondary {
   --tw-border-opacity: 1;
-  border-color: rgb(251 211 198 / var(--tw-border-opacity));
+  border-color: rgb(185 104 79 / var(--tw-border-opacity));
 }
 .border-transparent {
   border-color: transparent;
@@ -1679,9 +1679,9 @@ video {
 .border-white\/20 {
   border-color: rgb(255 255 255 / 0.2);
 }
-.bg-\[\#023e35\] {
+.bg-\[\#B9684F\] {
   --tw-bg-opacity: 1;
-  background-color: rgb(2 62 53 / var(--tw-bg-opacity));
+  background-color: rgb(185 104 79 / var(--tw-bg-opacity));
 }
 .bg-accent\/10 {
   background-color: rgb(210 229 208 / 0.1);
@@ -1740,16 +1740,16 @@ video {
 }
 .bg-secondary {
   --tw-bg-opacity: 1;
-  background-color: rgb(251 211 198 / var(--tw-bg-opacity));
+  background-color: rgb(185 104 79 / var(--tw-bg-opacity));
 }
 .bg-secondary\/10 {
-  background-color: rgb(251 211 198 / 0.1);
+  background-color: rgb(185 104 79 / 0.1);
 }
 .bg-secondary\/20 {
-  background-color: rgb(251 211 198 / 0.2);
+  background-color: rgb(185 104 79 / 0.2);
 }
 .bg-secondary\/5 {
-  background-color: rgb(251 211 198 / 0.05);
+  background-color: rgb(185 104 79 / 0.05);
 }
 .bg-white {
   --tw-bg-opacity: 1;
@@ -1799,8 +1799,8 @@ video {
   --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
 }
 .from-secondary\/5 {
-  --tw-gradient-from: rgb(251 211 198 / 0.05) var(--tw-gradient-from-position);
-  --tw-gradient-to: rgb(251 211 198 / 0) var(--tw-gradient-to-position);
+  --tw-gradient-from: rgb(185 104 79 / 0.05) var(--tw-gradient-from-position);
+  --tw-gradient-to: rgb(185 104 79 / 0) var(--tw-gradient-to-position);
   --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
 }
 .from-white {
@@ -1818,7 +1818,7 @@ video {
   --tw-gradient-to: #f9fafb var(--tw-gradient-to-position);
 }
 .to-secondary\/20 {
-  --tw-gradient-to: rgb(251 211 198 / 0.2) var(--tw-gradient-to-position);
+  --tw-gradient-to: rgb(185 104 79 / 0.2) var(--tw-gradient-to-position);
 }
 .to-transparent {
   --tw-gradient-to: transparent var(--tw-gradient-to-position);
@@ -2035,10 +2035,10 @@ video {
 }
 .text-secondary {
   --tw-text-opacity: 1;
-  color: rgb(251 211 198 / var(--tw-text-opacity));
+  color: rgb(185 104 79 / var(--tw-text-opacity));
 }
 .text-secondary\/10 {
-  color: rgb(251 211 198 / 0.1);
+  color: rgb(185 104 79 / 0.1);
 }
 .text-white {
   --tw-text-opacity: 1;
@@ -2164,7 +2164,7 @@ html, body {
 }
 
 .hover\:border-secondary\/50:hover {
-  border-color: rgb(251 211 198 / 0.5);
+  border-color: rgb(185 104 79 / 0.5);
 }
 
 .hover\:bg-\[\#2E5751\]:hover {
@@ -2212,11 +2212,11 @@ html, body {
 
 .hover\:bg-secondary:hover {
   --tw-bg-opacity: 1;
-  background-color: rgb(251 211 198 / var(--tw-bg-opacity));
+  background-color: rgb(185 104 79 / var(--tw-bg-opacity));
 }
 
 .hover\:bg-secondary\/90:hover {
-  background-color: rgb(251 211 198 / 0.9);
+  background-color: rgb(185 104 79 / 0.9);
 }
 
 .hover\:bg-white\/20:hover {
@@ -2227,9 +2227,9 @@ html, body {
   background-color: rgb(255 255 255 / 0.3);
 }
 
-.hover\:text-\[\#023e35\]:hover {
+.hover\:text-\[\#B9684F\]:hover {
   --tw-text-opacity: 1;
-  color: rgb(2 62 53 / var(--tw-text-opacity));
+  color: rgb(185 104 79 / var(--tw-text-opacity));
 }
 
 .hover\:text-\[\#FBD3C6\]:hover {
@@ -2264,7 +2264,7 @@ html, body {
 
 .hover\:text-secondary:hover {
   --tw-text-opacity: 1;
-  color: rgb(251 211 198 / var(--tw-text-opacity));
+  color: rgb(185 104 79 / var(--tw-text-opacity));
 }
 
 .hover\:text-white:hover {
@@ -2301,7 +2301,7 @@ html, body {
 
 .focus\:border-secondary:focus {
   --tw-border-opacity: 1;
-  border-color: rgb(251 211 198 / var(--tw-border-opacity));
+  border-color: rgb(185 104 79 / var(--tw-border-opacity));
 }
 
 .focus\:border-transparent:focus {
@@ -2326,11 +2326,11 @@ html, body {
 
 .focus\:ring-secondary:focus {
   --tw-ring-opacity: 1;
-  --tw-ring-color: rgb(251 211 198 / var(--tw-ring-opacity));
+  --tw-ring-color: rgb(185 104 79 / var(--tw-ring-opacity));
 }
 
 .focus\:ring-secondary\/20:focus {
-  --tw-ring-color: rgb(251 211 198 / 0.2);
+  --tw-ring-color: rgb(185 104 79 / 0.2);
 }
 
 .focus\:ring-white\/50:focus {
@@ -2378,12 +2378,12 @@ html, body {
 
 .prose-a\:text-secondary :is(:where(a):not(:where([class~="not-prose"],[class~="not-prose"] *))) {
   --tw-text-opacity: 1;
-  color: rgb(251 211 198 / var(--tw-text-opacity));
+  color: rgb(185 104 79 / var(--tw-text-opacity));
 }
 
 .prose-blockquote\:border-secondary :is(:where(blockquote):not(:where([class~="not-prose"],[class~="not-prose"] *))) {
   --tw-border-opacity: 1;
-  border-color: rgb(251 211 198 / var(--tw-border-opacity));
+  border-color: rgb(185 104 79 / var(--tw-border-opacity));
 }
 
 .prose-strong\:text-primary :is(:where(strong):not(:where([class~="not-prose"],[class~="not-prose"] *))) {

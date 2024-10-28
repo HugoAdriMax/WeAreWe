@@ -207,7 +207,7 @@ export function About() {
         >
           <a
             href="#contact"
-            className="inline-flex items-center gap-2 bg-secondary text-primary px-8 py-4 
+            className="inline-flex items-center gap-2 bg-secondary text-white px-8 py-4 
                      rounded-full font-semibold hover:bg-secondary/90 transition-colors"
           >
             Démarrer votre projet

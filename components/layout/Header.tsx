@@ -43,8 +43,8 @@ export const Header = () => {
           ))}
           <Link
             href="#contact"
-            className="bg-[#023e35] text-white px-4 py-1.5 rounded-md font-semibold text-sm
-                     hover:bg-[#FBD3C6] hover:text-[#023e35] transition-colors duration-200"
+            className="bg-[#B9684F] text-white px-4 py-1.5 rounded-md font-semibold text-sm
+                     hover:bg-[#FBD3C6] hover:text-[#B9684F] transition-colors duration-200"
           >
             Contact
           </Link>
