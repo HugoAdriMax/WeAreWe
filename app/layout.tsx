@@ -53,8 +53,15 @@ export const metadata: Metadata = {
     icon: [
       { url: 'https://i.imgur.com/2IAHziM.png', type: 'image/png' },
     ],
+    shortcut: [{ url: 'https://i.imgur.com/2IAHziM.png', type: 'image/png' }],
     apple: [
       { url: 'https://i.imgur.com/2IAHziM.png', type: 'image/png' },
+    ],
+    other: [
+      {
+        rel: 'apple-touch-icon-precomposed',
+        url: 'https://i.imgur.com/2IAHziM.png',
+      },
     ],
   },
   manifest: '/site.webmanifest',
@@ -74,8 +81,14 @@ export default function RootLayout({
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="canonical" href={siteMetadata.siteUrl} />
-        <link rel="icon" href="https://i.imgur.com/2IAHziM.png" type="image/png" />
+        {/* Favicons exhaustifs */}
+        <link rel="icon" type="image/png" href="https://i.imgur.com/2IAHziM.png" />
+        <link rel="shortcut icon" type="image/png" href="https://i.imgur.com/2IAHziM.png" />
         <link rel="apple-touch-icon" href="https://i.imgur.com/2IAHziM.png" />
+        <link rel="apple-touch-icon-precomposed" href="https://i.imgur.com/2IAHziM.png" />
+        <link rel="mask-icon" href="https://i.imgur.com/2IAHziM.png" color="#2E5751" />
+        {/* Force le navigateur à recharger le favicon */}
+        <meta name="theme-color" content="#2E5751" />
       </head>
       <body className="flex flex-col min-h-screen">
         <Providers>
