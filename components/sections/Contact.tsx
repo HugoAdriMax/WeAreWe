@@ -19,7 +19,7 @@ interface FormData {
   phone: string;
   message: string;
   budget: string;
-  services: string[]; // Modifié pour accepter plusieurs services
+  services: string[];
 }
 
 const initialFormData: FormData = {
@@ -29,7 +29,7 @@ const initialFormData: FormData = {
   phone: "",
   message: "",
   budget: "",
-  services: [] // Initialisé comme tableau vide
+  services: []
 };
 
 export function Contact() {
@@ -59,13 +59,19 @@ export function Contact() {
     e.preventDefault();
     setIsSubmitting(true);
 
+    // Préparer les données pour Formspree
+    const formDataToSend = {
+      ...formData,
+      services: formData.services.join(', ') // Convertir l'array en string
+    };
+
     try {
       const response = await fetch('https://formspree.io/f/xovqqyog', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(formDataToSend)
       });
 
       if (response.ok) {
@@ -102,7 +108,6 @@ export function Contact() {
       }));
     }
   };
-
   return (
     <section id="contact" className="py-24 bg-gradient-to-b from-white to-gray-50">
       <div className="container mx-auto px-4">
@@ -139,7 +144,7 @@ export function Contact() {
 
           {/* Carte de contact */}
           <div className="bg-white rounded-2xl shadow-xl p-8">
-            {/* Étapes - Modifié pour 2 étapes */}
+            {/* Étapes - 2 étapes au lieu de 3 */}
             <div className="flex justify-between mb-8 relative">
               <div className="absolute top-1/2 left-0 right-0 h-1 bg-gray-200 -translate-y-1/2 z-0">
                 <div 
@@ -229,8 +234,9 @@ export function Contact() {
                 </div>
               </div>
 
-              {/* Étape 2 - Modifiée pour les services multiples */}
+              {/* Étape 2 */}
               <div className={`space-y-6 ${currentStep === 2 ? 'block' : 'hidden'}`}>
+                {/* Services multiples */}
                 <div>
                   <label className="block text-gray-700 font-medium mb-2">Service(s) souhaité(s)</label>
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
