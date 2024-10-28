@@ -64,7 +64,7 @@ export const metadata: Metadata = {
       },
     ],
   },
-  manifest: '/site.webmanifest',
+  // Suppression de manifest car il n'existe pas
   alternates: {
     canonical: siteMetadata.siteUrl,
   },
@@ -81,14 +81,36 @@ export default function RootLayout({
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="canonical" href={siteMetadata.siteUrl} />
-        {/* Favicons exhaustifs */}
+        {/* Favicon setup */}
         <link rel="icon" type="image/png" href="https://i.imgur.com/2IAHziM.png" />
         <link rel="shortcut icon" type="image/png" href="https://i.imgur.com/2IAHziM.png" />
         <link rel="apple-touch-icon" href="https://i.imgur.com/2IAHziM.png" />
         <link rel="apple-touch-icon-precomposed" href="https://i.imgur.com/2IAHziM.png" />
         <link rel="mask-icon" href="https://i.imgur.com/2IAHziM.png" color="#2E5751" />
-        {/* Force le navigateur à recharger le favicon */}
         <meta name="theme-color" content="#2E5751" />
+
+        {/* Web App Manifest */}
+        <link rel="manifest" href={JSON.stringify({
+          name: siteMetadata.title,
+          short_name: "Tolly",
+          description: siteMetadata.description,
+          start_url: "/",
+          display: "standalone",
+          background_color: "#2E5751",
+          theme_color: "#2E5751",
+          icons: [
+            {
+              src: "https://i.imgur.com/2IAHziM.png",
+              sizes: "192x192",
+              type: "image/png"
+            },
+            {
+              src: "https://i.imgur.com/2IAHziM.png",
+              sizes: "512x512",
+              type: "image/png"
+            }
+          ]
+        })} />
       </head>
       <body className="flex flex-col min-h-screen">
         <Providers>
