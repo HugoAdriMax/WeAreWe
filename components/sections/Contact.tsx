@@ -339,7 +339,7 @@ export function Contact() {
                         'Envoi en cours...'
                       ) : (
                         <>
-                          On y est presque
+                          je valide
                           <Send className="w-4 h-4" />
                         </>
                       )}
