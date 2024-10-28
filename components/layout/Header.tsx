@@ -21,11 +21,11 @@ export const Header = () => {
       <div className="container mx-auto py-5 flex items-center justify-between px-4">
         <Link href="/" className="flex items-center hover:opacity-75 transition">
           <Image
-            src="https://i.imgur.com/sntdVuC.png"
+            src="https://i.imgur.com/QJup7V0.png"
             alt="Logo Tolly"
             width={70} // Réduction de la largeur de 80 à 50
             height={70} // Réduction de la hauteur de 80 à 50
-            className="h-13 w-auto" // Réduction de h-20 à h-12
+            className="h-12 w-auto" // Réduction de h-20 à h-12
             priority
           />
         </Link>
