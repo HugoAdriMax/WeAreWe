@@ -70,8 +70,8 @@ export function Hero() {
         </div>
       </div>
 
-{/* Scroll indicator avec position et espacement corrigés */}
-<div className="absolute bottom-12 w-full flex justify-center mt-32 md:mt-0">
+{/* Scroll indicator avec meilleur espacement vertical */}
+<div className="absolute bottom-4 md:bottom-12 w-full flex justify-center mt-48 md:mt-0">
   <motion.div
     animate={{ y: [0, 10, 0] }}
     transition={{ duration: 1.5, repeat: Infinity }}
