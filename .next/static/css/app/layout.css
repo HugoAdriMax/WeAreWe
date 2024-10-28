@@ -1405,6 +1405,12 @@ video {
 .min-h-screen {
   min-height: 100vh;
 }
+.min-h-\[90vh\] {
+  min-height: 90vh;
+}
+.min-h-\[85vh\] {
+  min-height: 85vh;
+}
 .w-1 {
   width: 0.25rem;
 }
@@ -1932,6 +1938,12 @@ video {
 .pt-8 {
   padding-top: 2rem;
 }
+.pt-16 {
+  padding-top: 4rem;
+}
+.pt-12 {
+  padding-top: 3rem;
+}
 .text-left {
   text-align: left;
 }
@@ -2453,6 +2465,10 @@ html, body {
 
   .md\:h-\[60vh\] {
     height: 60vh;
+  }
+
+  .md\:w-auto {
+    width: auto;
   }
 
   .md\:grid-cols-2 {
