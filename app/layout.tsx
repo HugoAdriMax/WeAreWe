@@ -15,6 +15,7 @@ export const metadata: Metadata = {
   keywords: siteMetadata.keywords,
   authors: [{ name: siteMetadata.author }],
   creator: siteMetadata.author,
+  manifest: '/manifest.json', // Ajout du manifest
   robots: {
     index: true,
     follow: true,
@@ -64,7 +65,6 @@ export const metadata: Metadata = {
       },
     ],
   },
-  // Suppression de manifest car il n'existe pas
   alternates: {
     canonical: siteMetadata.siteUrl,
   },
@@ -88,29 +88,6 @@ export default function RootLayout({
         <link rel="apple-touch-icon-precomposed" href="https://i.imgur.com/2IAHziM.png" />
         <link rel="mask-icon" href="https://i.imgur.com/2IAHziM.png" color="#2E5751" />
         <meta name="theme-color" content="#2E5751" />
-
-        {/* Web App Manifest */}
-        <link rel="manifest" href={JSON.stringify({
-          name: siteMetadata.title,
-          short_name: "Tolly",
-          description: siteMetadata.description,
-          start_url: "/",
-          display: "standalone",
-          background_color: "#2E5751",
-          theme_color: "#2E5751",
-          icons: [
-            {
-              src: "https://i.imgur.com/2IAHziM.png",
-              sizes: "192x192",
-              type: "image/png"
-            },
-            {
-              src: "https://i.imgur.com/2IAHziM.png",
-              sizes: "512x512",
-              type: "image/png"
-            }
-          ]
-        })} />
       </head>
       <body className="flex flex-col min-h-screen">
         <Providers>

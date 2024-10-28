@@ -98,9 +98,10 @@ export default function ArticlePage() {
           src={article.imageUrl}
           alt={article.title}
           fill
-          sizes="100vw"
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 100vw"
           className="object-cover"
           priority
+          quality={90} // Ajoutons une qualité d'image
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
         

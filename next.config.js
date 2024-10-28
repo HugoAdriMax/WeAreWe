@@ -20,6 +20,9 @@ const nextConfig = {
         pathname: '**',
       },
     ],
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048], // Ajout des tailles d'appareil
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384], // Ajout des tailles d'image
+    formats: ['image/webp'], // Support du format WebP
   },
   webpack: (config) => {
     config.resolve.alias = {
