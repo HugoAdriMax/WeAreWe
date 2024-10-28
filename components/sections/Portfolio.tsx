@@ -147,6 +147,7 @@ export function Portfolio() {
                         src={project.image}
                         alt={project.title}
                         fill
+                        sizes="100vw"
                         className="object-cover transition-transform duration-300 group-hover:scale-105"
                         onError={() => {
                           setImageError(prev => ({ ...prev, [project.id]: true }));

@@ -98,6 +98,7 @@ export default function ArticlePage() {
           src={article.imageUrl}
           alt={article.title}
           fill
+          sizes="100vw"
           className="object-cover"
           priority
         />

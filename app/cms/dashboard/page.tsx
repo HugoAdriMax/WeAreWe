@@ -317,6 +317,7 @@ export default function DashboardPage() {
                             src={article.imageUrl}
                             alt={article.title}
                             fill
+                            sizes="100vw"
                             className="object-cover rounded-lg"
                           />
                         </div>

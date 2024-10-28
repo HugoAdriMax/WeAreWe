@@ -242,6 +242,7 @@ export default function BlogPage() {
                       src={decodeURIComponent(article.imageUrl)}
                       alt={article.title}
                       fill
+                      sizes="100vw"
                       className="object-cover transition-transform duration-300 group-hover:scale-110"
                     />
                     <span className="absolute top-4 right-4 bg-primary/80 backdrop-blur-sm text-white px-3 py-1 rounded-full text-sm font-medium">
