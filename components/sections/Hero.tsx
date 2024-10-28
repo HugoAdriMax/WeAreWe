@@ -70,18 +70,16 @@ export function Hero() {
         </div>
       </div>
 
-{/* Scroll indicator avec centrage corrigé pour mobile */}
-<div className="absolute bottom-8 w-full">
-  <motion.div
-    className="mx-auto flex justify-center"
-    animate={{ y: [0, 10, 0] }}
-    transition={{ duration: 1.5, repeat: Infinity }}
-  >
-    <div className="w-8 h-12 rounded-full border-2 border-white/20 flex items-center justify-center">
-      <div className="w-1 h-3 bg-white/60 rounded-full" />
-    </div>
-  </motion.div>
-</div>
+{/* Scroll indicator avec position corrigée pour mobile */}
+<motion.div
+  className="absolute left-1/2 -translate-x-1/2 md:bottom-8 bottom-4 mt-20 md:mt-0"
+  animate={{ y: [0, 10, 0] }}
+  transition={{ duration: 1.5, repeat: Infinity }}
+>
+  <div className="w-8 h-12 rounded-full border-2 border-white/20 flex items-center justify-center">
+    <div className="w-1 h-3 bg-white/60 rounded-full" />
+  </div>
+</motion.div>
 </section>
 );
 }
