@@ -1,5 +1,4 @@
 "use client";
-
 import { Editor } from '@tinymce/tinymce-react';
 import { useRef } from 'react';
 import type { Editor as TinyMCEEditor } from 'tinymce';
@@ -13,44 +12,57 @@ export default function EditorComponent({ initialValue, onSave }: EditorProps) {
   const editorRef = useRef<TinyMCEEditor | null>(null);
 
   return (
-    <div className="bg-white rounded-lg shadow">
-      <Editor
-        apiKey={process.env.NEXT_PUBLIC_TINYMCE_API_KEY}
-        onInit={(evt, editor) => editorRef.current = editor}
-        initialValue={initialValue}
-        init={{
-          height: 500,
-          menubar: true,
-          plugins: [
-            'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
-            'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
-            'insertdatetime', 'media', 'table', 'code', 'help', 'wordcount',
-            'media', 'paste'
-          ],
-          toolbar: 'undo redo | blocks | ' +
-            'bold italic forecolor | alignleft aligncenter ' +
-            'alignright alignjustify | bullist numlist outdent indent | ' +
-            'removeformat | help',
-          content_style: `
-            body { 
-              font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-              font-size: 16px;
-              line-height: 1.5;
-              margin: 1rem;
-            }
-          `,
-          branding: false,
-          statusbar: false,
-          paste_data_images: true,
-          images_upload_handler: async function (blobInfo) {
-            // Ici, vous pouvez implémenter votre propre logique d'upload d'images
-            return new Promise((resolve, reject) => {
-              resolve('https://via.placeholder.com/800x400');
-            });
-          },
-        }}
-        onEditorChange={(content) => onSave(content)}
-      />
-    </div>
+    <Editor
+      tinymceScriptSrc="/tinymce/tinymce.min.js"  // Assurez-vous que ce chemin est correct
+      apiKey={process.env.NEXT_PUBLIC_TINYMCE_API_KEY}
+      init={{
+        skin: 'oxide',
+        width: '100%',
+        height: 500,
+        menubar: true,
+        base_url: '/tinymce',
+        plugins: [
+          'lists', 'link', 'image', 'charmap', 'preview',
+          'searchreplace', 'fullscreen',
+          'media', 'table', 'code', 'help', 'wordcount'
+        ],
+        toolbar: 'styles | bold italic | alignleft aligncenter alignright | ' +
+                'bullist numlist | link image | preview fullscreen',
+        content_style: `
+          body {
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            line-height: 1.6;
+            margin: 15px;
+          }
+        `,
+        textpattern_patterns: [
+          {pattern: '*', replacement: '<li>'},
+          {pattern: '#', replacement: '<h1>'},
+          {pattern: '##', replacement: '<h2>'},
+          {pattern: '###', replacement: '<h3>'},
+          {pattern: '####', replacement: '<h4>'},
+          {pattern: '#####', replacement: '<h5>'},
+          {pattern: '######', replacement: '<h6>'},
+          {pattern: '1.', replacement: '<ol><li>'},
+          {pattern: '* ', replacement: '<ul><li>'},
+          {pattern: '- ', replacement: '<ul><li>'}
+        ],
+        // Ajout de ces paramètres spécifiques
+        directionality : 'ltr',
+        text_direction: 'ltr',
+        rtl_ui: false,
+        element_format: 'html',
+        entity_encoding: 'raw',
+        schema: 'html5',
+        // Forcer le formatage en UTF-8
+        document_base_url: '/',
+        encoding: 'UTF-8',
+        browser_spellcheck: true,
+        gecko_spellcheck: true
+      }}
+      value={initialValue}
+      onEditorChange={onSave}
+    />
   );
 }
