@@ -19,7 +19,7 @@ interface FormData {
   phone: string;
   message: string;
   budget: string;
-  service: string;
+  services: string[]; // Modifié pour accepter plusieurs services
 }
 
 const initialFormData: FormData = {
@@ -29,7 +29,7 @@ const initialFormData: FormData = {
   phone: "",
   message: "",
   budget: "",
-  service: ""
+  services: [] // Initialisé comme tableau vide
 };
 
 export function Contact() {
@@ -84,10 +84,23 @@ export function Contact() {
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    setFormData(prev => ({
-      ...prev,
-      [e.target.name]: e.target.value
-    }));
+    const { name, value } = e.target;
+
+    if (name === 'services') {
+      const updatedServices = formData.services.includes(value)
+        ? formData.services.filter(service => service !== value)
+        : [...formData.services, value];
+
+      setFormData(prev => ({
+        ...prev,
+        services: updatedServices
+      }));
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        [name]: value
+      }));
+    }
   };
 
   return (
@@ -126,15 +139,15 @@ export function Contact() {
 
           {/* Carte de contact */}
           <div className="bg-white rounded-2xl shadow-xl p-8">
-            {/* Étapes */}
+            {/* Étapes - Modifié pour 2 étapes */}
             <div className="flex justify-between mb-8 relative">
               <div className="absolute top-1/2 left-0 right-0 h-1 bg-gray-200 -translate-y-1/2 z-0">
                 <div 
                   className="h-full bg-secondary transition-all duration-300"
-                  style={{ width: `${((currentStep - 1) / 2) * 100}%` }}
+                  style={{ width: `${((currentStep - 1) / 1) * 100}%` }}
                 />
               </div>
-              {[1, 2, 3].map((step) => (
+              {[1, 2].map((step) => (
                 <div 
                   key={step}
                   className={`relative z-10 flex items-center justify-center w-10 h-10 rounded-full 
@@ -216,24 +229,24 @@ export function Contact() {
                 </div>
               </div>
 
-              {/* Étape 2 */}
+              {/* Étape 2 - Modifiée pour les services multiples */}
               <div className={`space-y-6 ${currentStep === 2 ? 'block' : 'hidden'}`}>
                 <div>
-                  <label className="block text-gray-700 font-medium mb-2">Service souhaité</label>
+                  <label className="block text-gray-700 font-medium mb-2">Service(s) souhaité(s)</label>
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                     {services.map((service) => (
                       <label
                         key={service}
                         className={`flex items-center justify-center p-4 rounded-lg border cursor-pointer
-                                ${formData.service === service 
+                                ${formData.services.includes(service)
                                   ? 'border-secondary bg-secondary/5 text-secondary' 
                                   : 'border-gray-200 hover:border-secondary/50'}`}
                       >
                         <input
-                          type="radio"
-                          name="service"
+                          type="checkbox"
+                          name="services"
                           value={service}
-                          checked={formData.service === service}
+                          checked={formData.services.includes(service)}
                           onChange={handleChange}
                           className="hidden"
                         />
@@ -267,10 +280,7 @@ export function Contact() {
                     ))}
                   </div>
                 </div>
-              </div>
-
-              {/* Étape 3 */}
-              <div className={`space-y-6 ${currentStep === 3 ? 'block' : 'hidden'}`}>
+                
                 <div>
                   <label className="block text-gray-700 font-medium mb-2">Votre message</label>
                   <div className="relative">
@@ -301,21 +311,21 @@ export function Contact() {
                   </button>
                 )}
                 <div className="ml-auto">
-                  {currentStep < 3 ? (
+                  {currentStep === 1 ? (
                     <button
                       type="button"
-                      onClick={() => setCurrentStep(prev => prev + 1)}
+                      onClick={() => setCurrentStep(2)}
                       className="bg-primary text-white px-8 py-3 rounded-lg hover:bg-primary/90 
                                transition-colors flex items-center gap-2"
                     >
-                      Suivant
+                      Let's go !
                       <Send className="w-4 h-4" />
                     </button>
                   ) : (
                     <button
                       type="submit"
                       disabled={isSubmitting}
-                      className="bg-secondary text-primary px-8 py-3 rounded-lg hover:bg-secondary/90 
+                      className="bg-secondary text-white px-8 py-3 rounded-lg hover:bg-secondary/90 
                                transition-colors flex items-center gap-2 disabled:opacity-50 
                                disabled:cursor-not-allowed"
                     >
@@ -323,7 +333,7 @@ export function Contact() {
                         'Envoi en cours...'
                       ) : (
                         <>
-                          Envoyer
+                          On y est presque
                           <Send className="w-4 h-4" />
                         </>
                       )}

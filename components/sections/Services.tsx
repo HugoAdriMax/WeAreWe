@@ -126,7 +126,7 @@ export function Services() {
               <div className="relative z-10">
                 <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-6 transition-colors 
                               ${hoveredIndex === index ? 'bg-secondary/20' : 'bg-secondary/10'}`}>
-                  <service.icon className="w-6 h-6 text-primary" />
+                  <service.icon className="w-6 h-6 text-secondary" />
                 </div>
 
                 <h3 className="text-xl font-semibold text-primary mb-4">{service.title}</h3>
