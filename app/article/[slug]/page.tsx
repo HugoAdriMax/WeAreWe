@@ -2,12 +2,6 @@ import { Metadata } from 'next';
 import ArticlePage from './ArticlePage';
 import JsonLd from '@/components/Seo/JsonLd';
 
-interface Params {
-  params: {
-    slug: string;
-  };
-}
-
 // Fonction pour récupérer l'article
 async function getArticle(slug: string) {
   const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/articles?slug=${slug}`;
@@ -28,9 +22,9 @@ async function getArticle(slug: string) {
 }
 
 // Génération des métadonnées
-export async function generateMetadata(paramsObject: Params): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
   try {
-    const article = await getArticle(paramsObject.params.slug); // Utiliser paramsObject.params.slug directement
+    const article = await getArticle(params.slug); // Utiliser params.slug directement
 
     if (!article) {
       return {
@@ -46,7 +40,7 @@ export async function generateMetadata(paramsObject: Params): Promise<Metadata> 
         title: article.title,
         description: article.metaDescription,
         type: 'article',
-        url: `${process.env.NEXT_PUBLIC_API_BASE_URL}/article/${paramsObject.params.slug}`, // Utiliser paramsObject.params.slug directement
+        url: `${process.env.NEXT_PUBLIC_API_BASE_URL}/article/${params.slug}`, // Utiliser params.slug directement
         images: [
           {
             url: article.imageUrl,
@@ -65,7 +59,7 @@ export async function generateMetadata(paramsObject: Params): Promise<Metadata> 
         creator: '@tolly',
       },
       alternates: {
-        canonical: `${process.env.NEXT_PUBLIC_API_BASE_URL}/article/${paramsObject.params.slug}`, // Utiliser paramsObject.params.slug directement
+        canonical: `${process.env.NEXT_PUBLIC_API_BASE_URL}/article/${params.slug}`, // Utiliser params.slug directement
       },
     };
   } catch (error) {
@@ -77,9 +71,9 @@ export async function generateMetadata(paramsObject: Params): Promise<Metadata> 
   }
 }
 
-export default async function Page(paramsObject: Params) {
+export default async function Page({ params }: { params: { slug: string } }) {
   try {
-    const article = await getArticle(paramsObject.params.slug); // Utiliser paramsObject.params.slug directement
+    const article = await getArticle(params.slug); // Utiliser params.slug directement
 
     if (!article) {
       return null;
@@ -96,7 +90,7 @@ export default async function Page(paramsObject: Params) {
       },
       mainEntityOfPage: {
         "@type": "WebPage",
-        "@id": `${process.env.NEXT_PUBLIC_API_BASE_URL}/article/${paramsObject.params.slug}` // Utiliser paramsObject.params.slug directement
+        "@id": `${process.env.NEXT_PUBLIC_API_BASE_URL}/article/${params.slug}` // Utiliser params.slug directement
       }
     };
 
@@ -106,7 +100,7 @@ export default async function Page(paramsObject: Params) {
           type="Article"
           data={articleJsonLd}
         />
-        <ArticlePage initialData={article} />©
+        <ArticlePage initialData={article} />
       </>
     );
   } catch (error) {
