@@ -2,6 +2,12 @@ import { Metadata } from 'next';
 import ArticlePage from './ArticlePage';
 import JsonLd from '@/components/Seo/JsonLd';
 
+interface PageParams {
+  params: {
+    slug: string;
+  };
+}
+
 // Fonction pour récupérer l'article
 async function getArticle(slug: string) {
   const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/articles?slug=${slug}`;
@@ -22,7 +28,7 @@ async function getArticle(slug: string) {
 }
 
 // Génération des métadonnées
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+export async function generateMetadata({ params }: PageParams): Promise<Metadata> {
   try {
     const article = await getArticle(params.slug); // Utiliser params.slug directement
 
@@ -71,7 +77,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   }
 }
 
-export default async function Page({ params }: { params: { slug: string } }) {
+export default async function Page({ params }: PageParams) {
   try {
     const article = await getArticle(params.slug); // Utiliser params.slug directement
 
