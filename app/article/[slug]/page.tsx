@@ -2,12 +2,6 @@ import { Metadata } from 'next';
 import ArticlePage from './ArticlePage';
 import JsonLd from '@/components/Seo/JsonLd';
 
-interface PageParams {
-  params: {
-    slug: string;
-  };
-}
-
 // Fonction pour récupérer l'article
 async function getArticle(slug: string) {
   const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/articles?slug=${slug}`;
@@ -16,7 +10,7 @@ async function getArticle(slug: string) {
     const response = await fetch(apiUrl, { cache: 'no-store' });
 
     if (!response.ok) {
-      throw new Error('Erreur lors du chargement de l\'article');
+      throw new Error("Erreur lors du chargement de l'article");
     }
 
     const data = await response.json();
@@ -28,14 +22,18 @@ async function getArticle(slug: string) {
 }
 
 // Génération des métadonnées
-export async function generateMetadata({ params }: PageParams): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: {
+  params: { slug: string };
+}): Promise<Metadata> {
   try {
-    const article = await getArticle(params.slug); // Utiliser params.slug directement
+    const article = await getArticle(params.slug);
 
     if (!article) {
       return {
         title: 'Article non trouvé | Tolly',
-        description: 'Cet article n\'existe pas ou a été déplacé.'
+        description: "Cet article n'existe pas ou a été déplacé.",
       };
     }
 
@@ -46,14 +44,14 @@ export async function generateMetadata({ params }: PageParams): Promise<Metadata
         title: article.title,
         description: article.metaDescription,
         type: 'article',
-        url: `${process.env.NEXT_PUBLIC_API_BASE_URL}/article/${params.slug}`, // Utiliser params.slug directement
+        url: `${process.env.NEXT_PUBLIC_API_BASE_URL}/article/${params.slug}`,
         images: [
           {
             url: article.imageUrl,
             width: 1200,
             height: 630,
             alt: article.title,
-          }
+          },
         ],
         siteName: 'Tolly',
       },
@@ -65,7 +63,7 @@ export async function generateMetadata({ params }: PageParams): Promise<Metadata
         creator: '@tolly',
       },
       alternates: {
-        canonical: `${process.env.NEXT_PUBLIC_API_BASE_URL}/article/${params.slug}`, // Utiliser params.slug directement
+        canonical: `${process.env.NEXT_PUBLIC_API_BASE_URL}/article/${params.slug}`,
       },
     };
   } catch (error) {
@@ -77,9 +75,13 @@ export async function generateMetadata({ params }: PageParams): Promise<Metadata
   }
 }
 
-export default async function Page({ params }: PageParams) {
+export default async function Page({
+  params,
+}: {
+  params: { slug: string };
+}) {
   try {
-    const article = await getArticle(params.slug); // Utiliser params.slug directement
+    const article = await getArticle(params.slug);
 
     if (!article) {
       return null;
@@ -92,20 +94,17 @@ export default async function Page({ params }: PageParams) {
       datePublished: article.date,
       author: {
         "@type": "Person",
-        name: article.author
+        name: article.author,
       },
       mainEntityOfPage: {
         "@type": "WebPage",
-        "@id": `${process.env.NEXT_PUBLIC_API_BASE_URL}/article/${params.slug}` // Utiliser params.slug directement
-      }
+        "@id": `${process.env.NEXT_PUBLIC_API_BASE_URL}/article/${params.slug}`,
+      },
     };
 
     return (
       <>
-        <JsonLd 
-          type="Article"
-          data={articleJsonLd}
-        />
+        <JsonLd type="Article" data={articleJsonLd} />
         <ArticlePage initialData={article} />
       </>
     );
