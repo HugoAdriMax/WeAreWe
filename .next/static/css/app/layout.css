@@ -1226,9 +1226,6 @@ video {
 .top-1\/2 {
   top: 50%;
 }
-.top-16 {
-  top: 4rem;
-}
 .top-3 {
   top: 0.75rem;
 }
@@ -1651,9 +1648,6 @@ video {
 .scroll-smooth {
   scroll-behavior: smooth;
 }
-.rounded {
-  border-radius: 0.25rem;
-}
 .rounded-2xl {
   border-radius: 1rem;
 }
@@ -2006,9 +2000,6 @@ video {
 }
 .pt-8 {
   padding-top: 2rem;
-}
-.text-left {
-  text-align: left;
 }
 .text-center {
   text-align: center;
