@@ -12,6 +12,7 @@ export const Header = () => {
     { href: '#about', label: 'À propos' },
     { href: '#portfolio', label: 'Portfolio' },
     { href: '#testimonials', label: 'Témoignages' },
+    { href: '/social-hooks', label: 'Générateur d\'accroches' },
     { href: '/blog', label: 'Blog' },
   ];
 

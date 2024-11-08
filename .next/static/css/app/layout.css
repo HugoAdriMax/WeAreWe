@@ -1983,6 +1983,9 @@ video {
 .pl-12 {
   padding-left: 3rem;
 }
+.pr-10 {
+  padding-right: 2.5rem;
+}
 .pr-4 {
   padding-right: 1rem;
 }
@@ -2000,6 +2003,9 @@ video {
 }
 .pt-8 {
   padding-top: 2rem;
+}
+.pb-24 {
+  padding-bottom: 6rem;
 }
 .text-center {
   text-align: center;
