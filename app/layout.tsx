@@ -1,4 +1,5 @@
 import './globals.css';
+import { Analytics } from '@vercel/analytics/react';
 import { Providers } from "./providers";
 import { siteMetadata } from './config/metadata';
 import Header from '@/components/layout/Header';
@@ -15,7 +16,7 @@ export const metadata: Metadata = {
   keywords: siteMetadata.keywords,
   authors: [{ name: siteMetadata.author }],
   creator: siteMetadata.author,
-  manifest: '/manifest.json', // Ajout du manifest
+  manifest: '/manifest.json',
   robots: {
     index: true,
     follow: true,
@@ -96,6 +97,17 @@ export default function RootLayout({
             {children}
           </main>
           <Footer />
+          <Analytics 
+            mode={process.env.NODE_ENV === 'development' ? 'development' : 'production'}
+            debug={process.env.NODE_ENV === 'development'} // Active les logs en développement
+            beforeSend={(event) => {
+              // Personnalisation des événements si nécessaire
+              if (event.url.includes('/cms')) {
+                return null; // Ne pas tracker les pages CMS
+              }
+              return event;
+            }}
+          />
         </Providers>
       </body>
     </html>
