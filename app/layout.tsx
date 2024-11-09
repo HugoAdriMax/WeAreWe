@@ -97,17 +97,8 @@ export default function RootLayout({
             {children}
           </main>
           <Footer />
-          <Analytics 
-            mode={process.env.NODE_ENV === 'development' ? 'development' : 'production'}
-            debug={process.env.NODE_ENV === 'development'} // Active les logs en développement
-            beforeSend={(event) => {
-              // Personnalisation des événements si nécessaire
-              if (event.url.includes('/cms')) {
-                return null; // Ne pas tracker les pages CMS
-              }
-              return event;
-            }}
-          />
+          {/* Analytics sans options pour éviter les erreurs de prérenderisation */}
+          <Analytics />
         </Providers>
       </body>
     </html>
