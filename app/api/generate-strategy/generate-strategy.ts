@@ -2,9 +2,11 @@
 import OpenAI from 'openai';
 import { NextResponse } from 'next/server';
 
+export const runtime = 'edge';  // Ajout de cette ligne
+
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
-  dangerouslyAllowBrowser: true  // Ajout de cette option
+  dangerouslyAllowBrowser: true
 });
 
 export async function POST(request: Request) {
@@ -16,16 +18,12 @@ export async function POST(request: Request) {
   }
 
   try {
-    const { industry, target, budget, goals, timeline } = await request.json();
+    const data = await request.json();
+    const { industry, target, budget, goals, timeline } = data;
 
-    if (!industry || !target || !budget || !goals || !timeline) {
-      return NextResponse.json(
-        { error: 'Tous les champs sont requis' },
-        { status: 400 }
-      );
-    }
-
-    const prompt = `En tant qu'expert en marketing digital, crée une stratégie marketing détaillée pour :
+    const systemMessage = "Vous êtes un expert en marketing digital spécialisé dans la création de stratégies marketing.";
+    
+    const userPrompt = `Créez une stratégie marketing détaillée pour :
     
     Secteur: ${industry}
     Cible: ${target}
@@ -33,55 +31,46 @@ export async function POST(request: Request) {
     Objectifs: ${goals.join(', ')}
     Durée: ${timeline}
     
-    Format de réponse en JSON :
-    {
-      "objectives": ["3-5 objectifs SMART"],
-      "channels": ["4-6 canaux marketing"],
-      "tactics": ["5-7 tactiques"],
-      "kpis": ["3-5 KPIs"],
-      "budget": {
-        "min": "budget minimum",
-        "max": "budget maximum"
-      },
-      "timeline": "planning d'implémentation"
-    }`;
+    Incluez:
+    1. 3-5 objectifs SMART
+    2. 4-6 canaux marketing recommandés
+    3. 5-7 tactiques spécifiques
+    4. 3-5 KPIs à suivre
+    5. Recommandation budgétaire
+    6. Planning d'implémentation`;
 
     const completion = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo",  // Changement du modèle pour correspondre
+      model: "gpt-3.5-turbo",
       messages: [
         {
           role: "system",
-          content: "Vous êtes un expert en marketing digital spécialisé dans la création de stratégies marketing. Répondez uniquement en format JSON."
+          content: systemMessage
         },
         {
           role: "user",
-          content: prompt
+          content: userPrompt
         }
       ],
       temperature: 0.7,
       max_tokens: 1000,
     });
 
-    const responseContent = completion.choices[0]?.message?.content;
-    if (!responseContent) {
-      throw new Error('Pas de réponse de l\'API OpenAI');
-    }
+    const generatedText = completion.choices[0]?.message?.content || '';
 
-    const strategyResponse = JSON.parse(responseContent);
-    
+    // Structuration de la réponse
     const strategy = {
-      objectives: strategyResponse.objectives || [],
-      channels: strategyResponse.channels || [],
-      tactics: strategyResponse.tactics || [],
-      kpis: strategyResponse.kpis || [],
+      objectives: generatedText.split('\n').filter(line => line.includes('objectif') || line.includes('Objectif')),
+      channels: generatedText.split('\n').filter(line => line.includes('canal') || line.includes('Canal')),
+      tactics: generatedText.split('\n').filter(line => line.includes('tactique') || line.includes('Tactique')),
+      kpis: generatedText.split('\n').filter(line => line.includes('KPI') || line.includes('indicateur')),
       budget: {
-        min: parseInt(strategyResponse.budget?.min || '0'),
-        max: parseInt(strategyResponse.budget?.max || '0'),
+        min: budget.includes('small') ? 500 : budget.includes('medium') ? 1000 : 3000,
+        max: budget.includes('small') ? 1000 : budget.includes('medium') ? 3000 : 5000,
       },
-      timeline: strategyResponse.timeline || timeline,
+      timeline: timeline
     };
 
-    return NextResponse.json(strategy);
+    return NextResponse.json({ strategy });
 
   } catch (error: any) {
     console.error('OpenAI API Error:', error);
@@ -93,4 +82,20 @@ export async function POST(request: Request) {
       { status: 500 }
     );
   }
+}
+
+// Ajout des méthodes OPTIONS et GET
+export async function OPTIONS(request: Request) {
+  return new Response(null, {
+    status: 204,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type',
+    },
+  });
+}
+
+export async function GET(request: Request) {
+  return NextResponse.json({ message: 'Méthode GET non supportée' }, { status: 405 });
 }
