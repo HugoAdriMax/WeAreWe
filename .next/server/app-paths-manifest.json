@@ -1,3 +1,18 @@
 {
-  "/page": "app/page.js"
+  "/_not-found/page": "app/_not-found/page.js",
+  "/api/articles/[id]/route": "app/api/articles/[id]/route.js",
+  "/api/articles/route": "app/api/articles/route.js",
+  "/api/robots/route": "app/api/robots/route.js",
+  "/api/generate-hooks/route": "app/api/generate-hooks/route.js",
+  "/api/sitemap/route": "app/api/sitemap/route.js",
+  "/api/auth/[...nextauth]/route": "app/api/auth/[...nextauth]/route.js",
+  "/article/[slug]/page": "app/article/[slug]/page.js",
+  "/blog/page": "app/blog/page.js",
+  "/page": "app/page.js",
+  "/strategy/page": "app/strategy/page.js",
+  "/social-hooks/page": "app/social-hooks/page.js",
+  "/cms/login/page": "app/cms/login/page.js",
+  "/cms/page": "app/cms/page.js",
+  "/cms/dashboard/page": "app/cms/dashboard/page.js",
+  "/api/generate-strategy/route": "app/api/generate-strategy/route.js"
 }
