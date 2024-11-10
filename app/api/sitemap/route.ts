@@ -29,6 +29,12 @@ export async function GET() {
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
+  <url>
+  <loc>https://www.tolly.fr/strategy</loc>
+  <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.9</priority>
+</url>
   ${articles.map(article => `
   <url>
     <loc>https://www.tolly.fr/article/${article.slug}</loc>
