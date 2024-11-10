@@ -2,27 +2,6 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import type { Metadata } from 'next';
-
-export const metadata: Metadata = {
-  title: 'Générateur de Stratégie Marketing IA | Tolly',
-  description: 'Créez votre stratégie marketing personnalisée en quelques minutes avec l\'IA',
-  openGraph: {
-    title: 'Générateur de Stratégie Marketing IA | Tolly',
-    description: 'Créez votre stratégie marketing personnalisée en quelques minutes avec l\'IA',
-    type: 'website',
-    locale: 'fr_FR',
-    siteName: 'Tolly'
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'Générateur de Stratégie Marketing IA | Tolly',
-    description: 'Créez votre stratégie marketing personnalisée en quelques minutes avec l\'IA'
-  },
-  alternates: {
-    canonical: 'https://www.tolly.fr/strategy'
-  }
-};
 
 import { 
   Target, 
