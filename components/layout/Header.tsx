@@ -13,6 +13,7 @@ export const Header = () => {
     { href: '#portfolio', label: 'Portfolio' },
     { href: '#testimonials', label: 'Témoignages' },
     { href: '/social-hooks', label: 'Générateur d\'accroches' },
+    { href: '/strategy', label: 'Générez votre Stratégie' },
     { href: '/blog', label: 'Blog' },
   ];
 
