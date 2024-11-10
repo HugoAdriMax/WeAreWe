@@ -10,7 +10,8 @@ import {
   CheckCircle,
   ArrowRight,
   RefreshCw,
-  Sparkles
+  Sparkles,
+  AlertCircle
 } from 'lucide-react';
 
 interface FormData {
@@ -36,6 +37,7 @@ interface Strategy {
 export default function StrategyPage() {
   const [step, setStep] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [formData, setFormData] = useState<FormData>({
     industry: '',
     target: '',
@@ -54,7 +56,6 @@ export default function StrategyPage() {
     'Fidélisation client'
   ];
 
-  // Progression steps avec icônes
   const steps = [
     { number: 1, title: 'Informations', icon: Users },
     { number: 2, title: 'Objectifs', icon: Target },
@@ -76,10 +77,12 @@ export default function StrategyPage() {
       ...prev,
       [field]: value
     }));
+    setError(null);
   };
 
   const handleGenerateStrategy = async () => {
     setIsLoading(true);
+    setError(null);
     try {
       const response = await fetch('/api/generate-strategy', {
         method: 'POST',
@@ -88,16 +91,23 @@ export default function StrategyPage() {
         },
         body: JSON.stringify(formData),
       });
-      
+
       if (!response.ok) {
-        throw new Error('Erreur lors de la génération de la stratégie');
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Erreur lors de la génération de la stratégie');
       }
 
       const data = await response.json();
+      
+      if (!data || !Array.isArray(data.objectives)) {
+        throw new Error('Format de réponse invalide');
+      }
+
       setStrategy(data);
       setStep(4);
     } catch (error) {
       console.error('Error:', error);
+      setError(error instanceof Error ? error.message : 'Une erreur est survenue');
     } finally {
       setIsLoading(false);
     }
@@ -116,9 +126,11 @@ export default function StrategyPage() {
     }
   };
 
+  // Le reste de votre JSX reste le même jusqu'à la partie des résultats
+
   return (
     <main className="min-h-screen bg-gradient-to-br from-[#2E5751] to-[#1a3330]">
-      {/* Hero Section */}
+      {/* Hero Section reste identique */}
       <section className="pt-28 pb-20 text-white">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
@@ -183,6 +195,13 @@ export default function StrategyPage() {
               animate={{ opacity: 1, y: 0 }}
               className="bg-white rounded-2xl shadow-xl overflow-hidden"
             >
+              {error && (
+                <div className="p-4 bg-red-50 text-red-500 flex items-center gap-2">
+                  <AlertCircle className="w-5 h-5" />
+                  {error}
+                </div>
+              )}
+
               {step === 1 && (
                 <div className="p-8">
                   <h2 className="text-2xl font-semibold text-gray-800 mb-6">
@@ -217,17 +236,25 @@ export default function StrategyPage() {
                       <label className="block text-sm font-medium text-gray-700 mb-2">
                         Budget mensuel estimé
                       </label>
-                      <select
-                        value={formData.budget}
-                        onChange={(e) => handleInputChange('budget', e.target.value)}
-                        className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2E5751] focus:border-transparent"
-                      >
-                        <option value="">Sélectionnez un budget</option>
-                        <option value="small">500€ - 1000€</option>
-                        <option value="medium">1000€ - 3000€</option>
-                        <option value="large">3000€ - 5000€</option>
-                        <option value="enterprise">5000€+</option>
-                      </select>
+                      <div className="relative">
+                        <select
+                          value={formData.budget}
+                          onChange={(e) => handleInputChange('budget', e.target.value)}
+                          className="w-full p-3 appearance-none bg-white border border-gray-300 rounded-lg 
+                                   focus:ring-2 focus:ring-[#2E5751] focus:border-transparent pr-10"
+                        >
+                          <option value="">Sélectionnez un budget</option>
+                          <option value="small">500€ - 1000€</option>
+                          <option value="medium">1000€ - 3000€</option>
+                          <option value="large">3000€ - 5000€</option>
+                          <option value="enterprise">5000€+</option>
+                        </select>
+                        <div className="absolute inset-y-0 right-0 flex items-center px-3 pointer-events-none text-gray-500">
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                          </svg>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -286,35 +313,86 @@ export default function StrategyPage() {
                 </div>
               )}
 
-              {step === 4 && strategy && (
+              {step === 4 && (
                 <div className="p-8">
-                  <h2 className="text-2xl font-semibold text-gray-800 mb-6">
-                    Votre stratégie personnalisée
-                  </h2>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="bg-gray-50 p-6 rounded-xl">
-                      <h3 className="text-lg font-semibold mb-4">Objectifs</h3>
-                      <ul className="space-y-2">
-                        {strategy.objectives.map((objective, index) => (
-                          <li key={index} className="flex items-start gap-2">
-                            <CheckCircle className="w-5 h-5 text-[#B9684F] shrink-0 mt-0.5" />
-                            <span>{objective}</span>
-                          </li>
-                        ))}
-                      </ul>
+                  {isLoading ? (
+                    <div className="flex justify-center items-center py-12">
+                      <RefreshCw className="w-8 h-8 animate-spin text-[#B9684F]" />
                     </div>
-                    <div className="bg-gray-50 p-6 rounded-xl">
-                      <h3 className="text-lg font-semibold mb-4">Canaux</h3>
-                      <ul className="space-y-2">
-                        {strategy.channels.map((channel, index) => (
-                          <li key={index} className="flex items-start gap-2">
-                            <CheckCircle className="w-5 h-5 text-[#B9684F] shrink-0 mt-0.5" />
-                            <span>{channel}</span>
-                          </li>
-                        ))}
-                      </ul>
+                  ) : strategy ? (
+                    <>
+                      <h2 className="text-2xl font-semibold text-gray-800 mb-6">
+                        Votre stratégie personnalisée
+                      </h2>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="bg-gray-50 p-6 rounded-xl">
+                          <h3 className="text-lg font-semibold mb-4">Objectifs</h3>
+                          <ul className="space-y-2">
+                            {strategy.objectives.map((objective, index) => (
+                              <li key={index} className="flex items-start gap-2">
+                                <CheckCircle className="w-5 h-5 text-[#B9684F] shrink-0 mt-0.5" />
+                                <span>{objective}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                        <div className="bg-gray-50 p-6 rounded-xl">
+                          <h3 className="text-lg font-semibold mb-4">Canaux</h3>
+                          <ul className="space-y-2">
+                            {strategy.channels.map((channel, index) => (
+                              <li key={index} className="flex items-start gap-2">
+                                <CheckCircle className="w-5 h-5 text-[#B9684F] shrink-0 mt-0.5" />
+                                <span>{channel}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                        <div className="bg-gray-50 p-6 rounded-xl">
+                          <h3 className="text-lg font-semibold mb-4">Tactiques</h3>
+                          <ul className="space-y-2">
+                          {strategy.tactics.map((tactic, index) => (
+                              <li key={index} className="flex items-start gap-2">
+                                <CheckCircle className="w-5 h-5 text-[#B9684F] shrink-0 mt-0.5" />
+                                <span>{tactic}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                        <div className="bg-gray-50 p-6 rounded-xl">
+                          <h3 className="text-lg font-semibold mb-4">KPIs à suivre</h3>
+                          <ul className="space-y-2">
+                            {strategy.kpis.map((kpi, index) => (
+                              <li key={index} className="flex items-start gap-2">
+                                <CheckCircle className="w-5 h-5 text-[#B9684F] shrink-0 mt-0.5" />
+                                <span>{kpi}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                        <div className="bg-gray-50 p-6 rounded-xl col-span-2">
+                          <h3 className="text-lg font-semibold mb-4">Budget et Timeline</h3>
+                          <div className="grid grid-cols-2 gap-4">
+                            <div>
+                              <p className="text-gray-600 mb-2">Budget mensuel recommandé :</p>
+                              <p className="text-xl font-semibold text-[#B9684F]">
+                                {strategy.budget.min}€ - {strategy.budget.max}€
+                              </p>
+                            </div>
+                            <div>
+                              <p className="text-gray-600 mb-2">Durée du projet :</p>
+                              <p className="text-xl font-semibold text-[#B9684F]">
+                                {strategy.timeline}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </>
+                  ) : (
+                    <div className="text-center py-12 text-gray-500">
+                      Une erreur est survenue lors de la génération de la stratégie
                     </div>
-                  </div>
+                  )}
                 </div>
               )}
 
@@ -363,7 +441,7 @@ export default function StrategyPage() {
         </div>
       </section>
 
-      {/* Features Section - Optionnel */}
+      {/* Features Section */}
       <section className="pb-20">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
