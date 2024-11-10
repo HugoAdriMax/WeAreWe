@@ -1,8 +1,7 @@
 "use client";
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-
 import { 
   Target, 
   TrendingUp, 
@@ -14,6 +13,7 @@ import {
   Sparkles,
   AlertCircle
 } from 'lucide-react';
+
 
 interface FormData {
   industry: string;
@@ -47,6 +47,43 @@ export default function StrategyPage() {
     timeline: ''
   });
   const [strategy, setStrategy] = useState<Strategy | null>(null);
+
+
+   // Définir les métadonnées dynamiquement pour la page client-side
+   useEffect(() => {
+    document.title = "Générateur de Stratégie Marketing AI | Tolly";
+    document
+      .querySelector('meta[name="description"]')
+      ?.setAttribute(
+        'content',
+        "Obtenez un plan marketing personnalisé en quelques minutes avec notre générateur alimenté par l'IA."
+      );
+
+    const ogTitle = document.createElement('meta');
+    ogTitle.setAttribute('property', 'og:title');
+    ogTitle.setAttribute('content', "Générateur de Stratégie Marketing AI | Tolly");
+    document.head.appendChild(ogTitle);
+
+    const ogDescription = document.createElement('meta');
+    ogDescription.setAttribute('property', 'og:description');
+    ogDescription.setAttribute(
+      'content',
+      "Créez une stratégie marketing sur mesure avec notre IA en quelques minutes."
+    );
+    document.head.appendChild(ogDescription);
+
+    const twitterCard = document.createElement('meta');
+    twitterCard.setAttribute('name', 'twitter:card');
+    twitterCard.setAttribute('content', 'summary_large_image');
+    document.head.appendChild(twitterCard);
+
+    return () => {
+      document.head.removeChild(ogTitle);
+      document.head.removeChild(ogDescription);
+      document.head.removeChild(twitterCard);
+    };
+  }, []);
+
 
   const businessGoals = [
     'Augmentation du trafic web',

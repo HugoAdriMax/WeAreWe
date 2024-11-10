@@ -1,62 +1,6 @@
 {
   "version": 3,
-  "middleware": {
-    "/": {
-      "files": [
-        "server/edge-runtime-webpack.js",
-        "server/middleware.js"
-      ],
-      "name": "middleware",
-      "page": "/",
-      "matchers": [
-        {
-          "regexp": "^(?:\\/(_next\\/data\\/[^/]{1,}))?\\/cms(?:\\/((?:[^\\/#\\?]+?)(?:\\/(?:[^\\/#\\?]+?))*))?(\\.json)?[\\/#\\?]?$",
-          "originalSource": "/cms/:path*"
-        }
-      ],
-      "wasm": [],
-      "assets": [],
-      "env": {
-        "__NEXT_BUILD_ID": "JYg3QMGkdGiPVD8ETsQO5",
-        "NEXT_SERVER_ACTIONS_ENCRYPTION_KEY": "0CrrW2lgrnD/CIfIsAgUu/Rf4hXmEP//Fn50nvvj3oQ=",
-        "__NEXT_PREVIEW_MODE_ID": "287555a72e966461b425d40e4402cc78",
-        "__NEXT_PREVIEW_MODE_ENCRYPTION_KEY": "40c51cef9371f91381e2f3e660f003de00db70eda9e391630a48b20b21dad8d6",
-        "__NEXT_PREVIEW_MODE_SIGNING_KEY": "835500dd3809cbbbec24f7facd845679bd406ac2648a42db9a92d3d1c51a0bdc"
-      }
-    }
-  },
-  "functions": {
-    "/api/generate-strategy/route": {
-      "files": [
-        "server/server-reference-manifest.js",
-        "server/app/api/generate-strategy/route_client-reference-manifest.js",
-        "server/middleware-build-manifest.js",
-        "server/middleware-react-loadable-manifest.js",
-        "server/next-font-manifest.js",
-        "server/interception-route-rewrite-manifest.js",
-        "server/edge-runtime-webpack.js",
-        "server/app/api/generate-strategy/route.js"
-      ],
-      "name": "app/api/generate-strategy/route",
-      "page": "/api/generate-strategy/route",
-      "matchers": [
-        {
-          "regexp": "^/api/generate\\-strategy$",
-          "originalSource": "/api/generate-strategy"
-        }
-      ],
-      "wasm": [],
-      "assets": [],
-      "env": {
-        "__NEXT_BUILD_ID": "JYg3QMGkdGiPVD8ETsQO5",
-        "NEXT_SERVER_ACTIONS_ENCRYPTION_KEY": "0CrrW2lgrnD/CIfIsAgUu/Rf4hXmEP//Fn50nvvj3oQ=",
-        "__NEXT_PREVIEW_MODE_ID": "287555a72e966461b425d40e4402cc78",
-        "__NEXT_PREVIEW_MODE_ENCRYPTION_KEY": "40c51cef9371f91381e2f3e660f003de00db70eda9e391630a48b20b21dad8d6",
-        "__NEXT_PREVIEW_MODE_SIGNING_KEY": "835500dd3809cbbbec24f7facd845679bd406ac2648a42db9a92d3d1c51a0bdc"
-      }
-    }
-  },
-  "sortedMiddleware": [
-    "/"
-  ]
+  "middleware": {},
+  "functions": {},
+  "sortedMiddleware": []
 }
