@@ -9,6 +9,7 @@ import React from 'react';
 interface Tag {
   id: string;
   label: string;
+  weight: number;
 }
 
 interface Article {
@@ -34,38 +35,102 @@ const categories = ['all', 'SEO', 'Web Design', 'Marketing', 'E-commerce']
     label: cat === 'all' ? 'Tous les articles' : cat
   }));
 
-// Liste de mots-clés prédéfinis par catégorie
+// Mots-clés plus spécifiques avec leur poids pour la catégorisation
 const keywordsByCategory = {
-  'SEO': ['référencement', 'google', 'ranking', 'backlinks', 'mots-clés', 'analytics', 'seo'],
-  'Web Design': ['ui', 'ux', 'responsive', 'mobile', 'design', 'interface', 'webdesign'],
-  'Marketing': ['stratégie', 'social media', 'conversion', 'communication', 'marketing'],
-  'E-commerce': ['vente', 'boutique', 'shop', 'conversion', 'panier', 'e-commerce']
+  'SEO': {
+    primary: ['seo', 'référencement naturel', 'optimisation moteur recherche'],
+    secondary: ['référencement', 'google', 'ranking', 'backlinks', 'mots-clés', 'analytics', 'serp', 'position'],
+    context: ['site web', 'trafic', 'visibilité']
+  },
+  'Web Design': {
+    primary: ['web design', 'webdesign', 'conception web', 'design interface'],
+    secondary: ['ui', 'ux', 'responsive', 'mobile', 'design', 'interface', 'maquette'],
+    context: ['utilisateur', 'ergonomie', 'navigation']
+  },
+  'Marketing': {
+    primary: ['marketing digital', 'stratégie marketing', 'inbound marketing'],
+    secondary: ['stratégie', 'social media', 'conversion', 'communication', 'marketing', 'acquisition'],
+    context: ['marque', 'audience', 'client']
+  },
+  'E-commerce': {
+    primary: ['e-commerce', 'commerce en ligne', 'boutique en ligne'],
+    secondary: ['vente', 'boutique', 'shop', 'conversion', 'panier', 'marketplace'],
+    context: ['produit', 'achat', 'client']
+  }
 };
 
+// Mots à exclure des tags
+const excludedWords = new Set([
+  'le', 'la', 'les', 'un', 'une', 'des', 'ce', 'ces', 'sur', 'pour', 'dans',
+  'avec', 'par', 'est', 'sont', 'être', 'avoir', 'fait', 'faire', 'plus',
+  'vous', 'nous', 'ils', 'elles', 'leur', 'leurs', 'tout', 'tous', 'cette',
+  'votre', 'notre', 'comment', 'quoi', 'quel', 'quelle', 'aussi', 'donc'
+]);
+
+function getContentScore(content: string, keywords: string[]): number {
+  const normalizedContent = content.toLowerCase();
+  return keywords.reduce((score, keyword) => {
+    const regex = new RegExp(`\\b${keyword}\\b`, 'gi');
+    const matches = normalizedContent.match(regex);
+    return score + (matches ? matches.length : 0);
+  }, 0);
+}
+
 function determineCategory(article: Article): string {
+  const content = `${article.title} ${article.metaDescription}`.toLowerCase();
+  let bestCategory = 'Autres';
+  let highestScore = 0;
+
   for (const [category, keywords] of Object.entries(keywordsByCategory)) {
-    if (keywords.some(keyword => article.title.toLowerCase().includes(keyword) || article.metaDescription.toLowerCase().includes(keyword))) {
-      return category;
+    const primaryScore = getContentScore(content, keywords.primary) * 3;
+    const secondaryScore = getContentScore(content, keywords.secondary) * 2;
+    const contextScore = getContentScore(content, keywords.context);
+    
+    const totalScore = primaryScore + secondaryScore + contextScore;
+    
+    if (totalScore > highestScore) {
+      highestScore = totalScore;
+      bestCategory = category;
     }
   }
-  return 'Autres';
+
+  // Ne retourne une catégorie que si le score est suffisant
+  return highestScore >= 2 ? bestCategory : 'Autres';
 }
 
 function generateTags(article: Article): Tag[] {
-  const tags = new Set<string>();
   const content = `${article.title} ${article.metaDescription}`.toLowerCase();
   const words = content.split(/[\s,.-]+/);
-  
+  const tagCandidates = new Map<string, number>();
+
+  // Première passe : compte la fréquence des mots
   words.forEach(word => {
-    if (word.length > 4 && !['le', 'la', 'les', 'un', 'une', 'des', 'ce', 'ces', 'sur', 'pour', 'dans'].includes(word)) {
-      tags.add(word);
+    if (word.length > 4 && !excludedWords.has(word)) {
+      tagCandidates.set(word, (tagCandidates.get(word) || 0) + 1);
     }
   });
 
-  return Array.from(tags).slice(0, 5).map(tag => ({
-    id: tag.replace(/\s+/g, '-'),
-    label: tag
-  }));
+  // Deuxième passe : vérifie les expressions composées
+  const contentNormalized = content.toLowerCase();
+  for (const category of Object.values(keywordsByCategory)) {
+    [...category.primary, ...category.secondary].forEach(keyword => {
+      if (keyword.includes(' ') && contentNormalized.includes(keyword)) {
+        tagCandidates.set(keyword, (tagCandidates.get(keyword) || 0) + 2);
+      }
+    });
+  }
+
+  // Convertit en tableau de tags et trie par pertinence
+  const tags: Tag[] = Array.from(tagCandidates.entries())
+    .map(([label, weight]) => ({
+      id: label.replace(/\s+/g, '-'),
+      label,
+      weight
+    }))
+    .sort((a, b) => b.weight - a.weight)
+    .slice(0, 5);
+
+  return tags;
 }
 
 export default function BlogPage() {
@@ -104,7 +169,8 @@ export default function BlogPage() {
   useEffect(() => {
     const filtered = articles.filter(article => {
       const matchesSearch = article.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        article.metaDescription.toLowerCase().includes(searchTerm.toLowerCase());
+        article.metaDescription.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        article.tags.some(tag => tag.label.includes(searchTerm.toLowerCase()));
       const matchesCategory = selectedCategory === 'all' || article.category.toLowerCase() === selectedCategory;
       return matchesSearch && matchesCategory;
     });
@@ -163,7 +229,7 @@ export default function BlogPage() {
         {tags.map((tag) => (
           <span
             key={tag.id}
-            onClick={() => setSelectedCategory(tag.id)}
+            onClick={() => setSearchTerm(tag.label)}
             className="cursor-pointer px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full hover:bg-gray-200"
           >
             #{tag.label}
@@ -257,7 +323,7 @@ export default function BlogPage() {
                       {article.metaDescription}
                     </p>
                     <ArticleTags tags={article.tags} />
-                    <div className="flex justify-between items-center">
+                    <div className="flex justify-between items-center mt-4">
                       <div className="flex items-center text-sm text-gray-500">
                         <Calendar className="w-4 h-4 mr-1" />
                         {new Date(article.date).toLocaleDateString('fr-FR', {
