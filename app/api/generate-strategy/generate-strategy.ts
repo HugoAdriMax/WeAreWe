@@ -1,93 +1,74 @@
+// app/api/generate-strategy/route.ts
 import OpenAI from 'openai';
 import { NextResponse } from 'next/server';
 
-// Configuration de l'API OpenAI
 const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY
+  apiKey: process.env.OPENAI_API_KEY,
+  dangerouslyAllowBrowser: true  // Ajout de cette option
 });
 
-// Fonction pour gérer les erreurs
-function handleError(error: unknown) {
-  console.error('Strategy generation error:', error);
-  return NextResponse.json(
-    { 
-      error: 'Failed to generate strategy', 
-      details: error instanceof Error ? error.message : 'Unknown error' 
-    },
-    { status: 500 }
-  );
-}
-
-// Handler POST
 export async function POST(request: Request) {
-  try {
-    // Validation de la requête
-    if (!request.body) {
-      return NextResponse.json(
-        { error: 'Missing request body' },
-        { status: 400 }
-      );
-    }
+  if (!process.env.OPENAI_API_KEY) {
+    return NextResponse.json(
+      { error: 'La clé API OpenAI n\'est pas configurée' },
+      { status: 500 }
+    );
+  }
 
-    // Récupération et validation des données
-    const data = await request.json();
-    const { industry, target, budget, goals, timeline } = data;
+  try {
+    const { industry, target, budget, goals, timeline } = await request.json();
 
     if (!industry || !target || !budget || !goals || !timeline) {
       return NextResponse.json(
-        { error: 'Missing required fields' },
+        { error: 'Tous les champs sont requis' },
         { status: 400 }
       );
     }
 
-    // Construction du prompt
-    const prompt = `En tant qu'expert en marketing digital, crée une stratégie marketing détaillée pour une entreprise avec les caractéristiques suivantes:
-
+    const prompt = `En tant qu'expert en marketing digital, crée une stratégie marketing détaillée pour :
+    
     Secteur: ${industry}
     Cible: ${target}
-    Budget mensuel: ${budget}
-    Objectifs principaux: ${goals.join(', ')}
+    Budget: ${budget}
+    Objectifs: ${goals.join(', ')}
     Durée: ${timeline}
-
-    Réponds uniquement avec un objet JSON contenant ces éléments :
+    
+    Format de réponse en JSON :
     {
-      "objectives": ["objectif 1", "objectif 2", "objectif 3"],
-      "channels": ["canal 1", "canal 2", "canal 3"],
-      "tactics": ["tactique 1", "tactique 2", "tactique 3"],
-      "kpis": ["kpi 1", "kpi 2", "kpi 3"],
+      "objectives": ["3-5 objectifs SMART"],
+      "channels": ["4-6 canaux marketing"],
+      "tactics": ["5-7 tactiques"],
+      "kpis": ["3-5 KPIs"],
       "budget": {
-        "min": "montant minimum",
-        "max": "montant maximum"
+        "min": "budget minimum",
+        "max": "budget maximum"
       },
       "timeline": "planning d'implémentation"
     }`;
 
-    // Appel à l'API OpenAI
     const completion = await openai.chat.completions.create({
+      model: "gpt-3.5-turbo",  // Changement du modèle pour correspondre
       messages: [
         {
           role: "system",
-          content: "Tu es un expert en marketing digital spécialisé dans la création de stratégies marketing personnalisées. Tu réponds uniquement en JSON valide."
+          content: "Vous êtes un expert en marketing digital spécialisé dans la création de stratégies marketing. Répondez uniquement en format JSON."
         },
         {
           role: "user",
           content: prompt
         }
       ],
-      model: "gpt-4",
-      response_format: { type: "json_object" },
+      temperature: 0.7,
+      max_tokens: 1000,
     });
 
-    // Validation de la réponse
     const responseContent = completion.choices[0]?.message?.content;
     if (!responseContent) {
-      throw new Error('Empty response from OpenAI');
+      throw new Error('Pas de réponse de l\'API OpenAI');
     }
 
-    // Parse et validation du JSON
     const strategyResponse = JSON.parse(responseContent);
-
-    // Construction de la réponse formatée
+    
     const strategy = {
       objectives: strategyResponse.objectives || [],
       channels: strategyResponse.channels || [],
@@ -100,15 +81,16 @@ export async function POST(request: Request) {
       timeline: strategyResponse.timeline || timeline,
     };
 
-    // Envoi de la réponse
     return NextResponse.json(strategy);
 
-  } catch (error) {
-    return handleError(error);
+  } catch (error: any) {
+    console.error('OpenAI API Error:', error);
+    return NextResponse.json(
+      {
+        error: 'Une erreur est survenue lors de la génération de la stratégie',
+        details: error.message
+      },
+      { status: 500 }
+    );
   }
-}
-
-// Handler OPTIONS pour CORS (si nécessaire)
-export async function OPTIONS(request: Request) {
-  return NextResponse.json({}, { status: 200 });
 }
