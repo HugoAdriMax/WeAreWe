@@ -1,19 +1,47 @@
 import OpenAI from 'openai';
 import { NextResponse } from 'next/server';
 
-export const runtime = 'edge';
-
+// Configuration de l'API OpenAI
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY
 });
 
-export async function POST(req: Request) {
-  try {
-    const { industry, target, budget, goals, timeline } = await req.json();
+// Fonction pour gérer les erreurs
+function handleError(error: unknown) {
+  console.error('Strategy generation error:', error);
+  return NextResponse.json(
+    { 
+      error: 'Failed to generate strategy', 
+      details: error instanceof Error ? error.message : 'Unknown error' 
+    },
+    { status: 500 }
+  );
+}
 
-    // Création d'un prompt détaillé
-    const prompt = `En tant qu'expert en marketing digital, crée une stratégie marketing détaillée 
-    pour une entreprise avec les caractéristiques suivantes:
+// Handler POST
+export async function POST(request: Request) {
+  try {
+    // Validation de la requête
+    if (!request.body) {
+      return NextResponse.json(
+        { error: 'Missing request body' },
+        { status: 400 }
+      );
+    }
+
+    // Récupération et validation des données
+    const data = await request.json();
+    const { industry, target, budget, goals, timeline } = data;
+
+    if (!industry || !target || !budget || !goals || !timeline) {
+      return NextResponse.json(
+        { error: 'Missing required fields' },
+        { status: 400 }
+      );
+    }
+
+    // Construction du prompt
+    const prompt = `En tant qu'expert en marketing digital, crée une stratégie marketing détaillée pour une entreprise avec les caractéristiques suivantes:
 
     Secteur: ${industry}
     Cible: ${target}
@@ -21,27 +49,20 @@ export async function POST(req: Request) {
     Objectifs principaux: ${goals.join(', ')}
     Durée: ${timeline}
 
-    Fournis une réponse structurée au format JSON avec:
-    - 3-5 objectifs SMART spécifiques (objectives)
-    - 4-6 canaux marketing recommandés (channels)
-    - 5-7 tactiques concrètes (tactics)
-    - 3-5 KPIs essentiels à suivre (kpis)
-    - Une recommandation de budget (budget avec min et max)
-    - Un timeline d'implémentation (timeline)
-
-    Format de réponse attendu:
+    Réponds uniquement avec un objet JSON contenant ces éléments :
     {
-      "objectives": [],
-      "channels": [],
-      "tactics": [],
-      "kpis": [],
+      "objectives": ["objectif 1", "objectif 2", "objectif 3"],
+      "channels": ["canal 1", "canal 2", "canal 3"],
+      "tactics": ["tactique 1", "tactique 2", "tactique 3"],
+      "kpis": ["kpi 1", "kpi 2", "kpi 3"],
       "budget": {
-        "min": "",
-        "max": ""
+        "min": "montant minimum",
+        "max": "montant maximum"
       },
-      "timeline": ""
+      "timeline": "planning d'implémentation"
     }`;
 
+    // Appel à l'API OpenAI
     const completion = await openai.chat.completions.create({
       messages: [
         {
@@ -55,18 +76,18 @@ export async function POST(req: Request) {
       ],
       model: "gpt-4",
       response_format: { type: "json_object" },
-      temperature: 0.7,
     });
 
+    // Validation de la réponse
     const responseContent = completion.choices[0]?.message?.content;
-
     if (!responseContent) {
-      throw new Error('No content in response');
+      throw new Error('Empty response from OpenAI');
     }
 
+    // Parse et validation du JSON
     const strategyResponse = JSON.parse(responseContent);
 
-    // Transformation et validation des données
+    // Construction de la réponse formatée
     const strategy = {
       objectives: strategyResponse.objectives || [],
       channels: strategyResponse.channels || [],
@@ -79,13 +100,15 @@ export async function POST(req: Request) {
       timeline: strategyResponse.timeline || timeline,
     };
 
+    // Envoi de la réponse
     return NextResponse.json(strategy);
 
   } catch (error) {
-    console.error('Strategy generation error:', error);
-    return NextResponse.json(
-      { error: 'Failed to generate strategy', details: error instanceof Error ? error.message : 'Unknown error' },
-      { status: 500 }
-    );
+    return handleError(error);
   }
+}
+
+// Handler OPTIONS pour CORS (si nécessaire)
+export async function OPTIONS(request: Request) {
+  return NextResponse.json({}, { status: 200 });
 }
