@@ -25,13 +25,14 @@ const nextConfig = {
     formats: ['image/webp'],
   },
   webpack: (config, { isServer }) => {
+    // Ajout d'alias personnalisés
     config.resolve.alias = {
       ...config.resolve.alias,
       '@lib': path.resolve(__dirname, 'app/lib'),
       '@models': path.resolve(__dirname, 'app/models'),
-      'tinymce': path.resolve(__dirname, 'node_modules/tinymce'), // Ajout de l'alias TinyMCE
+      'tinymce': path.resolve(__dirname, 'node_modules/tinymce'),
     };
-    
+
     // Support spécifique pour TinyMCE
     if (!isServer) {
       config.resolve.fallback = {
@@ -41,9 +42,13 @@ const nextConfig = {
       };
     }
 
+    // Exclure `mongodb` du bundle côté serveur
+    if (isServer) {
+      config.externals.push('mongodb');
+    }
+
     return config;
   },
-  // Ajout de la configuration spécifique pour TinyMCE
   transpilePackages: ['tinymce'],
 };
 
